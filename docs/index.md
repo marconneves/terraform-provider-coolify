@@ -5,7 +5,7 @@ description: |-
   Terraform provider for interacting with Coolify API.
 ---
 
-# Coolify Provider
+# Coolify Provider - IN DEVELOPMENT
 
 [Coolify](https://coolify.io) is a self-hostable, all-in-one solution to host your applications, databases, or other open-source services with a few simple clicks.
 

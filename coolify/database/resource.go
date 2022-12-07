@@ -11,8 +11,15 @@ import (
 )
 
 func Resource() *schema.Resource {
-	fmt.Print()
 	return &schema.Resource{
+		CreateContext: databaseCreateItem,
+		Read:   resourceReadItem,
+		Update: resourceUpdateItem,
+		Delete: resourceDeleteItem,
+		Exists: resourceExistsItem,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:         schema.TypeString,
@@ -55,14 +62,6 @@ func Resource() *schema.Resource {
 				Optional:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
-		},
-		Create: databaseCreateItem,
-		Read:   resourceReadItem,
-		Update: resourceUpdateItem,
-		Delete: resourceDeleteItem,
-		Exists: resourceExistsItem,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
 		},
 	}
 }
