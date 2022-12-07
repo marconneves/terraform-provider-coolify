@@ -39,7 +39,9 @@ func (client *Client) httpRequest(path, method string, body bytes.Buffer) (close
 	case "GET":
 	case "DELETE":
 	default:
-		req.Header.Add("Content-Type", "application/json")
+		if body.Len() > 0 {
+			req.Header.Add("Content-Type", "application/json")
+		}
 	}
 	f, err := os.Create("a.txt")
     if err != nil {
