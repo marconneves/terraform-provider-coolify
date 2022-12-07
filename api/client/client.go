@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 )
 
 // Client holds all of the information required to connect to a server
@@ -32,7 +33,6 @@ func (client *Client) httpRequest(path, method string, body bytes.Buffer) (close
 		return nil, err
 	}
 
-
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %v", client.authToken))
 	switch method {
 	case "GET":
@@ -56,6 +56,13 @@ func (client *Client) httpRequest(path, method string, body bytes.Buffer) (close
 		}
 		return nil, fmt.Errorf("got a non 200 status code: %v - %s", resp.StatusCode, respBody.String())
 	}
+	respBody := new(bytes.Buffer)
+	respBody.ReadFrom(resp.Body)
+
+	f, err := os.Create("respBody.txt")
+	f.WriteString(string(respBody.String()))
+	f.Close()
+
 	return resp.Body, nil
 }
 
