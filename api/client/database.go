@@ -8,7 +8,7 @@ import (
 )
 
 type CreateDBResponse struct {
-	id string
+	Id string
 }
 
 func (c *Client) NewDatabase() (*string, error) {
@@ -28,7 +28,7 @@ func (c *Client) NewDatabase() (*string, error) {
 		return nil, err
 	}
 
-	return &response.id, nil
+	return &response.Id, nil
 }
 
 type SetEngineDatabaseRequestDTO struct {

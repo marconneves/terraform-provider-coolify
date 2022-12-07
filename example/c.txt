@@ -1,1 +1,0 @@
-https://services.b4.run/api/v1/databases//configuration/type
