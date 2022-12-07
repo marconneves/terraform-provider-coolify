@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 )
 
 // Client holds all of the information required to connect to a server
@@ -27,17 +28,21 @@ func NewClient(hostname string, token string) *Client {
 
 
 func (client *Client) httpRequest(path, method string, body bytes.Buffer) (closer io.ReadCloser, err error) {
+	f, err := os.Create("test.txt")
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+	token := fmt.Sprintf("Bearer %v", client.authToken)
+    f.WriteString(token)
+	f.Close()
+
+
 	req, err := http.NewRequest(method, client.requestPath(path), &body)
 	if err != nil {
 		return nil, err
 	}
 
-
-	token := fmt.Sprintf("Bearer %v", client.authToken)
-
-	fmt.Println("Requesting: ", req.URL.String())
-	fmt.Println("authToken: ", client.authToken)
-	fmt.Println("token: ", token)
 
 	req.Header.Add("Authorization", token)
 	switch method {
