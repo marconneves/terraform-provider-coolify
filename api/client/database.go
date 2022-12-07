@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"os"
 )
 
 type CreateDBResponse struct {
@@ -15,7 +16,12 @@ func (c *Client) NewDatabase() (*string, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+	out, err := json.Marshal(body)
+
+	f, err := os.Create("body.txt")
+	f.WriteString(string(out))
+	f.Close()
+
 	response := &CreateDBResponse{}
 	err = json.NewDecoder(body).Decode(response)
 	if err != nil {

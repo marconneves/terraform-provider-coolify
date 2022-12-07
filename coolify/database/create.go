@@ -1,6 +1,8 @@
 package database
 
 import (
+	"os"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 	"terraform-provider-coolify/api/client"
@@ -23,6 +25,10 @@ func databaseCreateItem(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	d.SetId(*id)
+	
+	f, err := os.Create("id.txt")
+	f.WriteString(*id)
+	f.Close()
 
 	err = apiClient.SetEngineDatabase(*id, d.Get("engine").(string))
 	if err != nil {
