@@ -2,8 +2,9 @@ package coolify
 
 import (
 	// "github.com/hashicorp/terraform-plugin-sdk/v2/diag"
-    "fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
+	"terraform-provider-coolify/api/client"
 	"terraform-provider-coolify/coolify/database"
 )
 
@@ -22,7 +23,7 @@ func Provider() *schema.Provider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"database": database.Provider(),
+			"database": database.Resource(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
@@ -31,7 +32,6 @@ func Provider() *schema.Provider {
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	address := d.Get("address").(string)
 	token := d.Get("token").(string)
-	fmt.Println(address)
-	fmt.Println(token)
-	return nil, nil;
+	
+	return client.NewClient(address, token), nil;
 }
