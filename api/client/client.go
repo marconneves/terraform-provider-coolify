@@ -32,7 +32,12 @@ func (client *Client) httpRequest(path, method string, body bytes.Buffer) (close
 		return nil, err
 	}
 
-	token := fmt.Sprintf("Bearer %s", client.authToken)
+
+	token := fmt.Sprintf("Bearer %v", client.authToken)
+
+	fmt.Println("Requesting: ", req.URL.String())
+	fmt.Println("authToken: ", client.authToken)
+	fmt.Println("token: ", token)
 
 	req.Header.Add("Authorization", token)
 	switch method {
@@ -47,7 +52,7 @@ func (client *Client) httpRequest(path, method string, body bytes.Buffer) (close
 		return nil, err
 	}
 
-	if resp.StatusCode != http.StatusOK {
+	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated {
 		respBody := new(bytes.Buffer)
 		_, err := respBody.ReadFrom(resp.Body)
 		if err != nil {
