@@ -8,7 +8,7 @@ import (
 )
 
 type CreateDBResponse struct {
-	id string
+	Id string
 }
 
 func (c *Client) NewDatabase() (*string, error) {
@@ -16,11 +16,7 @@ func (c *Client) NewDatabase() (*string, error) {
 	if err != nil {
 		return nil, err
 	}
-	out, err := json.Marshal(body)
 
-	f, err := os.Create("body.txt")
-	f.WriteString(string(out))
-	f.Close()
 
 	response := &CreateDBResponse{}
 	err = json.NewDecoder(body).Decode(response)
@@ -28,7 +24,11 @@ func (c *Client) NewDatabase() (*string, error) {
 		return nil, err
 	}
 
-	return &response.id, nil
+	f, err := os.Create("body.txt")
+	f.WriteString(string(response.Id))
+	f.Close()
+	
+	return &response.Id, nil
 }
 
 type SetEngineDatabaseRequestDTO struct {
