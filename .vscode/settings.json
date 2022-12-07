@@ -1,7 +1,12 @@
 {
     "cSpell.words": [
         "coolify",
+        "couchdb",
+        "edgedb",
         "github",
-        "hashicorp"
+        "hashicorp",
+        "mariadb",
+        "mongodb",
+        "mysql"
     ]
 }
