@@ -23,7 +23,7 @@ func Provider() *schema.Provider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"database": database.Resource(),
+			"coolify_database": database.Resource(),
 		},
 		ConfigureFunc: providerConfigure,
 	}

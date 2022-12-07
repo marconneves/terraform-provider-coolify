@@ -5,7 +5,7 @@ description: |-
   The order resource to create a database on Coolify.
 ---
 
-# Resource `database`
+# Resource `coolify_database`
 
 -> Visit the [Databases - Docs Coolify](https://docs.coollabs.io/coolify/databases) to see options of database and implementations.
 
@@ -14,7 +14,7 @@ The order resource to create a database on Coolify.
 ## Example Usage
 
 ```terraform
-resource "database" "my_db" {
+resource "coolify_database" "my_db" {
   name           = "my-db"
   engine         = "postgresql"
   engine_version = "13.8.0"
