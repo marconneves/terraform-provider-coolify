@@ -42,3 +42,4 @@ terraform
 .terraform.lock.hcl
 main.tf
 example/*
+*.test.go
