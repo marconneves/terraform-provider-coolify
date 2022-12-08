@@ -37,8 +37,8 @@ func TestAccItem_Basic(t *testing.T) {
 					// testAccCheckExampleItemExists("coolify_database.test_item"),
 					resource.TestCheckResourceAttr(
 						"coolify_database.test_item", "name", "my-db"),
-					resource.TestCheckResourceAttr(
-						"coolify_database.test_item", "engine", "postgresql"),
+					// resource.TestCheckResourceAttr(
+					// 	"coolify_database.test_item", "engine.#", "postgresql"),
 					// resource.TestCheckResourceAttr(
 					// 	"coolify_database.test_item", "tags.#", "2"),
 				),
@@ -93,9 +93,15 @@ func testAccCheckItemBasic() string {
 	return fmt.Sprintf(`
 resource "coolify_database" "test_item" {
 	name           = "my-db"
-	engine         = "postgresql"
-	engine_version = "13.8.0"
-	destination_id = "clb9wrx87001fmo9dvvog6xet"
+
+	engine {
+	  image = "postgresql"
+	  version = "13.8.0"
+	}
+  
+	settings {
+	  destination_id = "clb9wrx87001fmo9dvvog6xet"
+	}
 }
 `)
 }

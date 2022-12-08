@@ -14,6 +14,30 @@ import (
 
 
 func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+
+	db := &Database{}
+
+	db.Name = d.Get("name").(string)
+
+
+	engines := d.Get("engine").([]interface{})
+	for _, engine := range engines {
+		i := engine.(map[string]interface{})
+
+		db.Engine.Image = i["image"].(string)
+		db.Engine.Version = i["version"].(string)
+	}
+
+	settings := d.Get("settings").([]interface{})
+	for _, setting := range settings {
+		i := setting.(map[string]interface{})
+
+		db.Settings.DestinationId = i["destination_id"].(string)
+		db.Settings.IsPublic = i["is_public"].(bool)
+		db.Settings.AppendOnly = i["append_only"].(bool)
+		db.Settings.PublicPort = i["public_port"].(int)
+	}
+
 	apiClient := m.(*client.Client)
 
 	id, err := apiClient.NewDatabase()
@@ -22,19 +46,19 @@ func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 	}
 	d.SetId(*id)
 
-	err = apiClient.SetEngineDatabase(*id, d.Get("engine").(string))
+	err = apiClient.SetEngineDatabase(*id, db.Engine.Image)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	err = apiClient.SetDestinationDatabase(*id, d.Get("destination_id").(string))
+	err = apiClient.SetDestinationDatabase(*id, db.Settings.DestinationId)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
 	databaseToUpdate := &client.UpdateDatabaseDTO{
-		Name: d.Get("name").(string),
-		Version: d.Get("engine_version").(string),
+		Name:  db.Name,
+		Version: db.Engine.Version,
 		DefaultDatabase: "fist-db",
 		DbUser: "user",
 		DbUserPassword: "password",
@@ -55,7 +79,7 @@ func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 
 	if d.Get("is_public") != nil {
 		settingsToUpdate := &client.UpdateSettingsDatabaseDTO{
-			IsPublic: d.Get("is_public").(bool),
+			IsPublic: db.Settings.IsPublic,
 		}
 		settingsResponse, err := apiClient.UpdateSettings(*id, settingsToUpdate)
 		if err != nil {
@@ -71,8 +95,6 @@ func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 						
 			tflog.Trace(ctx, "Database %v started on port: %" + *id + strconv.Itoa(*settingsToSet.public_port))
 		}
-	} else {
-		d.Set("is_public", false)
 	}
 	
 	return nil

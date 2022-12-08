@@ -6,6 +6,20 @@ import (
 	"terraform-provider-coolify/shared"
 )
 
+type Database struct {
+	Name string `json:"name"`
+	Engine struct {
+		Image string `json:"image"`
+		Version string `json:"version"`
+	} `json:"engine"`
+	Settings struct {
+		DestinationId string `json:"destination_id"`
+		IsPublic bool `json:"is_public"`
+		AppendOnly bool `json:"append_only"`
+		PublicPort int `json:"public_port"`
+	} `json:"settings"`
+}
+
 func Resource() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: databaseCreateItem,
@@ -28,6 +42,7 @@ func Resource() *schema.Resource {
 			"engine": {
 				Type:     schema.TypeList,
 				Required: true,
+				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"image": {
@@ -35,12 +50,13 @@ func Resource() *schema.Resource {
 							Description: "Engine of db, options: MongoDB, MySQL, MariaDB, PostgreSQL, Redis, CouchDB or EdgeDB.",
 							Required: true,
 							ForceNew: true,
-							ValidateFunc: ValidateEngine,
+							ValidateFunc: ValidateEngineImage,
 						},
 						"version": {
 							Type:          schema.TypeString,
 							Required:      true,
 							ForceNew:      true,
+							// ValidateDiagFunc: validateDiagFunc(validation.IntBetween(0, 7)),
 						},
 					},
 				},
@@ -48,7 +64,8 @@ func Resource() *schema.Resource {
 
 			"settings": {
 				Type:     schema.TypeList,
-				Required: false,
+				Required: true,
+				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"destination_id": {
@@ -58,13 +75,17 @@ func Resource() *schema.Resource {
 						},
 						"is_public": {
 							Type:     schema.TypeBool,
-							Required: false,
+							Optional: true,
 							Default: false,
 						},
 						"append_only": {
 							Type:     schema.TypeBool,
-							Required: false,
+							Optional: true,
 							Default: false,
+						},
+						"public_port": {
+							Type:     schema.TypeInt,
+							Optional: true,
 						},
 					},
 				},

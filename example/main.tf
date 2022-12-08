@@ -2,20 +2,26 @@ terraform {
   required_providers {
     coolify = {
       source = "themarkwill/coolify"
-      version = "~>0.0.17"
+      version = "0.0.19"
     }
   }
 }
 
 provider "coolify" {
-  address = "https://localhost:3300"
-  token = "TOKEN OF COOLIFY"
+  address = "url of coolify"
+  token = "token"
 }
 
 resource "coolify_database" "my_db" {
-  name           = "my-db"
-  engine         = "postgresql"
-  engine_version = "13.8.0"
-  destination_id = "ID OF COOLIFY"
-  is_public      = true
+  name           = "outro-db"
+
+  engine {
+    name = "redis"
+    version = "7.0"
+  }
+
+  settings {
+    destination_id = "id-destination"
+    is_public      = true
+  }
 }
