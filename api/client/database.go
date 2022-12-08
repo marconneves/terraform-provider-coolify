@@ -125,6 +125,27 @@ func (c *Client) UpdateDatabase(id string, database *UpdateDatabaseDTO) error {
 	return nil
 }
 
+type UpdateNameDatabaseDTO struct {
+	Name        string `json:"name"`
+}
+
+func (c *Client) UpdateNameDatabase(id string, name string) error {
+	buf := bytes.Buffer{}
+	err := json.NewEncoder(&buf).Encode(&UpdateNameDatabaseDTO{Name: name})
+	if err != nil {
+		return err
+	}
+
+	_, err = c.httpRequest(fmt.Sprintf("api/v1/databases/%v", id), "POST", buf)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+
+
 func (c *Client) StartDatabase(id string) error {
 	_, err := c.httpRequest(fmt.Sprintf("api/v1/databases/%v/start", id), "POST", bytes.Buffer{})
 	if err != nil {
@@ -144,13 +165,12 @@ func (c *Client) StopDatabase(id string) error {
 }
 
 type DeleteDatabaseRequestDTO struct {
-	Id 	  string `json:"id"`
 	Force bool `json:"force"`
 }
 
-func (c *Client) DeleteDatabase(id string, force bool) error {
+func (c *Client) DeleteDatabase(id string) error {
 	buf := bytes.Buffer{}
-	err := json.NewEncoder(&buf).Encode(&DeleteDatabaseRequestDTO{Id: id, Force: force})
+	err := json.NewEncoder(&buf).Encode(&DeleteDatabaseRequestDTO{Force: true})
 	if err != nil {
 		return err
 	}

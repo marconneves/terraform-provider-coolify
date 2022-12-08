@@ -14,10 +14,8 @@ func databaseUpdateItem(ctx context.Context, d *schema.ResourceData, m interface
 	apiClient := m.(*client.Client)
 	databaseId := d.Id()
 
-	databaseToUpdate := &client.UpdateDatabaseDTO{
-		Name: d.Get("name").(string),
-	}
-	err := apiClient.UpdateDatabase(databaseId, databaseToUpdate)
+
+	err := apiClient.UpdateNameDatabase(databaseId, d.Get("name").(string))
 	if err != nil {
 		return diag.FromErr(err)
 	}
