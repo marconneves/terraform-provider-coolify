@@ -13,15 +13,8 @@ import (
 
 
 
-func DatabaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	apiClient := m.(*client.Client)
-
-	// // 1. New Database
-	// // 2. Set Tipe of DB
-	// // 4. Set destination of DB
-	// // 5. Update Base of configs DB
-	// 6. Deploy DB
-	// 7. Set is Public when is Public
 
 	id, err := apiClient.NewDatabase()
 	if err != nil {
@@ -60,9 +53,7 @@ func DatabaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 	}
 	tflog.Trace(ctx, "Data base started")
 
-
-	
-	if(d.Get("is_public") != nil){
+	if d.Get("is_public") != nil {
 		settingsToUpdate := &client.UpdateSettingsDatabaseDTO{
 			IsPublic: d.Get("is_public").(bool),
 		}
@@ -74,12 +65,11 @@ func DatabaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 		if settingsResponse.PublicPort != nil {
 			publicPort := strconv.Itoa(*settingsResponse.PublicPort)
 			
-			d.Set("public_port", publicPort)
+			d.Set("settings.public_port", publicPort)
 						
 			tflog.Trace(ctx, "Database %v started on port: %" + *id + publicPort)
 		}
 	}
-
 	
 	return nil
 }

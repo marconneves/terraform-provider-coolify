@@ -1,7 +1,6 @@
 package database
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -12,8 +11,8 @@ import (
 
 func Resource() *schema.Resource {
 	return &schema.Resource{
-		CreateContext: DatabaseCreateItem,
-		Read:   resourceReadItem,
+		CreateContext: databaseCreateItem,
+		ReadContext: databaseReadItem,
 		Update: resourceUpdateItem,
 		Delete: resourceDeleteItem,
 		Exists: resourceExistsItem,
@@ -66,47 +65,6 @@ func Resource() *schema.Resource {
 	}
 }
 
-func resourceReadItem(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
-
-	itemId := d.Id()
-	item, err := apiClient.GetItem(itemId)
-	if err != nil {
-		if strings.Contains(err.Error(), "not found") {
-			d.SetId("")
-		} else {
-			return fmt.Errorf("error finding Item with ID %s", itemId)
-		}
-	}
-
-	d.SetId(item.Name)
-	d.Set("name", item.Name)
-	d.Set("description", item.Description)
-	d.Set("tags", item.Tags)
-	return nil
-}
-
-func resourceUpdateItem(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
-
-	tfTags := d.Get("tags").(*schema.Set).List()
-	tags := make([]string, len(tfTags))
-	for i, tfTag := range tfTags {
-		tags[i] = tfTag.(string)
-	}
-
-	item := client.Item{
-		Name:        d.Get("name").(string),
-		Description: d.Get("description").(string),
-		Tags:        tags,
-	}
-
-	err := apiClient.UpdateItem(&item)
-	if err != nil {
-		return err
-	}
-	return nil
-}
 
 func resourceDeleteItem(d *schema.ResourceData, m interface{}) error {
 	apiClient := m.(*client.Client)
