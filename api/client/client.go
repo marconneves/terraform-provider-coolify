@@ -32,7 +32,7 @@ func (client *Client) httpRequest(path, method string, body bytes.Buffer) (close
 		return nil, err
 	}
 
-	req.Header.Add("Authorization", fmt.Sprintf("Bearer %v", client.authToken))
+	req.Header.Add("Authorization", "Bearer " + client.authToken)
 	switch method {
 	case "GET":
 	case "DELETE":
@@ -60,5 +60,5 @@ func (client *Client) httpRequest(path, method string, body bytes.Buffer) (close
 }
 
 func (c *Client) requestPath(path string) string {
-	return fmt.Sprintf("%s/%s", c.hostname, path)
+	return c.hostname + "/" + path
 }

@@ -104,7 +104,7 @@ type UpdateSettingsDatabaseDTO struct {
 	AppendOnly 		bool `json:"appendOnly"`
 }
 type UpdateSettingsDatabaseResponseDTO struct {
-    PublicPort    int `json:"publicPort"`
+    PublicPort    *int `json:"publicPort"`
 }
 
 func (c *Client) UpdateSettings(id string, settings *UpdateSettingsDatabaseDTO) (*UpdateSettingsDatabaseResponseDTO, error) {

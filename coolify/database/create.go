@@ -2,7 +2,7 @@ package database
 
 import (
 	"context"
-	"fmt"
+	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -62,17 +62,24 @@ func DatabaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 
 
 	
-	settingsToUpdate := &client.UpdateSettingsDatabaseDTO{
-		IsPublic: d.Get("is_public").(bool),
-	}
-	settingsResponse, err := apiClient.UpdateSettings(*id, settingsToUpdate)
-	if err != nil {
-		return diag.FromErr(err)
+	if(d.Get("is_public") != nil){
+		settingsToUpdate := &client.UpdateSettingsDatabaseDTO{
+			IsPublic: d.Get("is_public").(bool),
+		}
+		settingsResponse, err := apiClient.UpdateSettings(*id, settingsToUpdate)
+		if err != nil {
+			return diag.FromErr(err)
+		}
+	
+		if settingsResponse.PublicPort != nil {
+			publicPort := strconv.Itoa(*settingsResponse.PublicPort)
+			
+			d.Set("public_port", publicPort)
+						
+			tflog.Trace(ctx, "Database %v started on port: %" + *id + publicPort)
+		}
 	}
 
-	d.Set("public_port", settingsResponse.PublicPort)
-
-	tflog.Trace(ctx, fmt.Sprintf("Database %v started on port: %v", *id, settingsResponse.PublicPort))
 	
 	return nil
 }
