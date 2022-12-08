@@ -31,11 +31,13 @@ func databaseUpdateItem(ctx context.Context, d *schema.ResourceData, m interface
 	}
 
 	if settingsResponse.PublicPort != nil {
-		publicPort := strconv.Itoa(*settingsResponse.PublicPort)
-		
-		d.Set("settings.public_port", publicPort)
+		settingsToSet := &Settings{
+			public_port: settingsResponse.PublicPort,
+		}
+		// d.Set("settings", settingsToSet)
+		// TODO: Set port after update
 					
-		tflog.Trace(ctx, "Database %v started on port: %" + databaseId + publicPort)
+		tflog.Trace(ctx, "Database %v started on port: %" + databaseId + strconv.Itoa(*settingsToSet.public_port))
 	}
 	
 	return nil

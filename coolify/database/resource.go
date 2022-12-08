@@ -21,7 +21,7 @@ func Resource() *schema.Resource {
 				Type:         schema.TypeString,
 				Description:  "The name of the resource, also acts as it's unique ID",
 				Required:     true,
-				ForceNew:     true,
+				ForceNew:     false,
 				ValidateFunc: shared.ValidateName,
 			},
 
@@ -60,4 +60,9 @@ func Resource() *schema.Resource {
 			},
 		},
 	}
+}
+
+
+type Settings struct {
+	public_port *int
 }

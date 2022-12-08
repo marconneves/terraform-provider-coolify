@@ -63,11 +63,13 @@ func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 		}
 	
 		if settingsResponse.PublicPort != nil {
-			publicPort := strconv.Itoa(*settingsResponse.PublicPort)
-			
-			d.Set("settings.public_port", publicPort)
+			settingsToSet := &Settings{
+				public_port: settingsResponse.PublicPort,
+			}
+			// d.Set("settings", settingsToSet)
+			// TODO: Set port after create
 						
-			tflog.Trace(ctx, "Database %v started on port: %" + *id + publicPort)
+			tflog.Trace(ctx, "Database %v started on port: %" + *id + strconv.Itoa(*settingsToSet.public_port))
 		}
 	} else {
 		d.Set("is_public", false)
