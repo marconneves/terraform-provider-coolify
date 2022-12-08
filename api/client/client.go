@@ -33,13 +33,8 @@ func (client *Client) httpRequest(path, method string, body bytes.Buffer) (close
 	}
 
 	req.Header.Add("Authorization", "Bearer " + client.authToken)
-	switch method {
-	case "GET":
-	case "DELETE":
-	default:
-		if body.Len() > 0 {
-			req.Header.Add("Content-Type", "application/json")
-		}
+	if body.Len() > 0 {
+		req.Header.Add("Content-Type", "application/json")
 	}
 
 	resp, err := client.httpClient.Do(req)
