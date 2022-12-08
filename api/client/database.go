@@ -143,9 +143,24 @@ func (c *Client) StopDatabase(id string) error {
 	return nil
 }
 
+type DeleteDatabaseRequestDTO struct {
+	Id 	  string `json:"id"`
+	Force bool `json:"force"`
+}
 
-func (c *Client) DeleteDatabase(id string) error {
-	_, err := c.httpRequest(fmt.Sprintf("api/v1/databases/%v", id), "DELETE", bytes.Buffer{})
+func (c *Client) DeleteDatabase(id string, force *bool) error {
+	needForce:= false
+	if force != nil {
+		needForce = *force
+	}
+
+	buf := bytes.Buffer{}
+	err := json.NewEncoder(&buf).Encode(&DeleteDatabaseRequestDTO{Id: id, Force: needForce})
+	if err != nil {
+		return err
+	}
+
+	_, err = c.httpRequest(fmt.Sprintf("api/v1/databases/%v", id), "DELETE", buf)
 	if err != nil {
 		return err
 	}
