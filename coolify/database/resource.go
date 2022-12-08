@@ -6,6 +6,20 @@ import (
 	"terraform-provider-coolify/shared"
 )
 
+type Database struct {
+	Name string `json:"name"`
+	Engine struct {
+		Image string `json:"image"`
+		Version string `json:"version"`
+	} `json:"engine"`
+	Settings struct {
+		DestinationId string `json:"destination_id"`
+		IsPublic bool `json:"is_public"`
+		AppendOnly bool `json:"append_only"`
+		PublicPort int `json:"public_port"`
+	} `json:"settings"`
+}
+
 func Resource() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: databaseCreateItem,
@@ -19,44 +33,62 @@ func Resource() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:         schema.TypeString,
-				Description:  "The name of the resource, also acts as it's unique ID",
+				Description:  "Name of the database.",
 				Required:     true,
 				ForceNew:     false,
 				ValidateFunc: shared.ValidateName,
 			},
 
 			"engine": {
-				Type:     schema.TypeString,
-				Description: "Engine of db, options: MongoDB, MySQL, MariaDB, PostgreSQL, Redis, CouchDB or EdgeDB.",
+				Type:     schema.TypeList,
 				Required: true,
-				ForceNew: true,
-				ValidateFunc: ValidateEngine,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"image": {
+							Type:     schema.TypeString,
+							Description: "Engine of db, options: MongoDB, MySQL, MariaDB, PostgreSQL, Redis, CouchDB or EdgeDB.",
+							Required: true,
+							ForceNew: true,
+							ValidateFunc: ValidateEngineImage,
+						},
+						"version": {
+							Type:          schema.TypeString,
+							Required:      true,
+							ForceNew:      true,
+							// ValidateDiagFunc: validateDiagFunc(validation.IntBetween(0, 7)),
+						},
+					},
+				},
 			},
 
-			"engine_version": {
-				Type:          schema.TypeString,
-				Required:      true,
-				ForceNew:      true,
-			},
-
-			"destination_id": {
-				Type:          schema.TypeString,
-				Required:      true,
-				ForceNew:      true,
-			},
-
-			"is_public": {
-				Type:        schema.TypeBool,
-				Description: "If this database is public or not",
-				Optional:    true,
-				Default:    false,
-			},
-			
 			"settings": {
-				Type:        schema.TypeSet,
-				Description: "Optional settings for the database",
-				Optional:    true,
-				Elem:        &schema.Schema{Type: schema.TypeString},
+				Type:     schema.TypeList,
+				Required: true,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"destination_id": {
+							Type:          schema.TypeString,
+							Required:      true,
+							ForceNew:      true,
+						},
+						"is_public": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Default: false,
+						},
+						"append_only": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Default: false,
+						},
+						"public_port": {
+							Type:     schema.TypeInt,
+							Optional: true,
+						},
+					},
+				},
 			},
 		},
 	}

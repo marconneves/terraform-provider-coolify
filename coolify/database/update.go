@@ -13,6 +13,7 @@ import (
 func databaseUpdateItem(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	apiClient := m.(*client.Client)
 	databaseId := d.Id()
+	db := &Database{}
 
 
 	err := apiClient.UpdateNameDatabase(databaseId, d.Get("name").(string))
@@ -20,8 +21,18 @@ func databaseUpdateItem(ctx context.Context, d *schema.ResourceData, m interface
 		return diag.FromErr(err)
 	}
 
+	settings := d.Get("settings").([]interface{})
+	for _, setting := range settings {
+		i := setting.(map[string]interface{})
+
+		db.Settings.DestinationId = i["destination_id"].(string)
+		db.Settings.IsPublic = i["is_public"].(bool)
+		db.Settings.AppendOnly = i["append_only"].(bool)
+		db.Settings.PublicPort = i["public_port"].(int)
+	}
+
 	settingsToUpdate := &client.UpdateSettingsDatabaseDTO{
-		IsPublic: d.Get("is_public").(bool),
+		IsPublic: db.Settings.IsPublic,
 	}
 	settingsResponse, err := apiClient.UpdateSettings(databaseId, settingsToUpdate)
 	if err != nil {

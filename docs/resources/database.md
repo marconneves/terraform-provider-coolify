@@ -16,12 +16,14 @@ The order resource to create a database on Coolify.
 ```terraform
 resource "coolify_database" "my_db" {
   name           = "my-db"
-  engine         = "postgresql"
-  engine_version = "13.8.0"
-  destination_id = "id_of_destination"
 
+  engine {
+    image = "postgresql"
+    version = "13.8.0"
+  }
   settings {
-    is_public = true
+    destination_id = "id-of-destination"
+    is_public      = true
   }
 }
 ```

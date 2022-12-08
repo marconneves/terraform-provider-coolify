@@ -4,9 +4,33 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+
+	"github.com/hashicorp/go-cty/cty"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func ValidateEngine(value interface{}, key string) (_ []string, _ []error) {
+func validateDiagFunc(validateFunc func(interface{}, string) ([]string, []error)) schema.SchemaValidateDiagFunc {
+	return func(i interface{}, path cty.Path) diag.Diagnostics {
+		warnings, errs := validateFunc(i, fmt.Sprintf("%+v", path))
+		var diags diag.Diagnostics
+		for _, warning := range warnings {
+			diags = append(diags, diag.Diagnostic{
+				Severity: diag.Warning,
+				Summary:  warning,
+			})
+		}
+		for _, err := range errs {
+			diags = append(diags, diag.Diagnostic{
+				Severity: diag.Error,
+				Summary:  err.Error(),
+			})
+		}
+		return diags
+	}
+}
+
+func ValidateEngineImage(value interface{}, key string) (_ []string, _ []error) {
 	var errs []error
 	var warns []string
 	engineBase, ok := value.(string)
@@ -26,6 +50,8 @@ func ValidateEngine(value interface{}, key string) (_ []string, _ []error) {
 
 	return warns, errs
 }
+
+
 
 func contains(s []string, str string) bool {
 	for _, v := range s {

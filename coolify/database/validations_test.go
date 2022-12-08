@@ -30,7 +30,7 @@ func TestValidateEngine(t *testing.T) {
 
 	for testName, testComponent := range cases {
 		t.Run(testName, func(t *testing.T) {
-			_, errors := ValidateEngine(testComponent.Value, testName)
+			_, errors := ValidateEngineImage(testComponent.Value, testName)
 
 			if len(errors) > 0 && !testComponent.Error {
 				t.Errorf("ValidateEngine(%s) produced an unexpected error", testComponent.Value)
