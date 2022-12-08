@@ -1,11 +1,8 @@
 package database
 
 import (
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
-	"terraform-provider-coolify/api/client"
 	"terraform-provider-coolify/shared"
 )
 
@@ -13,9 +10,9 @@ func Resource() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: databaseCreateItem,
 		ReadContext: databaseReadItem,
-		Update: resourceUpdateItem,
-		Delete: resourceDeleteItem,
-		Exists: resourceExistsItem,
+		UpdateContext: databaseUpdateItem,
+		DeleteContext: databaseDeleteItem,
+		Exists: databaseExistsItem,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -63,33 +60,4 @@ func Resource() *schema.Resource {
 			},
 		},
 	}
-}
-
-
-func resourceDeleteItem(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
-
-	itemId := d.Id()
-
-	err := apiClient.DeleteItem(itemId)
-	if err != nil {
-		return err
-	}
-	d.SetId("")
-	return nil
-}
-
-func resourceExistsItem(d *schema.ResourceData, m interface{}) (bool, error) {
-	apiClient := m.(*client.Client)
-
-	itemId := d.Id()
-	_, err := apiClient.GetItem(itemId)
-	if err != nil {
-		if strings.Contains(err.Error(), "not found") {
-			return false, nil
-		} else {
-			return false, err
-		}
-	}
-	return true, nil
 }

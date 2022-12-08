@@ -26,6 +26,42 @@ func (c *Client) NewDatabase() (*string, error) {
 	return &response.Id, nil
 }
 
+type Database struct {
+	PrivatePort int `json:"privatePort"`
+	Database struct {
+		Id string `json:"id"`
+		Name string `json:"name"`
+		PublicPort *int `json:"publicPort"`
+		DefaultDatabase string `json:"defaultDatabase"`
+		Type string `json:"type"`
+		Version string `json:"version"`
+		DbUser string `json:"dbUser"`
+		RootUser string `json:"rootUser"`
+		DestinationDockerId string `json:"destinationDockerId"`
+		CreatedAt string `json:"createdAt"`
+		UpdatedAt string `json:"updatedAt"`
+		Settings struct {
+			IsPublic bool `json:"isPublic"`
+			AppendOnly bool `json:"appendOnly"`
+		} `json:"settings"`
+	} `json:"database"`
+}
+
+func (c *Client) GetDatabase(id string) (*Database, error) {
+	body, err := c.httpRequest(fmt.Sprintf("api/v1/databases/%v", id), "GET", bytes.Buffer{})
+	if err != nil {
+		return nil, err
+	}
+
+	response := &Database{}
+	err = json.NewDecoder(body).Decode(response)
+	if err != nil {
+		return nil, err
+	}
+	
+	return response, nil
+}
+
 type SetEngineDatabaseRequestDTO struct {
     Type    string `json:"type"`
 }
@@ -98,16 +134,35 @@ func (c *Client) StartDatabase(id string) error {
 	return nil
 }
 
+func (c *Client) StopDatabase(id string) error {
+	_, err := c.httpRequest(fmt.Sprintf("api/v1/databases/%v/stop", id), "POST", bytes.Buffer{})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+
+func (c *Client) DeleteDatabase(id string) error {
+	_, err := c.httpRequest(fmt.Sprintf("api/v1/databases/%v", id), "DELETE", bytes.Buffer{})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 
 type UpdateSettingsDatabaseDTO struct {
 	IsPublic        bool `json:"isPublic"`
 	AppendOnly 		bool `json:"appendOnly"`
 }
-type UpdateSettingsDatabaseResponseDTO struct {
+type UpdateSettingsDatabase struct {
     PublicPort    *int `json:"publicPort"`
 }
 
-func (c *Client) UpdateSettings(id string, settings *UpdateSettingsDatabaseDTO) (*UpdateSettingsDatabaseResponseDTO, error) {
+func (c *Client) UpdateSettings(id string, settings *UpdateSettingsDatabaseDTO) (*UpdateSettingsDatabase, error) {
 	buf := bytes.Buffer{}
 	err := json.NewEncoder(&buf).Encode(settings)
 	if err != nil {
@@ -119,7 +174,7 @@ func (c *Client) UpdateSettings(id string, settings *UpdateSettingsDatabaseDTO) 
 		return nil, err
 	}
 
-	response := &UpdateSettingsDatabaseResponseDTO{}
+	response := &UpdateSettingsDatabase{}
 	err = json.NewDecoder(body).Decode(response)
 	if err != nil {
 		return nil, err

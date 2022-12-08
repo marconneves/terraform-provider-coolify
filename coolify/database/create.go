@@ -69,6 +69,8 @@ func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 						
 			tflog.Trace(ctx, "Database %v started on port: %" + *id + publicPort)
 		}
+	} else {
+		d.Set("is_public", false)
 	}
 	
 	return nil
