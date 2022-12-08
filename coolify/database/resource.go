@@ -12,7 +12,7 @@ import (
 
 func Resource() *schema.Resource {
 	return &schema.Resource{
-		CreateContext: databaseCreateItem,
+		CreateContext: DatabaseCreateItem,
 		Read:   resourceReadItem,
 		Update: resourceUpdateItem,
 		Delete: resourceDeleteItem,

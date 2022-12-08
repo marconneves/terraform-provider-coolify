@@ -2,7 +2,9 @@ package database
 
 import (
 	"context"
+	"fmt"
 
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
@@ -11,7 +13,7 @@ import (
 
 
 
-func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func DatabaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	apiClient := m.(*client.Client)
 
 	// // 1. New Database
@@ -49,6 +51,28 @@ func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 	if err != nil {
 		return diag.FromErr(err)
 	}
+
+
+	tflog.Trace(ctx, "Starting database...")
+	err = apiClient.StartDatabase(*id)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	tflog.Trace(ctx, "Data base started")
+
+
+	
+	settingsToUpdate := &client.UpdateSettingsDatabaseDTO{
+		IsPublic: d.Get("is_public").(bool),
+	}
+	settingsResponse, err := apiClient.UpdateSettings(*id, settingsToUpdate)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	d.Set("public_port", settingsResponse.PublicPort)
+
+	tflog.Trace(ctx, fmt.Sprintf("Database %v started on port: %v", *id, settingsResponse.PublicPort))
 	
 	return nil
 }

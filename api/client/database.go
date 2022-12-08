@@ -64,8 +64,6 @@ func (c *Client) SetDestinationDatabase(id string, destination string) error {
 	return nil
 }
 
-// Update database
-
 type UpdateDatabaseDTO struct {
 	Name        string `json:"name"`
 	Version 	string `json:"version"`
@@ -89,4 +87,43 @@ func (c *Client) UpdateDatabase(id string, database *UpdateDatabaseDTO) error {
 	}
 
 	return nil
+}
+
+func (c *Client) StartDatabase(id string) error {
+	_, err := c.httpRequest(fmt.Sprintf("api/v1/databases/%v/start", id), "POST", bytes.Buffer{})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+
+type UpdateSettingsDatabaseDTO struct {
+	IsPublic        bool `json:"isPublic"`
+	AppendOnly 		bool `json:"appendOnly"`
+}
+type UpdateSettingsDatabaseResponseDTO struct {
+    PublicPort    int `json:"publicPort"`
+}
+
+func (c *Client) UpdateSettings(id string, settings *UpdateSettingsDatabaseDTO) (*UpdateSettingsDatabaseResponseDTO, error) {
+	buf := bytes.Buffer{}
+	err := json.NewEncoder(&buf).Encode(settings)
+	if err != nil {
+		return nil, err
+	}
+
+	body, err := c.httpRequest(fmt.Sprintf("api/v1/databases/%v/settings", id), "POST", buf)
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateSettingsDatabaseResponseDTO{}
+	err = json.NewDecoder(body).Decode(response)
+	if err != nil {
+		return nil, err
+	}
+	
+	return response, nil
 }
