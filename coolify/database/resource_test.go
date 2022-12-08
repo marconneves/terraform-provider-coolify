@@ -33,15 +33,15 @@ func TestAccItem_Basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckItemBasic(),
-				// Check: resource.ComposeTestCheckFunc(
-				// 	testAccCheckExampleItemExists("coolify_database.test_item"),
-				// 	resource.TestCheckResourceAttr(
-				// 		"coolify_database.test_item", "name", "my-db"),
-				// 	resource.TestCheckResourceAttr(
-				// 		"coolify_database.test_item", "description", "hello"),
-				// 	resource.TestCheckResourceAttr(
-				// 		"coolify_database.test_item", "tags.#", "2"),
-				// ),
+				Check: resource.ComposeTestCheckFunc(
+					// testAccCheckExampleItemExists("coolify_database.test_item"),
+					resource.TestCheckResourceAttr(
+						"coolify_database.test_item", "name", "my-db"),
+					resource.TestCheckResourceAttr(
+						"coolify_database.test_item", "engine", "postgresql"),
+					// resource.TestCheckResourceAttr(
+					// 	"coolify_database.test_item", "tags.#", "2"),
+				),
 			},
 		},
 	})
@@ -55,7 +55,7 @@ func testAccCheckItemDestroy(s *tf.State) error {
 			continue
 		}
 
-		_, err := apiClient.GetItem(rs.Primary.ID)
+		_, err := apiClient.GetDatabase(rs.Primary.ID)
 		if err == nil {
 			return fmt.Errorf("Alert still exists")
 		}
