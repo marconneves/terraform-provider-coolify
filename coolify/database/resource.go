@@ -19,44 +19,55 @@ func Resource() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:         schema.TypeString,
-				Description:  "The name of the resource, also acts as it's unique ID",
+				Description:  "Name of the database.",
 				Required:     true,
 				ForceNew:     false,
 				ValidateFunc: shared.ValidateName,
 			},
 
 			"engine": {
-				Type:     schema.TypeString,
-				Description: "Engine of db, options: MongoDB, MySQL, MariaDB, PostgreSQL, Redis, CouchDB or EdgeDB.",
+				Type:     schema.TypeList,
 				Required: true,
-				ForceNew: true,
-				ValidateFunc: ValidateEngine,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"image": {
+							Type:     schema.TypeString,
+							Description: "Engine of db, options: MongoDB, MySQL, MariaDB, PostgreSQL, Redis, CouchDB or EdgeDB.",
+							Required: true,
+							ForceNew: true,
+							ValidateFunc: ValidateEngine,
+						},
+						"version": {
+							Type:          schema.TypeString,
+							Required:      true,
+							ForceNew:      true,
+						},
+					},
+				},
 			},
 
-			"engine_version": {
-				Type:          schema.TypeString,
-				Required:      true,
-				ForceNew:      true,
-			},
-
-			"destination_id": {
-				Type:          schema.TypeString,
-				Required:      true,
-				ForceNew:      true,
-			},
-
-			"is_public": {
-				Type:        schema.TypeBool,
-				Description: "If this database is public or not",
-				Optional:    true,
-				Default:    false,
-			},
-			
 			"settings": {
-				Type:        schema.TypeSet,
-				Description: "Optional settings for the database",
-				Optional:    true,
-				Elem:        &schema.Schema{Type: schema.TypeString},
+				Type:     schema.TypeList,
+				Required: false,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"destination_id": {
+							Type:          schema.TypeString,
+							Required:      true,
+							ForceNew:      true,
+						},
+						"is_public": {
+							Type:     schema.TypeBool,
+							Required: false,
+							Default: false,
+						},
+						"append_only": {
+							Type:     schema.TypeBool,
+							Required: false,
+							Default: false,
+						},
+					},
+				},
 			},
 		},
 	}
