@@ -17,7 +17,7 @@ func databaseDeleteItem(ctx context.Context, d *schema.ResourceData, m interface
 		return diag.FromErr(err)
 	}
 
-	err = apiClient.DeleteDatabase(itemId)
+	err = apiClient.DeleteDatabase(itemId, false)
 	if err != nil {
 		return diag.FromErr(err)
 	}
