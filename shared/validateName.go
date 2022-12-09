@@ -15,9 +15,9 @@ func ValidateName(valueObject interface{}, key string) (_ []string, _ []error) {
 		return warns, errs
 	}
 	
-	whiteSpace := regexp.MustCompile(`\s+`)
+	whiteSpace := regexp.MustCompile(`[^\w_\- ]+`)
 	if whiteSpace.Match([]byte(value)) {
-		errs = append(errs, fmt.Errorf("name cannot contain whitespace. Got %s", value))
+		errs = append(errs, fmt.Errorf("name cannot contain special characters. Got %s", value))
 		return warns, errs
 	}
 	

@@ -101,6 +101,7 @@ resource "coolify_database" "test_item" {
   
 	settings {
 	  destination_id = "clb9wrx87001fmo9dvvog6xet"
+	  is_public	  	 = true
 	}
 }
 `)

@@ -16,8 +16,10 @@ type Database struct {
 		DestinationId string `json:"destination_id"`
 		IsPublic bool `json:"is_public"`
 		AppendOnly bool `json:"append_only"`
-		PublicPort int `json:"public_port"`
 	} `json:"settings"`
+	Status struct {
+		PublicPort int `json:"public_port"`
+	}
 }
 
 func Resource() *schema.Resource {
@@ -76,13 +78,20 @@ func Resource() *schema.Resource {
 						"is_public": {
 							Type:     schema.TypeBool,
 							Optional: true,
-							Default: false,
 						},
 						"append_only": {
 							Type:     schema.TypeBool,
 							Optional: true,
-							Default: false,
 						},
+					},
+				},
+			},
+			"status": {
+				Type:     schema.TypeList,
+				Optional: true,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
 						"public_port": {
 							Type:     schema.TypeInt,
 							Optional: true,

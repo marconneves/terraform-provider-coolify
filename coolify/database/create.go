@@ -35,7 +35,6 @@ func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 		db.Settings.DestinationId = i["destination_id"].(string)
 		db.Settings.IsPublic = i["is_public"].(bool)
 		db.Settings.AppendOnly = i["append_only"].(bool)
-		db.Settings.PublicPort = i["public_port"].(int)
 	}
 
 	apiClient := m.(*client.Client)
