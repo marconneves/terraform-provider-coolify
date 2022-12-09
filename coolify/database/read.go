@@ -33,13 +33,20 @@ func databaseReadItem(ctx context.Context, d *schema.ResourceData, m interface{}
 	d.Set("engine", []interface{}{engine})
 
 	settings := make(map[string]interface{})
-	engine["destination_id"] = item.Database.DestinationDockerId
-	engine["is_public"] = item.Database.Settings.IsPublic
-	engine["append_only"] = item.Database.Settings.AppendOnly
+	settings["destination_id"] = item.Database.DestinationDockerId
+	settings["is_public"] = item.Database.Settings.IsPublic
+	settings["append_only"] = item.Database.Settings.AppendOnly
 	d.Set("settings", []interface{}{settings})
 
 	
-	// engine["public_port"] = item.Database.Version
+	status := make(map[string]interface{})
+	if item.Database.Settings.IsPublic == true {
+		status["port"] = item.Database.PublicPort
+	} else {
+		status["port"] = item.PrivatePort
+	}
+	
+	d.Set("status", []interface{}{status})
 
 	return nil
 }

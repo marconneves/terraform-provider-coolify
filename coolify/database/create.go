@@ -16,7 +16,7 @@ import (
 func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 
 	db := &Database{}
-
+	status := make(map[string]interface{})
 	db.Name = d.Get("name").(string)
 
 
@@ -32,9 +32,9 @@ func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 	for _, setting := range settings {
 		i := setting.(map[string]interface{})
 
+		db.Settings.AppendOnly = i["append_only"].(bool)
 		db.Settings.DestinationId = i["destination_id"].(string)
 		db.Settings.IsPublic = i["is_public"].(bool)
-		db.Settings.AppendOnly = i["append_only"].(bool)
 	}
 
 	apiClient := m.(*client.Client)
@@ -76,25 +76,21 @@ func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 	}
 	tflog.Trace(ctx, "Data base started")
 
-	if d.Get("is_public") != nil {
-		settingsToUpdate := &client.UpdateSettingsDatabaseDTO{
-			IsPublic: db.Settings.IsPublic,
-		}
-		settingsResponse, err := apiClient.UpdateSettings(*id, settingsToUpdate)
-		if err != nil {
-			return diag.FromErr(err)
-		}
-	
-		if settingsResponse.PublicPort != nil {
-			settingsToSet := &Settings{
-				public_port: settingsResponse.PublicPort,
-			}
-			// d.Set("settings", settingsToSet)
-			// TODO: Set port after create
-						
-			tflog.Trace(ctx, "Database %v started on port: %" + *id + strconv.Itoa(*settingsToSet.public_port))
-		}
+	settingsToUpdate := &client.UpdateSettingsDatabaseDTO{
+		IsPublic: db.Settings.IsPublic,
 	}
+	settingsResponse, err := apiClient.UpdateSettings(*id, settingsToUpdate)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	if settingsResponse.PublicPort != nil {
+		status["port"] = settingsResponse.PublicPort
+					
+		tflog.Info(ctx, "Database %v started on port: %" + *id + strconv.Itoa(*settingsResponse.PublicPort))
+	}
+	
+	d.Set("status", []interface{}{status})
 	
 	return nil
 }

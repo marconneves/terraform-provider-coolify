@@ -38,15 +38,14 @@ func databaseUpdateItem(ctx context.Context, d *schema.ResourceData, m interface
 		return diag.FromErr(err)
 	}
 
+	status := make(map[string]interface{})
 	if settingsResponse.PublicPort != nil {
-		settingsToSet := &Settings{
-			public_port: settingsResponse.PublicPort,
-		}
-		// d.Set("settings", settingsToSet)
-		// TODO: Set port after update
+		status["port"] = settingsResponse.PublicPort
 					
-		tflog.Trace(ctx, "Database %v started on port: %" + databaseId + strconv.Itoa(*settingsToSet.public_port))
+		tflog.Info(ctx, "Database %v started on port: %" + databaseId + strconv.Itoa(*settingsResponse.PublicPort))
 	}
+
+	d.Set("status", []interface{}{status})
 	
 	return nil
 }

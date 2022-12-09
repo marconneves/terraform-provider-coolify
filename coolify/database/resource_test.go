@@ -34,13 +34,11 @@ func TestAccItem_Basic(t *testing.T) {
 			{
 				Config: testAccCheckItemBasic(),
 				Check: resource.ComposeTestCheckFunc(
-					// testAccCheckExampleItemExists("coolify_database.test_item"),
+					testAccCheckExampleItemExists("coolify_database.test_item"),
 					resource.TestCheckResourceAttr(
 						"coolify_database.test_item", "name", "my-db"),
-					// resource.TestCheckResourceAttr(
-					// 	"coolify_database.test_item", "engine.#", "postgresql"),
-					// resource.TestCheckResourceAttr(
-					// 	"coolify_database.test_item", "tags.#", "2"),
+					resource.TestCheckResourceAttr(
+						"coolify_database.test_item", "engine.0.image", "postgresql"),
 				),
 			},
 		},
@@ -78,9 +76,9 @@ func testAccCheckExampleItemExists(resource string) resource.TestCheckFunc {
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("No Record ID is set")
 		}
-		name := rs.Primary.ID
+		id := rs.Primary.ID
 		apiClient := TestAccProvider.Meta().(*client.Client)
-		_, err := apiClient.GetItem(name)
+		_, err := apiClient.GetDatabase(id)
 		if err != nil {
 			return fmt.Errorf("error fetching item with resource %s. %s", resource, err)
 		}

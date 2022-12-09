@@ -78,22 +78,24 @@ func Resource() *schema.Resource {
 						"is_public": {
 							Type:     schema.TypeBool,
 							Optional: true,
+							Default: false,
 						},
 						"append_only": {
 							Type:     schema.TypeBool,
 							Optional: true,
+							Default: false,
 						},
 					},
 				},
 			},
 			"status": {
 				Type:     schema.TypeList,
-				Optional: true,
-				MaxItems: 1,
+				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"public_port": {
+						"port": {
 							Type:     schema.TypeInt,
+							Computed: true,
 							Optional: true,
 						},
 					},
@@ -101,9 +103,4 @@ func Resource() *schema.Resource {
 			},
 		},
 	}
-}
-
-
-type Settings struct {
-	public_port *int
 }

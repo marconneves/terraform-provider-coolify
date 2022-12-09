@@ -16,7 +16,7 @@ resource "coolify_database" "my_db" {
   name           = "outro-db"
 
   engine {
-    name = "redis"
+    image = "redis"
     version = "7.0"
   }
 
