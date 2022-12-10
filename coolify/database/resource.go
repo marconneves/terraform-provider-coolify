@@ -16,6 +16,11 @@ type Database struct {
 		DestinationId string `json:"destination_id"`
 		IsPublic bool `json:"is_public"`
 		AppendOnly bool `json:"append_only"`
+		DefaultDatabase string `json:"default_database"`
+		User string `json:"user"`
+		Password string `json:"password"`
+		RootUser string `json:"root_user"`
+		RootPassword string `json:"root_password"`
 	} `json:"settings"`
 	Status struct {
 		PublicPort int `json:"public_port"`
@@ -63,12 +68,42 @@ func Resource() *schema.Resource {
 						"is_public": {
 							Type:     schema.TypeBool,
 							Optional: true,
-							Default: false,
+							Default:  false,
 						},
 						"append_only": {
 							Type:     schema.TypeBool,
 							Optional: true,
-							Default: false,
+							Default:  false,
+						},
+						"default_database": {
+							Type:     schema.TypeString,
+							Optional: true,
+							ForceNew: true,
+							Default: "",
+						},
+						"user": {
+							Type:     schema.TypeString,
+							Optional: true,
+							ForceNew: true,
+							Default: "",
+						},
+						"password": {
+							Type:     schema.TypeString,
+							Optional: true,
+							ForceNew: true,
+							Default: "",
+						},
+						"root_user": {
+							Type:     schema.TypeString,
+							Optional: true,
+							ForceNew: true,
+							Default: "",
+						},
+						"root_password": {
+							Type:     schema.TypeString,
+							Optional: true,
+							ForceNew: true,
+							Default: "",
 						},
 					},
 				},
