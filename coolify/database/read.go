@@ -42,9 +42,31 @@ func databaseReadItem(ctx context.Context, d *schema.ResourceData, m interface{}
 	
 	status := make(map[string]string)
 	if item.Database.Settings.IsPublic == true {
+		status["host"] = *&item.Database.Id
 		status["port"] = strconv.Itoa(*item.Database.PublicPort)
 	} else {
-		status["port"] = strconv.Itoa(item.PrivatePort) 
+		if item.Settings.IpV4 != nil {
+			status["host"] = *item.Settings.IpV4
+		} else {
+			status["host"] = *item.Settings.IpV6
+		}
+		status["port"] = strconv.Itoa(item.PrivatePort)
+	}
+
+	if *&item.Database.DefaultDatabase != "" {
+		status["default_database"] = *&item.Database.DefaultDatabase
+	}
+	if *&item.Database.User != "" {
+		status["user"] = *&item.Database.User
+	}
+	if *&item.Database.Password != "" {
+		status["password"] = *&item.Database.Password
+	}
+	if *&item.Database.RootUser != "" {
+		status["root_user"] = *&item.Database.RootUser
+	}
+	if *&item.Database.RootPassword != "" {
+		status["root_password"] = *&item.Database.RootPassword
 	}
 	
 	d.Set("status", status)

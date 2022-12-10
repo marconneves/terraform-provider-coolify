@@ -168,17 +168,44 @@ func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 	settingsToUpdate := &client.UpdateSettingsDatabaseDTO{
 		IsPublic: db.Settings.IsPublic,
 	}
-	settingsResponse, err := apiClient.UpdateSettings(*id, settingsToUpdate)
+	_, err = apiClient.UpdateSettings(*id, settingsToUpdate)
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	
-	if settingsResponse.PublicPort != nil {
-		status["port"] = strconv.Itoa(*settingsResponse.PublicPort)
-					
-		tflog.Info(ctx, "Database %v started on port: %" + *id + strconv.Itoa(*settingsResponse.PublicPort))
+
+	item, err := apiClient.GetDatabase(*id)
+	if err != nil {
+		return diag.Errorf("error getting database: %s", err)
 	}
 	
+	if item.Database.Settings.IsPublic == true {
+		status["host"] = *&item.Database.Id
+		status["port"] = strconv.Itoa(*item.Database.PublicPort)
+	} else {
+		if item.Settings.IpV4 != nil {
+			status["host"] = *item.Settings.IpV4
+		} else {
+			status["host"] = *item.Settings.IpV6
+		}
+		status["port"] = strconv.Itoa(item.PrivatePort)
+	}
+
+	if *&item.Database.DefaultDatabase != "" {
+		status["default_database"] = *&item.Database.DefaultDatabase
+	}
+	if *&item.Database.User != "" {
+		status["user"] = *&item.Database.User
+	}
+	if *&item.Database.Password != "" {
+		status["password"] = *&item.Database.Password
+	}
+	if *&item.Database.RootUser != "" {
+		status["root_user"] = *&item.Database.RootUser
+	}
+	if *&item.Database.RootPassword != "" {
+		status["root_password"] = *&item.Database.RootPassword
+	}
+
 	d.Set("status", status)
 	
 	return nil

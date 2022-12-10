@@ -47,6 +47,10 @@ type Database struct {
 			AppendOnly bool `json:"appendOnly"`
 		} `json:"settings"`
 	} `json:"database"`
+	Settings struct {
+		IpV4 *string `json:"ipv4"`
+		IpV6 *string `json:"ipv6"`
+	} `json:"settings"`
 }
 
 func (c *Client) GetDatabase(id string) (*Database, error) {
