@@ -3,7 +3,8 @@ name: Go Testings
 on: [push]
 
 jobs:
-  build:
+  test:
+    name: Go Testings
     runs-on: ubuntu-latest
     env:
       TF_ACC: true
