@@ -5,7 +5,7 @@ description: |-
   Terraform provider for interacting with Coolify API.
 ---
 
-# Coolify Provider - IN DEVELOPMENT
+# Coolify Provider
 
 [Coolify](https://coolify.io) is a self-hostable, all-in-one solution to host your applications, databases, or other open-source services with a few simple clicks.
 
@@ -18,6 +18,15 @@ You can try it out before installing it: [Live demo](https://demo.coolify.io/)
 Do not keep your authentication password in HCL for production environments, use Terraform environment variables.
 
 ```terraform
+terraform {
+  required_providers {
+    coolify = {
+      source = "themarkwill/coolify"
+      version = "0.1.7"
+    }
+  }
+}
+
 provider "coolify" {
   address = "http://demo.coolify.io"
   token = "TOKEN"
@@ -28,5 +37,5 @@ provider "coolify" {
 
 ### Required
 
-- **address** (String, Optional) Coolify API address
-- **token** (String, Optional) Token of user authorized
+* `address` - (String, Optional) Coolify API address
+* `token` - (String, Optional) Token of user authorized
