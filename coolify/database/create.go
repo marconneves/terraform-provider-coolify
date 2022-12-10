@@ -17,7 +17,7 @@ import (
 func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 
 	db := &Database{}
-	status := make(map[string]interface{})
+	status := make(map[string]string)
 	db.Name = d.Get("name").(string)
 
 
@@ -172,14 +172,14 @@ func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 	if err != nil {
 		return diag.FromErr(err)
 	}
-
+	
 	if settingsResponse.PublicPort != nil {
-		status["port"] = settingsResponse.PublicPort
+		status["port"] = strconv.Itoa(*settingsResponse.PublicPort)
 					
 		tflog.Info(ctx, "Database %v started on port: %" + *id + strconv.Itoa(*settingsResponse.PublicPort))
 	}
 	
-	d.Set("status", []interface{}{status})
+	d.Set("status", status)
 	
 	return nil
 }

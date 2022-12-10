@@ -39,6 +39,8 @@ func TestAccItem_Basic(t *testing.T) {
 						"coolify_database.test_item", "name", "my-db"),
 					resource.TestCheckResourceAttr(
 						"coolify_database.test_item", "engine", "postgresql:13.8.0"),
+					resource.TestCheckResourceAttrSet(
+						"coolify_database.test_item", "status.port"),
 				),
 			},
 		},

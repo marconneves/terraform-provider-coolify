@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"strconv"
 	"strings"
 	"terraform-provider-coolify/api/client"
 
@@ -39,14 +40,14 @@ func databaseReadItem(ctx context.Context, d *schema.ResourceData, m interface{}
 	d.Set("settings", []interface{}{settings})
 
 	
-	status := make(map[string]interface{})
+	status := make(map[string]string)
 	if item.Database.Settings.IsPublic == true {
-		status["port"] = item.Database.PublicPort
+		status["port"] = strconv.Itoa(*item.Database.PublicPort)
 	} else {
-		status["port"] = item.PrivatePort
+		status["port"] = strconv.Itoa(item.PrivatePort) 
 	}
 	
-	d.Set("status", []interface{}{status})
+	d.Set("status", status)
 
 	return nil
 }

@@ -6,6 +6,10 @@ import (
 	"terraform-provider-coolify/shared"
 )
 
+type Status struct {
+	Port string `json:"port"`
+} 
+
 type Database struct {
 	Name string `json:"name"`
 	Engine struct {
@@ -22,9 +26,7 @@ type Database struct {
 		RootUser string `json:"root_user"`
 		RootPassword string `json:"root_password"`
 	} `json:"settings"`
-	Status struct {
-		PublicPort int `json:"public_port"`
-	}
+	Status Status `json:"status"`
 }
 
 func Resource() *schema.Resource {
@@ -109,16 +111,11 @@ func Resource() *schema.Resource {
 				},
 			},
 			"status": {
-				Type:     schema.TypeList,
+				Type:     schema.TypeMap,
 				Computed: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"port": {
-							Type:     schema.TypeInt,
-							Computed: true,
-							Optional: true,
-						},
-					},
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+					Computed: true,
 				},
 			},
 		},
