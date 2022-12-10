@@ -19,7 +19,7 @@ on:
 jobs:
   CodeQL-Build:
     # CodeQL runs on ubuntu-latest, windows-latest, and macos-latest
-    runs-on: [custom, linux, large]
+    runs-on: [ubuntu-latest]
 
     strategy:
       fail-fast: false
