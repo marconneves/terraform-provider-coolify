@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -20,13 +21,9 @@ func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 	db.Name = d.Get("name").(string)
 
 
-	engines := d.Get("engine").([]interface{})
-	for _, engine := range engines {
-		i := engine.(map[string]interface{})
-
-		db.Engine.Image = i["image"].(string)
-		db.Engine.Version = i["version"].(string)
-	}
+    engineParts := strings.Split(d.Get("engine").(string), ":")
+	db.Engine.Image = engineParts[0]
+	db.Engine.Version = engineParts[1]
 
 	settings := d.Get("settings").([]interface{})
 	for _, setting := range settings {

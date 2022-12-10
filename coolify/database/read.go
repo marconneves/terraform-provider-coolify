@@ -25,12 +25,7 @@ func databaseReadItem(ctx context.Context, d *schema.ResourceData, m interface{}
 
 	d.SetId(item.Database.Id)
 	d.Set("name", item.Database.Name)
-
-	engine := make(map[string]interface{})
-	engine["image"] = item.Database.Type
-	engine["version"] = item.Database.Version
-
-	d.Set("engine", []interface{}{engine})
+	d.Set("engine", item.Database.Type + ":" + item.Database.Version)
 
 	settings := make(map[string]interface{})
 	settings["destination_id"] = item.Database.DestinationDockerId

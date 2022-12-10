@@ -14,11 +14,7 @@ provider "coolify" {
 
 resource "coolify_database" "my_db" {
   name           = "outro-db"
-
-  engine {
-    image = "redis"
-    version = "7.0"
-  }
+  engine         = "redis:7.0"
 
   settings {
     destination_id = "id-destination"

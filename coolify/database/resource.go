@@ -42,26 +42,11 @@ func Resource() *schema.Resource {
 			},
 
 			"engine": {
-				Type:     schema.TypeList,
-				Required: true,
-				MaxItems: 1,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"image": {
-							Type:     schema.TypeString,
-							Description: "Engine of db, options: MongoDB, MySQL, MariaDB, PostgreSQL, Redis, CouchDB or EdgeDB.",
-							Required: true,
-							ForceNew: true,
-							ValidateFunc: ValidateEngineImage,
-						},
-						"version": {
-							Type:          schema.TypeString,
-							Required:      true,
-							ForceNew:      true,
-							// ValidateDiagFunc: validateDiagFunc(validation.IntBetween(0, 7)),
-						},
-					},
-				},
+				Type:         schema.TypeString,
+				Description:  "Engine of db, options: MongoDB, MySQL, MariaDB, PostgreSQL, Redis, CouchDB or EdgeDB with specific version.",
+				Required:     true,
+				ForceNew:     false,
+				ValidateFunc: ValidateEngine,
 			},
 
 			"settings": {

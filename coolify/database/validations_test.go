@@ -15,22 +15,26 @@ func TestValidateEngine(t *testing.T) {
 			Error: true,
 		},
 		"ValidExistingEngine": {
-			Value: "mongodb",
+			Value: "mongodb:4.4",
 			Error: false,
 		},
 		"ValidExistingEngineWithTrace": {
-			Value: "mongo-db",
+			Value: "mongo-db:4.4",
 			Error: false,
 		},
 		"NotIsValidEngine": {
 			Value: "oracledb",
 			Error: true,
 		},
+		"NotIsValidEngineWithVersionFromOther": {
+			Value: "mariadb:8.0",
+			Error: true,
+		},
 	}
 
 	for testName, testComponent := range cases {
 		t.Run(testName, func(t *testing.T) {
-			_, errors := ValidateEngineImage(testComponent.Value, testName)
+			_, errors := ValidateEngine(testComponent.Value, testName)
 
 			if len(errors) > 0 && !testComponent.Error {
 				t.Errorf("ValidateEngine(%s) produced an unexpected error", testComponent.Value)

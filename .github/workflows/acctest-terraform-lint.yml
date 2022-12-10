@@ -1,0 +1,25 @@
+name: Go Testings
+
+on: [push]
+
+jobs:
+  test:
+    name: Go Testings
+    runs-on: ubuntu-latest
+    env:
+      TF_ACC: true
+      SERVICE_ADDRESS: ${{ secrets.SERVICE_ADDRESS }}
+      SERVICE_TOKEN: ${{ secrets.SERVICE_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version-file: .go-version
+
+      - name: Build
+        run: go build -v ./...
+
+      - name: Test
+        run: go test -v ./...
