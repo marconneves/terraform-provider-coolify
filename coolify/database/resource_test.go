@@ -38,7 +38,7 @@ func TestAccItem_Basic(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"coolify_database.test_item", "name", "my-db"),
 					resource.TestCheckResourceAttr(
-						"coolify_database.test_item", "engine.0.image", "postgresql"),
+						"coolify_database.test_item", "engine", "postgresql:13.8.0"),
 				),
 			},
 		},
@@ -91,11 +91,7 @@ func testAccCheckItemBasic() string {
 	return fmt.Sprintf(`
 resource "coolify_database" "test_item" {
 	name           = "my-db"
-
-	engine {
-	  image = "postgresql"
-	  version = "13.8.0"
-	}
+	engine         = "postgresql:13.8.0"
   
 	settings {
 	  destination_id = "clb9wrx87001fmo9dvvog6xet"

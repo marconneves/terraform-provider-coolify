@@ -16,11 +16,8 @@ The order resource to create a database on Coolify.
 ```terraform
 resource "coolify_database" "my_db" {
   name           = "my-db"
+  engine         = "postgresql:13.8.0"
 
-  engine {
-    image = "postgresql"
-    version = "13.8.0"
-  }
   settings {
     destination_id = "id-of-destination"
     is_public      = true
@@ -31,8 +28,7 @@ resource "coolify_database" "my_db" {
 ## Argument Reference
 
 - `name` - (Required) Name of project.
-- `engine` - (Required) Engine of db, options: MongoDB, MySQL, MariaDB, PostgreSQL, Redis, CouchDB or EdgeDB.
-- `engine_version` (Required) Version of engine. See [Posibles Versions](#possibles-versions) below for details.
+- `engine` - (Required) Engine of db, options: MongoDB, MySQL, MariaDB, PostgreSQL, Redis, CouchDB or EdgeDB with version of image See [Posibles Versions](#possibles-versions).
 
 ### Possibles Versions
 
