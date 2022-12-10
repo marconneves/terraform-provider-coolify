@@ -32,6 +32,96 @@ func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 		db.Settings.AppendOnly = i["append_only"].(bool)
 		db.Settings.DestinationId = i["destination_id"].(string)
 		db.Settings.IsPublic = i["is_public"].(bool)
+		
+		db.Settings.DefaultDatabase = i["default_database"].(string)
+		db.Settings.User = i["user"].(string)
+		db.Settings.Password = i["password"].(string)
+		db.Settings.RootUser = i["root_user"].(string)
+		db.Settings.RootPassword = i["root_password"].(string)
+	}
+
+	if db.Engine.Image == "mongodb" {
+		if db.Settings.RootUser == "" {
+			return diag.Errorf("default_database is required for MongoDB")
+		}
+		if db.Settings.RootPassword == "" {
+			return diag.Errorf("default_database is required for MongoDB")
+		}
+	} else if db.Engine.Image == "mysql" {
+		if db.Settings.DefaultDatabase == "" {
+			return diag.Errorf("default_database is required for MySQL")
+		}
+		if db.Settings.User == "" {
+			return diag.Errorf("user is required for MySQL")
+		}
+		if db.Settings.Password == "" {
+			return diag.Errorf("password is required for MySQL")
+		}
+		if db.Settings.RootUser == "" {
+			return diag.Errorf("default_database is required for MySQL")
+		}
+		if db.Settings.RootPassword == "" {
+			return diag.Errorf("default_database is required for MySQL")
+		}
+	} else if db.Engine.Image == "mariadb" {
+		if db.Settings.DefaultDatabase == "" {
+			return diag.Errorf("default_database is required for MariaDB")
+		}
+		if db.Settings.User == "" {
+			return diag.Errorf("user is required for MariaDB")
+		}
+		if db.Settings.Password == "" {
+			return diag.Errorf("password is required for MariaDB")
+		}
+		if db.Settings.RootUser == "" {
+			return diag.Errorf("default_database is required for MariaDB")
+		}
+		if db.Settings.RootPassword == "" {
+			return diag.Errorf("default_database is required for MariaDB")
+		}
+	} else if db.Engine.Image == "postgresql" {
+		if db.Settings.DefaultDatabase == "" {
+			return diag.Errorf("default_database is required for PostgreSQL")
+		}
+		if db.Settings.User == "" {
+			return diag.Errorf("user is required for PostgreSQL")
+		}
+		if db.Settings.Password == "" {
+			return diag.Errorf("password is required for PostgreSQL")
+		}
+		if db.Settings.RootPassword == "" {
+			return diag.Errorf("default_database is required for PostgreSQL")
+		}
+	} else if db.Engine.Image == "redis" {
+		if db.Settings.Password == "" {
+			return diag.Errorf("password is required for Redis")
+		}
+	} else if db.Engine.Image == "couchdb" {
+		if db.Settings.DefaultDatabase == "" {
+			return diag.Errorf("default_database is required for CouchDB")
+		}
+		if db.Settings.User == "" {
+			return diag.Errorf("user is required for CouchDB")
+		}
+		if db.Settings.Password == "" {
+			return diag.Errorf("password is required for CouchDB")
+		}
+		if db.Settings.RootUser == "" {
+			return diag.Errorf("default_database is required for CouchDB")
+		}
+		if db.Settings.RootPassword == "" {
+			return diag.Errorf("default_database is required for CouchDB")
+		}
+	} else if db.Engine.Image == "edgedb" {
+		if db.Settings.DefaultDatabase == "" {
+			return diag.Errorf("default_database is required for EdgeDB")
+		}
+		if db.Settings.RootUser == "" {
+			return diag.Errorf("default_database is required for EdgeDB")
+		}
+		if db.Settings.RootPassword == "" {
+			return diag.Errorf("default_database is required for EdgeDB")
+		}
 	}
 
 	apiClient := m.(*client.Client)
@@ -55,9 +145,11 @@ func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 	databaseToUpdate := &client.UpdateDatabaseDTO{
 		Name:  db.Name,
 		Version: db.Engine.Version,
-		DefaultDatabase: "fist-db",
-		DbUser: "user",
-		DbUserPassword: "password",
+		DefaultDatabase: db.Settings.DefaultDatabase,
+		DbUser: db.Settings.User,
+		DbUserPassword: db.Settings.Password,
+		RootUser: db.Settings.RootUser,
+		RootUserPassword: db.Settings.RootPassword,
 	}
 
 	err = apiClient.UpdateDatabase(*id, databaseToUpdate)
