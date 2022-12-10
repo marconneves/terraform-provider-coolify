@@ -37,5 +37,5 @@ provider "coolify" {
 
 ### Required
 
-- **address** (String, Optional) Coolify API address
-- **token** (String, Optional) Token of user authorized
+* `address` (String, Optional) Coolify API address
+* `token` (String, Optional) Token of user authorized
