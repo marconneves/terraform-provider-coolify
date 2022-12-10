@@ -33,10 +33,12 @@ type Database struct {
 		Name string `json:"name"`
 		PublicPort *int `json:"publicPort"`
 		DefaultDatabase string `json:"defaultDatabase"`
+		User string `json:"dbUser"`
+		Password string `json:"dbUserPassword"`
+		RootUser string `json:"rootUser"`
+		RootPassword string `json:"rootUserPassword"`
 		Type string `json:"type"`
 		Version string `json:"version"`
-		DbUser string `json:"dbUser"`
-		RootUser string `json:"rootUser"`
 		DestinationDockerId string `json:"destinationDockerId"`
 		CreatedAt string `json:"createdAt"`
 		UpdatedAt string `json:"updatedAt"`

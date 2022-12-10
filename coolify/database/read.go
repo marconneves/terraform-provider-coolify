@@ -31,6 +31,11 @@ func databaseReadItem(ctx context.Context, d *schema.ResourceData, m interface{}
 	settings["destination_id"] = item.Database.DestinationDockerId
 	settings["is_public"] = item.Database.Settings.IsPublic
 	settings["append_only"] = item.Database.Settings.AppendOnly
+	settings["default_database"] = item.Database.DefaultDatabase
+	settings["user"] = item.Database.User
+	settings["password"] = item.Database.Password
+	settings["root_user"] = item.Database.RootUser
+	settings["root_password"] = item.Database.RootPassword
 	d.Set("settings", []interface{}{settings})
 
 	
