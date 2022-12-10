@@ -1,0 +1,19 @@
+name: Create Tag
+on:
+  workflow_dispatch:
+    inputs:
+      tag_version:
+        description: 'Version to tag the release with. *Only Numbers and dots are allowed*'
+        required: true
+        default: 'latest'
+        type: string
+
+jobs:
+  create-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: rickstaa/action-create-tag@v1
+        with:
+          tag: "v${{ inputs.tag_version }}"
+          message: "Latest release"
