@@ -18,8 +18,14 @@ jobs:
         with:
           go-version-file: .go-version
 
-      - name: Build
-        run: go build -v ./...
+      - name: Test terraform-provider-coolify
+        run: go test -timeout 30s -run '^(TestProvider|TestProvider_impl|TestAccPreCheck)$' terraform-provider-coolify/coolify
 
-      - name: Test
-        run: go test -v ./...
+      - name: Test Shared
+        run: go test -timeout 30s -run '^TestValidateEngine$' terraform-provider-coolify/shared
+
+      - name: Test Resource database
+        run: go test -timeout 30s -run '^(TestValidateEngine|TestAccDatabase_Basic)$' terraform-provider-coolify/coolify/database
+
+      - name: Test Resource Destination
+        run: go test -timeout 30s -run '^TestAccDestination_Basic$' terraform-provider-coolify/coolify/destination
