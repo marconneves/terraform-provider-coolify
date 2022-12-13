@@ -43,3 +43,4 @@ terraform
 main.tf
 example/*
 *.test*
+__debug_bin

@@ -24,11 +24,11 @@ func destinationReadItem(ctx context.Context, d *schema.ResourceData, m interfac
 
 	d.SetId(item.Destination.Id)
 	d.Set("name", item.Destination.Name)
-	d.Set("network", item.Destination.Network)
 	d.Set("engine", item.Destination.Engine)
 	
 	status := make(map[string]string)
 	status["id"] = *&item.Destination.Id
+	status["network"] = item.Destination.Network
 	d.Set("status", status)
 
 	return nil
