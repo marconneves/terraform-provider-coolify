@@ -20,11 +20,13 @@ func Resource() *schema.Resource {
 			"network": {
 				Type:     schema.TypeString,
 				Optional: true,
+				ForceNew: true,
 				Default: "",
 			},
 			"engine": {
 				Type:     schema.TypeString,
 				Optional: true,
+				ForceNew: true,
 				Default: "/var/run/docker.sock",
 			},
 

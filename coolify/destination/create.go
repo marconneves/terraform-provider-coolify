@@ -15,6 +15,7 @@ func destinationCreateItem(ctx context.Context, d *schema.ResourceData, m interf
 	networkId := d.Get("network").(string)
 	if networkId == "" {
 		networkId = uuid.New().String()
+		d.Set("network", networkId)
 	}
 
 	apiClient := m.(*client.Client)
@@ -38,6 +39,7 @@ func destinationCreateItem(ctx context.Context, d *schema.ResourceData, m interf
 
 	status["id"] = *destinationId
 
+	d.SetId(*destinationId)
 	d.Set("status", status)
 	
 	return nil
