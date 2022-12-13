@@ -2,33 +2,43 @@ package destination
 
 import (
 	"context"
-	"fmt"
 	"terraform-provider-coolify/api/client"
 
+	"github.com/google/uuid"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func destinationCreateItem(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-
-	// 1. Generate network id random
-	// // 2. Generate new and get id
-	// 3. Check if this network exist
-	// 4. Update and set engine and network id
+	status := make(map[string]string)
+	
+	networkId := d.Get("network").(string)
+	if networkId == "" {
+		networkId = uuid.New().String()
+	}
 
 	apiClient := m.(*client.Client)
 
+	networkAlreadyExist := apiClient.CheckIfNetworkNameExist(networkId)
+	if networkAlreadyExist == true {
+		return diag.Errorf("This network already exist. Got %v", networkId)
+	}
+
 	destination := &client.CreateDestinationDTO{
-		Name: "network",
-		Network: "network",
+		Name: d.Get("name").(string),
+		Network: networkId,
+		Engine: d.Get("engine").(string),
+		RemoteEngine: false,
+		IsCoolifyProxyUsed: true,
 	}
 	destinationId, err := apiClient.NewDestination(destination)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	fmt.Printf("destination id: %v", *destinationId);
+	status["id"] = *destinationId
 
-
+	d.Set("status", status)
+	
 	return nil
 }
