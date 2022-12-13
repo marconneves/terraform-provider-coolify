@@ -25,7 +25,7 @@ func init() {
 }
 
 
-func TestAccItem_Basic(t *testing.T) {
+func TestAccDatabase_Basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() {},
 		Providers:    TestAccProviders,

@@ -25,7 +25,7 @@ func init() {
 }
 
 
-func TestAccItem_Basic(t *testing.T) {
+func TestAccDestination_Basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() {},
 		Providers:    TestAccProviders,
@@ -93,7 +93,7 @@ func testAccCheckItemBasic() string {
 	return fmt.Sprintf(`
 resource "coolify_destination" "test_item" {
 	name           = "my-network"
-	network		   = "3-unique"
+	network		   = "3-unique-other"
 }
 `)
 }
