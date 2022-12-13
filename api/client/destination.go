@@ -106,3 +106,23 @@ func (c *Client) DeleteDestination(id string) error {
 	return nil
 }
 
+type UpdateDestinationDTO struct {
+	Name        string `json:"name"`
+}
+
+func (c *Client) UpdateNameDestination(id string, name string) error {
+	buf := bytes.Buffer{}
+	err := json.NewEncoder(&buf).Encode(&UpdateDestinationDTO{
+		Name: name,
+	})
+	if err != nil {
+		return err
+	}
+
+	_, err = c.httpRequest(fmt.Sprintf("api/v1/destinations/%v", id), "POST", buf)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
