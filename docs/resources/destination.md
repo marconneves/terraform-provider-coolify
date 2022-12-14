@@ -43,12 +43,12 @@ resource "coolify_database" "my_db" {
   engine         = "postgresql:13.8.0"
 
   settings {
-    destination_id = coolify_destination.my_network.status.id
-    is_public      = true
+    destination_id   = coolify_destination.my_network.id
+    is_public        = true
     default_database = "postgres"
-    user = "user"
-    password = "password"
-    root_password = "root-password"
+    user             = "user"
+    password         = "password"
+    root_password    = "root-password"
   }
 }
 ```

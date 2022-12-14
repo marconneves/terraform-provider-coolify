@@ -22,7 +22,7 @@ resource "coolify_database" "my_db" {
   engine         = "redis:7.0"
 
   settings {
-    destination_id = coolify_destination.network.status.id
+    destination_id = coolify_destination.network.id
     is_public      = true
     password       = "123456"
   }
