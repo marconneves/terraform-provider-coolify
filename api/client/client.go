@@ -27,7 +27,8 @@ func NewClient(hostname string, token string) *Client {
 
 
 func (client *Client) httpRequest(path, method string, body bytes.Buffer) (closer io.ReadCloser, err error) {
-	req, err := http.NewRequest(method, client.requestPath(path), &body)
+	url := client.requestPath(path)
+	req, err := http.NewRequest(method, url, &body)
 	if err != nil {
 		return nil, err
 	}

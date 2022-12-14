@@ -70,6 +70,9 @@ The `settings` block supports:
 
 In addition to all the arguments above, the following attributes are exported.
 
+* `id` -
+  The ID of the destination.
+
 The `status` block supports:
 * `host` -
     The host of the database.

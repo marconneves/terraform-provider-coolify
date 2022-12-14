@@ -1,3 +1,8 @@
+# Documentation
+
+[Coolify - Doc](https://docs.coollabs.io/coolify)
+[Terraform Provider - Doc](https://registry.terraform.io/providers/themarkwill/coolify/latest/docs)
+
 # terraform-provider-coolify
 Provider of Coolify for Terraform
 
@@ -14,7 +19,7 @@ terraform {
   required_providers {
     coolify = {
       source = "themarkwill/coolify"
-      version = "0.1.3"
+      version = "0.2.1"
     }
   }
 }

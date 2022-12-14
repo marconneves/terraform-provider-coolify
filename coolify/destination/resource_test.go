@@ -1,4 +1,4 @@
-package database_test
+package destination_test
 
 import (
 	"fmt"
@@ -25,7 +25,7 @@ func init() {
 }
 
 
-func TestAccDatabase_Basic(t *testing.T) {
+func TestAccDestination_Basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() {},
 		Providers:    TestAccProviders,
@@ -34,13 +34,15 @@ func TestAccDatabase_Basic(t *testing.T) {
 			{
 				Config: testAccCheckItemBasic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckExampleItemExists("coolify_database.test_item"),
+					testAccCheckExampleItemExists("coolify_destination.test_item"),
 					resource.TestCheckResourceAttr(
-						"coolify_database.test_item", "name", "my-db"),
+						"coolify_destination.test_item", "name", "my-network"),
 					resource.TestCheckResourceAttr(
-						"coolify_database.test_item", "engine", "postgresql:13.8.0"),
+						"coolify_destination.test_item", "engine", "/var/run/docker.sock"),
 					resource.TestCheckResourceAttrSet(
-						"coolify_database.test_item", "status.port"),
+						"coolify_destination.test_item", "id"),
+					resource.TestCheckResourceAttrSet(
+						"coolify_destination.test_item", "status.network"),
 				),
 			},
 		},
@@ -55,7 +57,7 @@ func testAccCheckItemDestroy(s *tf.State) error {
 			continue
 		}
 
-		_, err := apiClient.GetDatabase(rs.Primary.ID)
+		_, err := apiClient.GetDestination(rs.Primary.ID)
 		if err == nil {
 			return fmt.Errorf("Alert still exists")
 		}
@@ -80,7 +82,7 @@ func testAccCheckExampleItemExists(resource string) resource.TestCheckFunc {
 		}
 		id := rs.Primary.ID
 		apiClient := TestAccProvider.Meta().(*client.Client)
-		_, err := apiClient.GetDatabase(id)
+		_, err := apiClient.GetDestination(id)
 		if err != nil {
 			return fmt.Errorf("error fetching item with resource %s. %s", resource, err)
 		}
@@ -91,18 +93,8 @@ func testAccCheckExampleItemExists(resource string) resource.TestCheckFunc {
 
 func testAccCheckItemBasic() string {
 	return fmt.Sprintf(`
-resource "coolify_database" "test_item" {
-	name           = "my-db"
-	engine         = "postgresql:13.8.0"
-  
-	settings {
-	  destination_id = "clb9wrx87001fmo9dvvog6xet"
-	  is_public	  	 = true
-	  default_database = "postgres"
-	  user = "myuser"
-	  password = "mypassword"
-	  root_password = "rootpassword"
-	}
+resource "coolify_destination" "test_item" {
+	name           = "my-network"
 }
 `)
 }
