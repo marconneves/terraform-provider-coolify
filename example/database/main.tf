@@ -17,7 +17,8 @@ resource "coolify_database" "my_db" {
   engine         = "redis:7.0"
 
   settings {
-    destination_id = "id from destination"
+    destination_id = "destination id"
     is_public      = true
+    password       = "123456"
   }
 }

@@ -36,7 +36,6 @@ func destinationCreateItem(ctx context.Context, d *schema.ResourceData, m interf
 		return diag.FromErr(err)
 	}
 
-	status["id"] = *destinationId
 	status["network"] = networkId
 	d.Set("status", status)
 
