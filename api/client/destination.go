@@ -6,7 +6,6 @@ import (
 	"fmt"
 )
 
-// {"name":"Local Docker","engine":"/var/run/docker.sock","remoteEngine":false,"network":"clblhbffr00003b5m8jejf511","isCoolifyProxyUsed":true}
 type CreateDestinationDTO struct {
 	Name string `json:"name"`
 	Network string `json:"network"`

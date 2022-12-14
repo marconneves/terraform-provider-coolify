@@ -28,5 +28,4 @@ jobs:
         run: go test -timeout 30s -run '^(TestValidateEngine|TestAccDatabase_Basic)$' terraform-provider-coolify/coolify/database
 
       - name: Test Resource Destination
-        continue-on-error: true
         run: go test -timeout 60s -run '^TestAccDestination_Basic$' terraform-provider-coolify/coolify/destination
