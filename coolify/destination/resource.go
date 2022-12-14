@@ -21,7 +21,6 @@ func Resource() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
-				Default: "",
 			},
 			"engine": {
 				Type:     schema.TypeString,

@@ -93,7 +93,6 @@ func testAccCheckItemBasic() string {
 	return fmt.Sprintf(`
 resource "coolify_destination" "test_item" {
 	name           = "my-network"
-	network		   = "3-unique-other"
 }
 `)
 }
