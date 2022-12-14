@@ -40,7 +40,9 @@ func TestAccDestination_Basic(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"coolify_destination.test_item", "engine", "/var/run/docker.sock"),
 					resource.TestCheckResourceAttrSet(
-						"coolify_destination.test_item", "status.id"),
+						"coolify_destination.test_item", "id"),
+					resource.TestCheckResourceAttrSet(
+						"coolify_destination.test_item", "status.network"),
 				),
 			},
 		},

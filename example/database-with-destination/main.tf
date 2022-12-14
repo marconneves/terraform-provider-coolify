@@ -12,12 +12,18 @@ provider "coolify" {
   token = "token"
 }
 
+resource "coolify_destination" "network" {
+  name    = "Network por Terraform"
+  network = "terraform-network"
+}
+
 resource "coolify_database" "my_db" {
   name           = "outro-db"
   engine         = "redis:7.0"
 
   settings {
-    destination_id = "id from destination"
+    destination_id = coolify_destination.network.id
     is_public      = true
+    password       = "123456"
   }
 }

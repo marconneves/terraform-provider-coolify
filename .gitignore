@@ -40,7 +40,6 @@ terraform
 *.key
 
 .terraform.lock.hcl
-main.tf
-example/*
+example/internal/
 *.test*
 __debug_bin
