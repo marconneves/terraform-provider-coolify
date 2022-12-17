@@ -1,5 +1,5 @@
 ---
-page_title: "destinations Resource - terraform-provider-coolify"
+page_title: "destination Resource - terraform-provider-coolify"
 subcategory: ""
 description: |-
   Destinations define where to deploy your application, database, or service.
