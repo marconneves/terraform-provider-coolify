@@ -11,10 +11,10 @@ import (
 func Resource() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: applicationCreateItem,
-		ReadContext: applicationReadItem,
+		ReadContext:   applicationReadItem,
 		UpdateContext: applicationUpdateItem,
 		DeleteContext: applicationDeleteItem,
-		Exists: applicationExistsItem,
+		Exists:        applicationExistsItem,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -26,10 +26,17 @@ func Resource() *schema.Resource {
 				ForceNew:     false,
 				ValidateFunc: shared.ValidateName,
 			},
+			"status": {
+				Type:     schema.TypeMap,
+				Computed: true,
+				Elem: &schema.Schema{
+					Type:     schema.TypeString,
+					Computed: true,
+				},
+			},
 		},
 	}
 }
-
 
 func applicationReadItem(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
@@ -37,13 +44,11 @@ func applicationReadItem(ctx context.Context, d *schema.ResourceData, m interfac
 	return diags
 }
 
-
 func applicationUpdateItem(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 
 	return diags
 }
-
 
 func applicationDeleteItem(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics

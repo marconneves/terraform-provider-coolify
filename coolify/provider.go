@@ -5,6 +5,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 	"terraform-provider-coolify/api/client"
+	"terraform-provider-coolify/coolify/application"
 	"terraform-provider-coolify/coolify/database"
 	"terraform-provider-coolify/coolify/destination"
 )
@@ -26,6 +27,7 @@ func Provider() *schema.Provider {
 		ResourcesMap: map[string]*schema.Resource{
 			"coolify_database":    database.Resource(),
 			"coolify_destination": destination.Resource(),
+			"coolify_application": application.Resource(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
