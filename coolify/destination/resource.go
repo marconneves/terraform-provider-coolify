@@ -5,10 +5,10 @@ import "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 func Resource() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: destinationCreateItem,
-		ReadContext: destinationReadItem,
+		ReadContext:   destinationReadItem,
 		UpdateContext: destinationUpdateItem,
 		DeleteContext: destinationDeleteItem,
-		Exists: destinationExistItem,
+		Exists:        destinationExistItem,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -26,14 +26,14 @@ func Resource() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
-				Default: "/var/run/docker.sock",
+				Default:  "/var/run/docker.sock",
 			},
 
 			"status": {
 				Type:     schema.TypeMap,
 				Computed: true,
 				Elem: &schema.Schema{
-					Type: schema.TypeString,
+					Type:     schema.TypeString,
 					Computed: true,
 				},
 			},

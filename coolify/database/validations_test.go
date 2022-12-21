@@ -4,7 +4,6 @@ import (
 	"testing"
 )
 
-
 func TestValidateEngine(t *testing.T) {
 	cases := map[string]struct {
 		Value interface{}

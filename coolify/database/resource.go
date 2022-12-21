@@ -8,23 +8,23 @@ import (
 
 type Status struct {
 	Port string `json:"port"`
-} 
+}
 
 type Database struct {
-	Name string
+	Name   string
 	Engine struct {
-		Image string
+		Image   string
 		Version string
 	}
 	Settings struct {
-		DestinationId string
-		IsPublic bool
-		AppendOnly bool
+		DestinationId   string
+		IsPublic        bool
+		AppendOnly      bool
 		DefaultDatabase string
-		User string
-		Password string
-		RootUser string
-		RootPassword string
+		User            string
+		Password        string
+		RootUser        string
+		RootPassword    string
 	}
 	Status Status
 }
@@ -32,10 +32,10 @@ type Database struct {
 func Resource() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: databaseCreateItem,
-		ReadContext: databaseReadItem,
+		ReadContext:   databaseReadItem,
 		UpdateContext: databaseUpdateItem,
 		DeleteContext: databaseDeleteItem,
-		Exists: databaseExistsItem,
+		Exists:        databaseExistsItem,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -63,9 +63,9 @@ func Resource() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"destination_id": {
-							Type:          schema.TypeString,
-							Required:      true,
-							ForceNew:      true,
+							Type:     schema.TypeString,
+							Required: true,
+							ForceNew: true,
 						},
 						"is_public": {
 							Type:     schema.TypeBool,
@@ -81,31 +81,31 @@ func Resource() *schema.Resource {
 							Type:     schema.TypeString,
 							Optional: true,
 							ForceNew: true,
-							Default: "",
+							Default:  "",
 						},
 						"user": {
 							Type:     schema.TypeString,
 							Optional: true,
 							ForceNew: true,
-							Default: "",
+							Default:  "",
 						},
 						"password": {
 							Type:     schema.TypeString,
 							Optional: true,
 							ForceNew: true,
-							Default: "",
+							Default:  "",
 						},
 						"root_user": {
 							Type:     schema.TypeString,
 							Optional: true,
 							ForceNew: true,
-							Default: "",
+							Default:  "",
 						},
 						"root_password": {
 							Type:     schema.TypeString,
 							Optional: true,
 							ForceNew: true,
-							Default: "",
+							Default:  "",
 						},
 					},
 				},
@@ -114,7 +114,7 @@ func Resource() *schema.Resource {
 				Type:     schema.TypeMap,
 				Computed: true,
 				Elem: &schema.Schema{
-					Type: schema.TypeString,
+					Type:     schema.TypeString,
 					Computed: true,
 				},
 			},

@@ -12,11 +12,10 @@ func destinationUpdateItem(ctx context.Context, d *schema.ResourceData, m interf
 	apiClient := m.(*client.Client)
 	databaseId := d.Id()
 
-
 	err := apiClient.UpdateNameDestination(databaseId, d.Get("name").(string))
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	
+
 	return nil
 }

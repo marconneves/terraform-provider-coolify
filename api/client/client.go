@@ -25,7 +25,6 @@ func NewClient(hostname string, token string) *Client {
 	}
 }
 
-
 func (client *Client) httpRequest(path, method string, body bytes.Buffer) (closer io.ReadCloser, err error) {
 	url := client.requestPath(path)
 	req, err := http.NewRequest(method, url, &body)
@@ -33,7 +32,7 @@ func (client *Client) httpRequest(path, method string, body bytes.Buffer) (close
 		return nil, err
 	}
 
-	req.Header.Add("Authorization", "Bearer " + client.authToken)
+	req.Header.Add("Authorization", "Bearer "+client.authToken)
 	if body.Len() > 0 {
 		req.Header.Add("Content-Type", "application/json")
 	}

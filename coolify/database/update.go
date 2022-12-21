@@ -15,7 +15,6 @@ func databaseUpdateItem(ctx context.Context, d *schema.ResourceData, m interface
 	databaseId := d.Id()
 	db := &Database{}
 
-
 	err := apiClient.UpdateNameDatabase(databaseId, d.Get("name").(string))
 	if err != nil {
 		return diag.FromErr(err)
@@ -41,11 +40,11 @@ func databaseUpdateItem(ctx context.Context, d *schema.ResourceData, m interface
 	status := make(map[string]interface{})
 	if settingsResponse.PublicPort != nil {
 		status["port"] = settingsResponse.PublicPort
-					
-		tflog.Info(ctx, "Database %v started on port: %" + databaseId + strconv.Itoa(*settingsResponse.PublicPort))
+
+		tflog.Info(ctx, "Database %v started on port: %"+databaseId+strconv.Itoa(*settingsResponse.PublicPort))
 	}
 
 	d.Set("status", []interface{}{status})
-	
+
 	return nil
 }

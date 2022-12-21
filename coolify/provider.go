@@ -24,7 +24,7 @@ func Provider() *schema.Provider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"coolify_database": database.Resource(),
+			"coolify_database":    database.Resource(),
 			"coolify_destination": destination.Resource(),
 		},
 		ConfigureFunc: providerConfigure,
@@ -34,6 +34,6 @@ func Provider() *schema.Provider {
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	address := d.Get("address").(string)
 	token := d.Get("token").(string)
-	
-	return client.NewClient(address, token), nil;
+
+	return client.NewClient(address, token), nil
 }

@@ -14,7 +14,6 @@ func databaseReadItem(ctx context.Context, d *schema.ResourceData, m interface{}
 	apiClient := m.(*client.Client)
 	databaseId := d.Id()
 
-
 	item, err := apiClient.GetDatabase(databaseId)
 	if err != nil {
 		if strings.Contains(err.Error(), "not found") {
@@ -26,7 +25,7 @@ func databaseReadItem(ctx context.Context, d *schema.ResourceData, m interface{}
 
 	d.SetId(item.Database.Id)
 	d.Set("name", item.Database.Name)
-	d.Set("engine", item.Database.Type + ":" + item.Database.Version)
+	d.Set("engine", item.Database.Type+":"+item.Database.Version)
 
 	settings := make(map[string]interface{})
 	settings["destination_id"] = item.Database.DestinationDockerId
@@ -39,7 +38,6 @@ func databaseReadItem(ctx context.Context, d *schema.ResourceData, m interface{}
 	settings["root_password"] = item.Database.RootPassword
 	d.Set("settings", []interface{}{settings})
 
-	
 	status := make(map[string]string)
 	if item.Database.Settings.IsPublic == true {
 		status["host"] = *&item.Database.Id
@@ -68,7 +66,7 @@ func databaseReadItem(ctx context.Context, d *schema.ResourceData, m interface{}
 	if *&item.Database.RootPassword != "" {
 		status["root_password"] = *&item.Database.RootPassword
 	}
-	
+
 	d.Set("status", status)
 
 	return nil

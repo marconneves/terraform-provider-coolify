@@ -13,7 +13,6 @@ import (
 	"terraform-provider-coolify/coolify"
 )
 
-
 var TestAccProviders map[string]*schema.Provider
 var TestAccProvider *schema.Provider
 
@@ -23,7 +22,6 @@ func init() {
 		"coolify": TestAccProvider,
 	}
 }
-
 
 func TestAccDestination_Basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
@@ -89,7 +87,6 @@ func testAccCheckExampleItemExists(resource string) resource.TestCheckFunc {
 		return nil
 	}
 }
-
 
 func testAccCheckItemBasic() string {
 	return fmt.Sprintf(`
