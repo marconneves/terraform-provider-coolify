@@ -11,22 +11,22 @@ type Status struct {
 } 
 
 type Database struct {
-	Name string `json:"name"`
+	Name string
 	Engine struct {
-		Image string `json:"image"`
-		Version string `json:"version"`
-	} `json:"engine"`
+		Image string
+		Version string
+	}
 	Settings struct {
-		DestinationId string `json:"destination_id"`
-		IsPublic bool `json:"is_public"`
-		AppendOnly bool `json:"append_only"`
-		DefaultDatabase string `json:"default_database"`
-		User string `json:"user"`
-		Password string `json:"password"`
-		RootUser string `json:"root_user"`
-		RootPassword string `json:"root_password"`
-	} `json:"settings"`
-	Status Status `json:"status"`
+		DestinationId string
+		IsPublic bool
+		AppendOnly bool
+		DefaultDatabase string
+		User string
+		Password string
+		RootUser string
+		RootPassword string
+	}
+	Status Status
 }
 
 func Resource() *schema.Resource {
