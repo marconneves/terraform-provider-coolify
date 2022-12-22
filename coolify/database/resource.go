@@ -110,6 +110,7 @@ func Resource() *schema.Resource {
 					},
 				},
 			},
+
 			"status": {
 				Type:     schema.TypeMap,
 				Computed: true,

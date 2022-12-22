@@ -8,94 +8,62 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-type Status struct {
-	Domain string
-}
+func applicationCreateItem(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	status := make(map[string]string)
 
-type Secret struct {
-	Name       string
-	Value      string
-	IsBuildEnv bool
-}
+	app := &Application{}
 
-type Application struct {
-	Name   string
-	Domain string
-	IsBot  bool
+	app.Name = d.Get("name").(string)
+	app.Domain = d.Get("domain").(string)
+	app.IsBot = d.Get("is_bot").(bool)
 
-	Template struct {
-		BuildPack  string
-		Image      string
-		BuildImage string
+	for _, template := range d.Get("template").([]interface{}) {
+		i := template.(map[string]interface{})
 
-		Settings struct {
-			IsCoolifyBuildPack bool
-			InstallCommand     string
-			BuildCommand       string
-			StartCommand       string
+		app.Template.BuildPack = i["build_pack"].(string)
+		app.Template.Image = i["image"].(string)
+		app.Template.BuildImage = i["build_image"].(string)
+
+		for _, settings := range i["settings"].([]interface{}) {
+			j := settings.(map[string]interface{})
+
+			app.Template.Settings.InstallCommand = j["install_command"].(string)
+			app.Template.Settings.BuildCommand = j["build_command"].(string)
+			app.Template.Settings.StartCommand = j["start_command"].(string)
+			app.Template.Settings.IsCoolifyBuildPack = j["is_coolify_build_pack"].(bool)
+			app.Template.Settings.AutoDeploy = j["auto_deploy"].(bool)
+		}
+
+		app.Template.Envs = []Env{}
+
+		for _, env := range i["env"].([]interface{}) {
+			j := env.(map[string]interface{})
+
+			secretOne := Env{
+				Key:        j["key"].(string),
+				Value:      j["value"].(string),
+				IsBuildEnv: j["is_build_env"].(bool),
+			}
+
+			app.Template.Envs = append(app.Template.Envs, secretOne)
 		}
 	}
 
-	Secrets []Secret
+	for _, repository := range d.Get("repository").([]interface{}) {
+		i := repository.(map[string]interface{})
 
-	Repository struct {
-		ProjectId  int
-		Repository string
-		Branch     string
-		AutoDeploy bool
+		app.Repository.RepositoryId = i["repository_id"].(int)
+		app.Repository.Repository = i["repository"].(string)
+		app.Repository.Branch = i["branch"].(string)
+		app.Repository.commitHash = i["commit_hash"].(string)
 	}
 
-	Settings struct {
-		DestinationId string
-		SourceId      string
+	for _, setting := range d.Get("settings").([]interface{}) {
+		i := setting.(map[string]interface{})
+
+		app.Settings.SourceId = i["source_id"].(string)
+		app.Settings.DestinationId = i["destination_id"].(string)
 	}
-
-	Status Status
-}
-
-func applicationCreateItem(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	// 1. New Application
-	// 2. Configuration -> Set Source
-	// 3. Configuration -> Set Repository
-	// 4. Configuration -> Set Destination
-	// 5. Configuration -> Set BuildPack
-	// 6. Update Application - Setup NodeJS
-	// if is bot
-	// 7. Update Application - Setup Bot
-	// if not is bot
-	// 7. Update Application - Setup Web domain
-	// 8. Request Deploy
-
-	secretOne := Secret{
-		Name:       "SECRET",
-		Value:      "VALUE",
-		IsBuildEnv: true,
-	}
-	status := make(map[string]string)
-
-	secrets := []Secret{secretOne}
-
-	app := &Application{
-		IsBot:   false,
-		Secrets: secrets,
-	}
-	app.Name = d.Get("name").(string)
-	app.Domain = "https://terraform.s.b4.run"
-	app.Template.BuildPack = "node"
-	app.Template.Image = "node:14"
-	app.Template.BuildImage = "node:14"
-	app.Template.Settings.InstallCommand = "npm install"
-	app.Template.Settings.BuildCommand = ""
-	app.Template.Settings.StartCommand = "npm start"
-	app.Template.Settings.IsCoolifyBuildPack = true
-
-	app.Repository.ProjectId = 579493141
-	app.Repository.Repository = "cool-sample/sample-nodejs"
-	app.Repository.Branch = "main"
-	app.Repository.AutoDeploy = true
-
-	app.Settings.DestinationId = "clb9wrx87001fmo9dvvog6xet"
-	app.Settings.SourceId = "clb9y09gs000f9dmod69f7dce"
 
 	apiClient := m.(*client.Client)
 
@@ -111,10 +79,10 @@ func applicationCreateItem(ctx context.Context, d *schema.ResourceData, m interf
 	}
 
 	repository := &client.SetRepositoryDTO{
-		ProjectId:  app.Repository.ProjectId,
+		ProjectId:  app.Repository.RepositoryId,
 		Repository: app.Repository.Repository,
 		Branch:     app.Repository.Branch,
-		AutoDeploy: app.Repository.AutoDeploy,
+		AutoDeploy: app.Template.Settings.AutoDeploy,
 	}
 	err = apiClient.SetRepositoryOnApplication(*id, repository)
 	if err != nil {
@@ -158,6 +126,9 @@ func applicationCreateItem(ctx context.Context, d *schema.ResourceData, m interf
 		ForceRebuild:       true,
 	}
 	deployId, err := apiClient.DeployApplication(*id, deploy)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 
 	status["deployId"] = *deployId
 
