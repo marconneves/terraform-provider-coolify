@@ -231,13 +231,3 @@ func applicationUpdateItem(ctx context.Context, d *schema.ResourceData, m interf
 
 	return diags
 }
-
-func applicationDeleteItem(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	var diags diag.Diagnostics
-
-	return diags
-}
-
-func applicationExistsItem(d *schema.ResourceData, m interface{}) (bool, error) {
-	return true, nil
-}

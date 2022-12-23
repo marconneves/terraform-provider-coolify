@@ -34,7 +34,7 @@ func TestAccApplication_Basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckExampleItemExists("coolify_application.test_item"),
 					resource.TestCheckResourceAttr(
-						"coolify_application.test_item", "name", "my-network"),
+						"coolify_application.test_item", "name", "first-app"),
 					resource.TestCheckResourceAttrSet(
 						"coolify_application.test_item", "id"),
 				),
@@ -51,7 +51,7 @@ func testAccCheckItemDestroy(s *tf.State) error {
 			continue
 		}
 
-		_, err := apiClient.GetDestination(rs.Primary.ID)
+		_, err := apiClient.GetApplication(rs.Primary.ID)
 		if err == nil {
 			return fmt.Errorf("Alert still exists")
 		}
@@ -76,7 +76,7 @@ func testAccCheckExampleItemExists(resource string) resource.TestCheckFunc {
 		}
 		id := rs.Primary.ID
 		apiClient := TestAccProvider.Meta().(*client.Client)
-		_, err := apiClient.GetDestination(id)
+		_, err := apiClient.GetApplication(id)
 		if err != nil {
 			return fmt.Errorf("error fetching item with resource %s. %s", resource, err)
 		}

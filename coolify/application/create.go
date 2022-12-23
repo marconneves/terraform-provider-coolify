@@ -119,7 +119,20 @@ func applicationCreateItem(ctx context.Context, d *schema.ResourceData, m interf
 		return diag.FromErr(err)
 	}
 
-	// DeployApplication
+	for _, env := range app.Template.Envs {
+		secret := &client.ApplicationEnvironmentDTO{
+			Name:           env.Key,
+			Value:         env.Value,
+			IsBuildEnv:    env.IsBuildEnv,
+			IsNew:         true,
+			PreviewSecret: false,
+		}
+		err = apiClient.AddEnvironmentToApplication(*id, secret)
+		if err != nil {
+			return diag.FromErr(err)
+		}
+	}
+
 	deploy := &client.DeployApplicationDTO{
 		PullMergeRequestId: nil,
 		Branch:             app.Repository.Branch,

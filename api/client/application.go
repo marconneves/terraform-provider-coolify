@@ -25,6 +25,54 @@ func (c *Client) NewApplication() (*string, error) {
 	return &response.Id, nil
 }
 
+type Application struct {
+	Id string `json:"id"`
+}
+
+func (c *Client) GetApplication(id string) (*Application, error) {
+	body, err := c.httpRequest(fmt.Sprintf("api/v1/applications/%v", id), "GET", bytes.Buffer{})
+	if err != nil {
+		return nil, err
+	}
+
+	response := &Application{}
+	err = json.NewDecoder(body).Decode(response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
+// need add body with force
+type DeleteApplicationDTO struct {
+	Force bool `json:"force"`
+}
+
+func (c *Client) DeleteApplication(id string) error {
+	buf := bytes.Buffer{}
+	err := json.NewEncoder(&buf).Encode(DeleteApplicationDTO{Force: true})
+	if err != nil {
+		return err
+	}
+
+	_, err = c.httpRequest(fmt.Sprintf("api/v1/applications/%v", id), "DELETE", buf)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *Client) StopApplication(id string) error {
+	_, err := c.httpRequest(fmt.Sprintf("api/v1/applications/%v/stop", id), "POST", bytes.Buffer{})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 type UpdateApplicationDTO struct {
 	Name string  `json:"name"`
 	Fqdn *string `json:"fqdn"`
@@ -158,4 +206,27 @@ func (c *Client) DeployApplication(id string, deploy *DeployApplicationDTO) (*st
 
 	return &response.BuildId, nil
 
+}
+
+type ApplicationEnvironmentDTO struct {
+	Name          string `json:"name"`
+	Value         string `json:"value"`
+	IsBuildEnv    bool   `json:"isBuildEnv"`
+	IsNew         bool   `json:"isNew"`
+	PreviewSecret bool   `json:"previewSecret"`
+}
+
+func (c *Client) AddEnvironmentToApplication(id string, environment *ApplicationEnvironmentDTO) error {
+	buf := bytes.Buffer{}
+	err := json.NewEncoder(&buf).Encode(environment)
+	if err != nil {
+		return err
+	}
+
+	_, err = c.httpRequest(fmt.Sprintf("api/v1/applications/%v/secrets", id), "POST", buf)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
