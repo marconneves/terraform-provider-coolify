@@ -31,4 +31,4 @@ jobs:
         run: go test -timeout 60s -run '^TestAccDestination_Basic$' terraform-provider-coolify/coolify/destination
 
       - name: Test Resource Application
-        run: go test -timeout 60s -run '^TestAccApplication_Basic$'' terraform-provider-coolify/coolify/application
+        run: go test -timeout 60s -run '^TestAccApplication_Basic$' terraform-provider-coolify/coolify/application
