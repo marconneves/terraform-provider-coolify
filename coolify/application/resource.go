@@ -1,10 +1,8 @@
 package application
 
 import (
-	"context"
 	"terraform-provider-coolify/shared"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -69,7 +67,6 @@ func Resource() *schema.Resource {
 				Type:         schema.TypeString,
 				Description:  "Name of the application.",
 				Required:     true,
-				ForceNew:     false,
 				ValidateFunc: shared.ValidateName,
 			},
 			"domain": {
@@ -124,11 +121,6 @@ func Resource() *schema.Resource {
 										Type:     schema.TypeString,
 										Required: true,
 									},
-									"is_coolify_build_pack": {
-										Type:     schema.TypeBool,
-										Optional: true,
-										Default:  true,
-									},
 									"auto_deploy": {
 										Type:     schema.TypeBool,
 										Optional: true,
@@ -171,10 +163,12 @@ func Resource() *schema.Resource {
 						"repository_id": {
 							Type:     schema.TypeInt,
 							Required: true,
+							ForceNew: true,
 						},
 						"repository": {
 							Type:     schema.TypeString,
 							Required: true,
+							ForceNew: true,
 						},
 						"branch": {
 							Type:     schema.TypeString,
@@ -218,16 +212,4 @@ func Resource() *schema.Resource {
 			},
 		},
 	}
-}
-
-func applicationReadItem(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	var diags diag.Diagnostics
-
-	return diags
-}
-
-func applicationUpdateItem(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	var diags diag.Diagnostics
-
-	return diags
 }

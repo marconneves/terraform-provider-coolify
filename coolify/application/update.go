@@ -8,10 +8,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func applicationCreateItem(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func applicationUpdateItem(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	status := make(map[string]string)
 
 	app := &Application{}
+
+	applicationId := d.Id()
 
 	app.Name = d.Get("name").(string)
 	app.Domain = d.Get("domain").(string)
@@ -33,7 +35,7 @@ func applicationCreateItem(ctx context.Context, d *schema.ResourceData, m interf
 			app.Template.Settings.InstallCommand = j["install_command"].(string)
 			app.Template.Settings.BuildCommand = j["build_command"].(string)
 			app.Template.Settings.StartCommand = j["start_command"].(string)
-			app.Template.Settings.IsCoolifyBuildPack = true
+			app.Template.Settings.IsCoolifyBuildPack = j["is_coolify_build_pack"].(bool)
 			app.Template.Settings.AutoDeploy = j["auto_deploy"].(bool)
 		}
 
@@ -62,25 +64,7 @@ func applicationCreateItem(ctx context.Context, d *schema.ResourceData, m interf
 		app.Repository.commitHash = i["commit_hash"].(string)
 	}
 
-	for _, setting := range d.Get("settings").([]interface{}) {
-		i := setting.(map[string]interface{})
-
-		app.Settings.SourceId = i["source_id"].(string)
-		app.Settings.DestinationId = i["destination_id"].(string)
-	}
-
 	apiClient := m.(*client.Client)
-
-	id, err := apiClient.NewApplication()
-	if err != nil {
-		return diag.FromErr(err)
-	}
-	d.SetId(*id)
-
-	err = apiClient.SetSourceOnApplication(*id, app.Settings.SourceId)
-	if err != nil {
-		return diag.FromErr(err)
-	}
 
 	repository := &client.SetRepositoryDTO{
 		ProjectId:  app.Repository.RepositoryId,
@@ -88,12 +72,7 @@ func applicationCreateItem(ctx context.Context, d *schema.ResourceData, m interf
 		Branch:     app.Repository.Branch,
 		AutoDeploy: app.Template.Settings.AutoDeploy,
 	}
-	err = apiClient.SetRepositoryOnApplication(*id, repository)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
-	err = apiClient.SetDestinationOnApplication(*id, app.Settings.DestinationId)
+	err := apiClient.SetRepositoryOnApplication(applicationId, repository)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -118,12 +97,14 @@ func applicationCreateItem(ctx context.Context, d *schema.ResourceData, m interf
 		StartCommand:       app.Template.Settings.StartCommand,
 	}
 
-	err = apiClient.UpdateApplication(*id, appToUpdate)
+	err = apiClient.UpdateApplication(applicationId, appToUpdate)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
 	for _, env := range app.Template.Envs {
+		apiClient.DeleteEnvironmentFromApplication(applicationId, env.Key)
+
 		secret := &client.ApplicationEnvironmentDTO{
 			Name:          env.Key,
 			Value:         env.Value,
@@ -131,7 +112,7 @@ func applicationCreateItem(ctx context.Context, d *schema.ResourceData, m interf
 			IsNew:         true,
 			PreviewSecret: false,
 		}
-		err = apiClient.AddEnvironmentToApplication(*id, secret)
+		err = apiClient.AddEnvironmentToApplication(applicationId, secret)
 		if err != nil {
 			return diag.FromErr(err)
 		}
@@ -142,10 +123,12 @@ func applicationCreateItem(ctx context.Context, d *schema.ResourceData, m interf
 		Branch:             app.Repository.Branch,
 		ForceRebuild:       true,
 	}
-	_, err = apiClient.DeployApplication(*id, deploy)
+	deployId, err := apiClient.DeployApplication(applicationId, deploy)
 	if err != nil {
 		return diag.FromErr(err)
 	}
+
+	status["deployId"] = *deployId
 
 	// TODO: Await deploy finish
 

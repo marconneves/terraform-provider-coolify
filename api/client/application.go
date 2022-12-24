@@ -26,7 +26,35 @@ func (c *Client) NewApplication() (*string, error) {
 }
 
 type Application struct {
-	Id string `json:"id"`
+	Application struct {
+		Id                  string  `json:"id"`
+		Name                string  `json:"name"`
+		Fqdn                string  `json:"fqdn"`
+		BuildPack           string  `json:"buildPack"`
+		BaseImage           string  `json:"baseImage"`
+		BaseBuildImage      string  `json:"baseBuildImage"`
+		InstallCommand      string  `json:"installCommand"`
+		BuildCommand        string  `json:"buildCommand"`
+		StartCommand        string  `json:"startCommand"`
+		Repository          string  `json:"repository"`
+		RepositoryId        int     `json:"projectId"`
+		Branch              string  `json:"branch"`
+		CommitHash          string  `json:"commitHash"`
+		GitCommitHash       *string `json:"gitCommitHash"`
+		GitSourceId         string  `json:"gitSourceId"`
+		DestinationDockerId string  `json:"destinationDockerId"`
+		Settings            struct {
+			AutoDeploy bool `json:"autodeploy"`
+			IsBot      bool `json:"isBot"`
+		} `json:"settings"`
+		Secrets []struct {
+			Id            string `json:"id"`
+			Name          string `json:"name"`
+			Value         string `json:"value"`
+			IsBuildSecret bool   `json:"isBuildSecret"`
+			IsPRMRSecret  bool   `json:"isPRMRSecret"`
+		} `json:"secrets"`
+	} `json:"application"`
 }
 
 func (c *Client) GetApplication(id string) (*Application, error) {
@@ -224,6 +252,27 @@ func (c *Client) AddEnvironmentToApplication(id string, environment *Application
 	}
 
 	_, err = c.httpRequest(fmt.Sprintf("api/v1/applications/%v/secrets", id), "POST", buf)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+type DeleteApplicationEnvironmentDTO struct {
+	Name string `json:"name"`
+}
+
+func (c *Client) DeleteEnvironmentFromApplication(id string, name string) error {
+	buf := bytes.Buffer{}
+	err := json.NewEncoder(&buf).Encode(&DeleteApplicationEnvironmentDTO{
+		Name: name,
+	})
+	if err != nil {
+		return err
+	}
+
+	_, err = c.httpRequest(fmt.Sprintf("api/v1/applications/%v/secrets", id), "DELETE", buf)
 	if err != nil {
 		return err
 	}

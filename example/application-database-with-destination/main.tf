@@ -2,7 +2,7 @@ terraform {
   required_providers {
     coolify = {
       source = "themarkwill/coolify"
-      version = "0.3.0-beta.1"
+      version = "0.3.0-beta.2"
     }
   }
 }
@@ -40,7 +40,6 @@ resource "coolify_application" "test_item" {
 		settings {
 			install_command = "npm install"
 			start_command = "npm start"
-			is_coolify_build_pack = true
 			auto_deploy = false
 		}
 

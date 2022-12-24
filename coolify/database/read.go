@@ -38,7 +38,7 @@ func databaseReadItem(ctx context.Context, d *schema.ResourceData, m interface{}
 	settings["root_password"] = item.Database.RootPassword
 	d.Set("settings", []interface{}{settings})
 
-	status := make(map[string]string)
+	status := make(map[string]interface{})
 	if item.Database.Settings.IsPublic == true {
 		status["host"] = *&item.Database.Id
 		status["port"] = strconv.Itoa(*item.Database.PublicPort)

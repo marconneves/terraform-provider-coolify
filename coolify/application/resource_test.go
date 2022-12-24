@@ -98,7 +98,6 @@ resource "coolify_application" "test_item" {
 		settings {
 			install_command = "npm install"
 			start_command = "npm start"
-			is_coolify_build_pack = true
 			auto_deploy = false
 		}
 
