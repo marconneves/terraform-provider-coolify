@@ -115,8 +115,9 @@ func Resource() *schema.Resource {
 				Type:     schema.TypeMap,
 				Computed: true,
 				Elem: &schema.Schema{
-					Type:     schema.TypeString,
-					Computed: true,
+					Type:         schema.TypeString,
+					Computed:     true,
+					ComputedWhen: []string{"settings"},
 				},
 			},
 		},
