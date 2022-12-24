@@ -45,10 +45,10 @@ func databaseReadItem(ctx context.Context, d *schema.ResourceData, m interface{}
 		} else {
 			status["host"] = *item.Settings.IpV6
 		}
-		status["port"] = strconv.Itoa(item.PrivatePort)
+		status["port"] = strconv.Itoa(*item.Database.PublicPort)
 	} else {
 		status["host"] = *&item.Database.Id
-		status["port"] = strconv.Itoa(*item.Database.PublicPort)
+		status["port"] = strconv.Itoa(item.PrivatePort)
 	}
 
 	if *&item.Database.DefaultDatabase != "" {
