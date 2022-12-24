@@ -8,8 +8,8 @@ terraform {
 }
 
 provider "coolify" {
-  address = "url of coolify"
-  token   = "token"
+  address = "https://services.b4.run"
+  token   = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbGJmb2JuOHEwMGFoOWRtbzgxY2k5bHl4IiwidGVhbUlkIjoiY2xiOXZrbGp3MDAwdm1vOWRlbHFyNjFtaSIsInBlcm1pc3Npb24iOiJhZG1pbiIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY3MDU0NDI4OX0.mc08PJ0b0JDQbU4Gt-uOVrawL5TyMewwbGD1jQperl0"
 }
 
 resource "coolify_destination" "network" {
@@ -57,11 +57,11 @@ resource "coolify_application" "test_item" {
   repository {
     repository_id = 579493141
     repository    = "cool-sample/sample-nodejs"
-    branch        = "main"
+    branch        = "develop"
   }
 
   settings {
     destination_id = coolify_destination.network.id
-    source_id      = "if of git source"
+    source_id      = "clb9y09gs000f9dmod69f7dce"
   }
 }
