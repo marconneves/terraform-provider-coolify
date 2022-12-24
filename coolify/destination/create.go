@@ -11,7 +11,7 @@ import (
 
 func destinationCreateItem(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	status := make(map[string]string)
-	
+
 	networkId := d.Get("network").(string)
 	if networkId == "" {
 		networkId = uuid.New().String()
@@ -25,10 +25,10 @@ func destinationCreateItem(ctx context.Context, d *schema.ResourceData, m interf
 	}
 
 	destination := &client.CreateDestinationDTO{
-		Name: d.Get("name").(string),
-		Network: networkId,
-		Engine: d.Get("engine").(string),
-		RemoteEngine: false,
+		Name:               d.Get("name").(string),
+		Network:            networkId,
+		Engine:             d.Get("engine").(string),
+		RemoteEngine:       false,
 		IsCoolifyProxyUsed: true,
 	}
 	destinationId, err := apiClient.NewDestination(destination)
@@ -40,6 +40,6 @@ func destinationCreateItem(ctx context.Context, d *schema.ResourceData, m interf
 	d.Set("status", status)
 
 	d.SetId(*destinationId)
-	
+
 	return nil
 }

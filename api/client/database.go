@@ -7,7 +7,7 @@ import (
 )
 
 type CreateDBResponse struct {
-	Id string
+	Id string `json:"id"`
 }
 
 func (c *Client) NewDatabase() (*string, error) {
@@ -16,34 +16,33 @@ func (c *Client) NewDatabase() (*string, error) {
 		return nil, err
 	}
 
-
-	response := &CreateDBResponse{}
+	response := &CreateApplicationResponse{}
 	err = json.NewDecoder(body).Decode(response)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return &response.Id, nil
 }
 
 type Database struct {
 	PrivatePort int `json:"privatePort"`
-	Database struct {
-		Id string `json:"id"`
-		Name string `json:"name"`
-		PublicPort *int `json:"publicPort"`
-		DefaultDatabase string `json:"defaultDatabase"`
-		User string `json:"dbUser"`
-		Password string `json:"dbUserPassword"`
-		RootUser string `json:"rootUser"`
-		RootPassword string `json:"rootUserPassword"`
-		Type string `json:"type"`
-		Version string `json:"version"`
+	Database    struct {
+		Id                  string `json:"id"`
+		Name                string `json:"name"`
+		PublicPort          *int   `json:"publicPort"`
+		DefaultDatabase     string `json:"defaultDatabase"`
+		User                string `json:"dbUser"`
+		Password            string `json:"dbUserPassword"`
+		RootUser            string `json:"rootUser"`
+		RootPassword        string `json:"rootUserPassword"`
+		Type                string `json:"type"`
+		Version             string `json:"version"`
 		DestinationDockerId string `json:"destinationDockerId"`
-		CreatedAt string `json:"createdAt"`
-		UpdatedAt string `json:"updatedAt"`
-		Settings struct {
-			IsPublic bool `json:"isPublic"`
+		CreatedAt           string `json:"createdAt"`
+		UpdatedAt           string `json:"updatedAt"`
+		Settings            struct {
+			IsPublic   bool `json:"isPublic"`
 			AppendOnly bool `json:"appendOnly"`
 		} `json:"settings"`
 	} `json:"database"`
@@ -64,12 +63,12 @@ func (c *Client) GetDatabase(id string) (*Database, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return response, nil
 }
 
 type SetEngineDatabaseRequestDTO struct {
-    Type    string `json:"type"`
+	Type string `json:"type"`
 }
 
 func (c *Client) SetEngineDatabase(id string, engine string) error {
@@ -88,7 +87,7 @@ func (c *Client) SetEngineDatabase(id string, engine string) error {
 }
 
 type SetDestinationDatabaseRequestDTO struct {
-    DestinationId    string `json:"destinationId"`
+	DestinationId string `json:"destinationId"`
 }
 
 func (c *Client) SetDestinationDatabase(id string, destination string) error {
@@ -107,13 +106,13 @@ func (c *Client) SetDestinationDatabase(id string, destination string) error {
 }
 
 type UpdateDatabaseDTO struct {
-	Name        string `json:"name"`
-	Version 	string `json:"version"`
-	
-	DefaultDatabase string `json:"defaultDatabase"`
-	DbUser string `json:"dbUser"`
-	DbUserPassword string `json:"dbUserPassword"`
-	RootUser string `json:"rootUser"`
+	Name    string `json:"name"`
+	Version string `json:"version"`
+
+	DefaultDatabase  string `json:"defaultDatabase"`
+	DbUser           string `json:"dbUser"`
+	DbUserPassword   string `json:"dbUserPassword"`
+	RootUser         string `json:"rootUser"`
 	RootUserPassword string `json:"rootUserPassword"`
 }
 
@@ -133,7 +132,7 @@ func (c *Client) UpdateDatabase(id string, database *UpdateDatabaseDTO) error {
 }
 
 type UpdateNameDatabaseDTO struct {
-	Name        string `json:"name"`
+	Name string `json:"name"`
 }
 
 func (c *Client) UpdateNameDatabase(id string, name string) error {
@@ -150,8 +149,6 @@ func (c *Client) UpdateNameDatabase(id string, name string) error {
 
 	return nil
 }
-
-
 
 func (c *Client) StartDatabase(id string) error {
 	_, err := c.httpRequest(fmt.Sprintf("api/v1/databases/%v/start", id), "POST", bytes.Buffer{})
@@ -190,13 +187,12 @@ func (c *Client) DeleteDatabase(id string) error {
 	return nil
 }
 
-
 type UpdateSettingsDatabaseDTO struct {
-	IsPublic        bool `json:"isPublic"`
-	AppendOnly 		bool `json:"appendOnly"`
+	IsPublic   bool `json:"isPublic"`
+	AppendOnly bool `json:"appendOnly"`
 }
 type UpdateSettingsDatabase struct {
-    PublicPort    *int `json:"publicPort"`
+	PublicPort *int `json:"publicPort"`
 }
 
 func (c *Client) UpdateSettings(id string, settings *UpdateSettingsDatabaseDTO) (*UpdateSettingsDatabase, error) {
@@ -216,6 +212,6 @@ func (c *Client) UpdateSettings(id string, settings *UpdateSettingsDatabaseDTO) 
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return response, nil
 }

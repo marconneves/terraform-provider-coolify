@@ -7,11 +7,11 @@ import (
 )
 
 type CreateDestinationDTO struct {
-	Name string `json:"name"`
-	Network string `json:"network"`
-	RemoteEngine bool `json:"remoteEngine"`
-	Engine string `json:"engine"`
-	IsCoolifyProxyUsed bool `json:"isCoolifyProsyUsed"`
+	Name               string `json:"name"`
+	Network            string `json:"network"`
+	RemoteEngine       bool   `json:"remoteEngine"`
+	Engine             string `json:"engine"`
+	IsCoolifyProxyUsed bool   `json:"isCoolifyProsyUsed"`
 }
 
 type CreateDestinationResponse struct {
@@ -39,17 +39,16 @@ func (c *Client) NewDestination(destination *CreateDestinationDTO) (*string, err
 	return &response.Id, nil
 }
 
-
 type Destination struct {
 	Destination struct {
-		Id string `json:"id"`
-		Network string `json:"network"`
-		Name string `json:"name"`
-		Engine string `json:"engine"`
-		RemoteEngine bool `json:"remoteEngine"`
-		IsCoolifyProxyUsed bool `json:"isCoolifyProsyUsed"`
-		CreatedAt string `json:"createdAt"`
-		UpdatedAt string `json:"updatedAt"`
+		Id                 string `json:"id"`
+		Network            string `json:"network"`
+		Name               string `json:"name"`
+		Engine             string `json:"engine"`
+		RemoteEngine       bool   `json:"remoteEngine"`
+		IsCoolifyProxyUsed bool   `json:"isCoolifyProsyUsed"`
+		CreatedAt          string `json:"createdAt"`
+		UpdatedAt          string `json:"updatedAt"`
 	} `json:"destination"`
 }
 
@@ -58,13 +57,13 @@ func (c *Client) GetDestination(id string) (*Destination, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	response := &Destination{}
 	err = json.NewDecoder(body).Decode(response)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return response, nil
 }
 
@@ -78,7 +77,7 @@ func (c *Client) CheckIfNetworkNameExist(networkName string) bool {
 	if err != nil {
 		return true
 	}
-	
+
 	_, err = c.httpRequest("api/v1/destinations/check", "POST", buf)
 	if err != nil {
 		return true
@@ -106,7 +105,7 @@ func (c *Client) DeleteDestination(id string) error {
 }
 
 type UpdateDestinationDTO struct {
-	Name        string `json:"name"`
+	Name string `json:"name"`
 }
 
 func (c *Client) UpdateNameDestination(id string, name string) error {

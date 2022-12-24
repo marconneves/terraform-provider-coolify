@@ -1,4 +1,4 @@
-package destination
+package application
 
 import (
 	"strings"
@@ -7,11 +7,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func destinationExistItem(d *schema.ResourceData, m interface{}) (bool, error) {
+func applicationExistsItem(d *schema.ResourceData, m interface{}) (bool, error) {
 	apiClient := m.(*client.Client)
-	destinationId := d.Id()
+	databaseId := d.Id()
 
-	_, err := apiClient.GetDestination(destinationId)
+	_, err := apiClient.GetApplication(databaseId)
 	if err != nil {
 		if strings.Contains(err.Error(), "not found") {
 			return false, nil
