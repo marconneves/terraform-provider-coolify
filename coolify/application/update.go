@@ -35,7 +35,7 @@ func applicationUpdateItem(ctx context.Context, d *schema.ResourceData, m interf
 			app.Template.Settings.InstallCommand = j["install_command"].(string)
 			app.Template.Settings.BuildCommand = j["build_command"].(string)
 			app.Template.Settings.StartCommand = j["start_command"].(string)
-			app.Template.Settings.IsCoolifyBuildPack = j["is_coolify_build_pack"].(bool)
+			app.Template.Settings.IsCoolifyBuildPack = true
 			app.Template.Settings.AutoDeploy = j["auto_deploy"].(bool)
 		}
 
