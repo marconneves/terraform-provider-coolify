@@ -12,16 +12,13 @@ import (
 	"terraform-provider-coolify/api/client"
 )
 
-
-
 func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 
 	db := &Database{}
 	status := make(map[string]string)
 	db.Name = d.Get("name").(string)
 
-
-    engineParts := strings.Split(d.Get("engine").(string), ":")
+	engineParts := strings.Split(d.Get("engine").(string), ":")
 	db.Engine.Image = engineParts[0]
 	db.Engine.Version = engineParts[1]
 
@@ -32,7 +29,7 @@ func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 		db.Settings.AppendOnly = i["append_only"].(bool)
 		db.Settings.DestinationId = i["destination_id"].(string)
 		db.Settings.IsPublic = i["is_public"].(bool)
-		
+
 		db.Settings.DefaultDatabase = i["default_database"].(string)
 		db.Settings.User = i["user"].(string)
 		db.Settings.Password = i["password"].(string)
@@ -143,12 +140,12 @@ func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 	}
 
 	databaseToUpdate := &client.UpdateDatabaseDTO{
-		Name:  db.Name,
-		Version: db.Engine.Version,
-		DefaultDatabase: db.Settings.DefaultDatabase,
-		DbUser: db.Settings.User,
-		DbUserPassword: db.Settings.Password,
-		RootUser: db.Settings.RootUser,
+		Name:             db.Name,
+		Version:          db.Engine.Version,
+		DefaultDatabase:  db.Settings.DefaultDatabase,
+		DbUser:           db.Settings.User,
+		DbUserPassword:   db.Settings.Password,
+		RootUser:         db.Settings.RootUser,
 		RootUserPassword: db.Settings.RootPassword,
 	}
 
@@ -156,7 +153,6 @@ func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 	if err != nil {
 		return diag.FromErr(err)
 	}
-
 
 	tflog.Trace(ctx, "Starting database...")
 	err = apiClient.StartDatabase(*id)
@@ -177,7 +173,7 @@ func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 	if err != nil {
 		return diag.Errorf("error getting database: %s", err)
 	}
-	
+
 	if item.Database.Settings.IsPublic == true {
 		status["host"] = *&item.Database.Id
 		status["port"] = strconv.Itoa(*item.Database.PublicPort)
@@ -207,6 +203,6 @@ func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 	}
 
 	d.Set("status", status)
-	
+
 	return nil
 }

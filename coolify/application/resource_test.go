@@ -1,4 +1,4 @@
-package destination_test
+package application_test
 
 import (
 	"fmt"
@@ -23,7 +23,7 @@ func init() {
 	}
 }
 
-func TestAccDestination_Basic(t *testing.T) {
+func TestAccApplication_Basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() {},
 		Providers:    TestAccProviders,
@@ -32,15 +32,11 @@ func TestAccDestination_Basic(t *testing.T) {
 			{
 				Config: testAccCheckItemBasic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckExampleItemExists("coolify_destination.test_item"),
+					testAccCheckExampleItemExists("coolify_application.test_item"),
 					resource.TestCheckResourceAttr(
-						"coolify_destination.test_item", "name", "my-network"),
-					resource.TestCheckResourceAttr(
-						"coolify_destination.test_item", "engine", "/var/run/docker.sock"),
+						"coolify_application.test_item", "name", "first-app"),
 					resource.TestCheckResourceAttrSet(
-						"coolify_destination.test_item", "id"),
-					resource.TestCheckResourceAttrSet(
-						"coolify_destination.test_item", "status.network"),
+						"coolify_application.test_item", "id"),
 				),
 			},
 		},
@@ -55,7 +51,7 @@ func testAccCheckItemDestroy(s *tf.State) error {
 			continue
 		}
 
-		_, err := apiClient.GetDestination(rs.Primary.ID)
+		_, err := apiClient.GetApplication(rs.Primary.ID)
 		if err == nil {
 			return fmt.Errorf("Alert still exists")
 		}
@@ -80,7 +76,7 @@ func testAccCheckExampleItemExists(resource string) resource.TestCheckFunc {
 		}
 		id := rs.Primary.ID
 		apiClient := TestAccProvider.Meta().(*client.Client)
-		_, err := apiClient.GetDestination(id)
+		_, err := apiClient.GetApplication(id)
 		if err != nil {
 			return fmt.Errorf("error fetching item with resource %s. %s", resource, err)
 		}
@@ -90,8 +86,42 @@ func testAccCheckExampleItemExists(resource string) resource.TestCheckFunc {
 
 func testAccCheckItemBasic() string {
 	return fmt.Sprintf(`
-resource "coolify_destination" "test_item" {
-	name           = "my-network"
+resource "coolify_application" "test_item" {
+	name           = "first-app"
+	domain		   = "first-app.s.b4.run"
+
+	template {
+		build_pack = "node"
+		image = "node:14"
+		build_image = "node:14"
+		
+		settings {
+			install_command = "npm install"
+			start_command = "npm start"
+			auto_deploy = false
+		}
+
+		env {
+			key = "BASE_PROJECT"
+			value = "production"
+		}
+
+		env {
+			key = "BASE_URL"
+			value = "https://front.s.b4.run"
+		}
+	}
+
+	repository {
+		repository_id = 579493141
+		repository = "cool-sample/sample-nodejs"
+		branch = "main"
+	}
+	
+	settings {
+		destination_id = "clb9wrx87001fmo9dvvog6xet"
+		source_id = "clb9y09gs000f9dmod69f7dce"
+	}
 }
 `)
 }

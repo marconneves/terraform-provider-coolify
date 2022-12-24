@@ -29,7 +29,6 @@ func TestProvider_impl(t *testing.T) {
 	var _ *schema.Provider = coolify.Provider()
 }
 
-
 func TestAccPreCheck(t *testing.T) {
 	if v := os.Getenv("TF_ACC"); v == "" {
 		t.Fatal("TF_ACC must be set for acceptance tests")
