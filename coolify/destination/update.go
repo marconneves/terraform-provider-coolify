@@ -17,5 +17,5 @@ func destinationUpdateItem(ctx context.Context, d *schema.ResourceData, m interf
 		return diag.FromErr(err)
 	}
 
-	return nil
+	return destinationReadItem(ctx, d, m)
 }

@@ -123,16 +123,14 @@ func applicationUpdateItem(ctx context.Context, d *schema.ResourceData, m interf
 		Branch:             app.Repository.Branch,
 		ForceRebuild:       true,
 	}
-	deployId, err := apiClient.DeployApplication(applicationId, deploy)
+	_, err = apiClient.DeployApplication(applicationId, deploy)
 	if err != nil {
 		return diag.FromErr(err)
 	}
-
-	status["deployId"] = *deployId
 
 	// TODO: Await deploy finish
 
 	d.Set("status", status)
 
-	return nil
+	return applicationReadItem(ctx, d, m)
 }

@@ -174,16 +174,16 @@ func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 		return diag.Errorf("error getting database: %s", err)
 	}
 
-	if item.Database.Settings.IsPublic == true {
-		status["host"] = *&item.Database.Id
-		status["port"] = strconv.Itoa(*item.Database.PublicPort)
-	} else {
+	if item.Database.Settings.IsPublic {
 		if item.Settings.IpV4 != nil {
 			status["host"] = *item.Settings.IpV4
 		} else {
 			status["host"] = *item.Settings.IpV6
 		}
 		status["port"] = strconv.Itoa(item.PrivatePort)
+	} else {
+		status["host"] = *&item.Database.Id
+		status["port"] = strconv.Itoa(*item.Database.PublicPort)
 	}
 
 	if *&item.Database.DefaultDatabase != "" {

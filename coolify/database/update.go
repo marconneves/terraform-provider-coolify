@@ -2,10 +2,8 @@ package database
 
 import (
 	"context"
-	"strconv"
 	"terraform-provider-coolify/api/client"
 
-	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -32,19 +30,10 @@ func databaseUpdateItem(ctx context.Context, d *schema.ResourceData, m interface
 	settingsToUpdate := &client.UpdateSettingsDatabaseDTO{
 		IsPublic: db.Settings.IsPublic,
 	}
-	settingsResponse, err := apiClient.UpdateSettings(databaseId, settingsToUpdate)
+	_, err = apiClient.UpdateSettings(databaseId, settingsToUpdate)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	status := make(map[string]interface{})
-	if settingsResponse.PublicPort != nil {
-		status["port"] = settingsResponse.PublicPort
-
-		tflog.Info(ctx, "Database %v started on port: %"+databaseId+strconv.Itoa(*settingsResponse.PublicPort))
-	}
-
-	d.Set("status", []interface{}{status})
-
-	return nil
+	return databaseReadItem(ctx, d, m)
 }
