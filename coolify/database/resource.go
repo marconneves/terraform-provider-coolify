@@ -112,12 +112,12 @@ func Resource() *schema.Resource {
 			},
 
 			"status": {
-				Type:     schema.TypeMap,
-				Computed: true,
+				Type:         schema.TypeMap,
+				Computed:     true,
+				ComputedWhen: []string{"status.0.is_public", "status.0.append_only"},
 				Elem: &schema.Schema{
-					Type:         schema.TypeString,
-					Computed:     true,
-					ComputedWhen: []string{"settings"},
+					Type:     schema.TypeString,
+					Computed: true,
 				},
 			},
 		},
