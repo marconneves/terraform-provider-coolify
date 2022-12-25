@@ -1,6 +1,6 @@
 ---
-page_title: "application Resource - terraform-provider-coolify"
-subcategory: ""
+subcategory: "Application"
+page_title: "Coolify: coolify_application"
 description: |-
   The order resource to create a application on Coolify.
 ---

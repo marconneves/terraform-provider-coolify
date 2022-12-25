@@ -1,6 +1,6 @@
 ---
-page_title: "database Resource - terraform-provider-coolify"
-subcategory: ""
+subcategory: "Database"
+page_title: "Coolify: coolify_database"
 description: |-
   The order resource to create a database on Coolify.
 ---
