@@ -7,11 +7,8 @@ description: |-
 
 # Resource `coolify_destination`
 
--> Visit the [Destinations - Docs Coolify](https://docs.coollabs.io/coolify/destinations) to see details of Destinations.
-
 Destinations define where to deploy your application, database, or service.
 
-~> **Note:** Now is available only Local Docker.
 
 ## coolify_destination
 
