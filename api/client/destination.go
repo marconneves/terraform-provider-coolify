@@ -40,16 +40,18 @@ func (c *Client) NewDestination(destination *CreateDestinationDTO) (*string, err
 }
 
 type Destination struct {
-	Destination struct {
-		Id                 string `json:"id"`
-		Network            string `json:"network"`
-		Name               string `json:"name"`
-		Engine             string `json:"engine"`
-		RemoteEngine       bool   `json:"remoteEngine"`
-		IsCoolifyProxyUsed bool   `json:"isCoolifyProsyUsed"`
-		CreatedAt          string `json:"createdAt"`
-		UpdatedAt          string `json:"updatedAt"`
-	} `json:"destination"`
+	Id                 string `json:"id"`
+	Network            string `json:"network"`
+	Name               string `json:"name"`
+	Engine             string `json:"engine"`
+	RemoteEngine       bool   `json:"remoteEngine"`
+	IsCoolifyProxyUsed bool   `json:"isCoolifyProsyUsed"`
+	CreatedAt          string `json:"createdAt"`
+	UpdatedAt          string `json:"updatedAt"`
+}
+
+type DestinationUnique struct {
+	Destination Destination `json:"destination"`
 }
 
 func (c *Client) GetDestination(id string) (*Destination, error) {
@@ -58,13 +60,32 @@ func (c *Client) GetDestination(id string) (*Destination, error) {
 		return nil, err
 	}
 
-	response := &Destination{}
+	response := &DestinationUnique{}
 	err = json.NewDecoder(body).Decode(response)
 	if err != nil {
 		return nil, err
 	}
 
-	return response, nil
+	return &response.Destination, nil
+}
+
+type DestinationMany struct {
+	Destinations []Destination `json:"destinations"`
+}
+
+func (c *Client) GetDestinations() (*[]Destination, error) {
+	body, err := c.httpRequest("api/v1/destinations", "GET", bytes.Buffer{})
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DestinationMany{}
+	err = json.NewDecoder(body).Decode(response)
+	if err != nil {
+		return nil, err
+	}
+
+	return &response.Destinations, nil
 }
 
 type CheckIfNetworkNameExistRequestDTO struct {

@@ -11,9 +11,9 @@ description: |-
 
 The order resource to create a application on Coolify.
 
-# coolify_application
+## coolify_application
 
-## Example Usage - basic PostgreSQL
+### Example Usage - basic PostgreSQL
 
 ```hcl
 resource "coolify_application" "test_item" {

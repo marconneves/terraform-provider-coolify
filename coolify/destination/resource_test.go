@@ -39,8 +39,6 @@ func TestAccDestination_Basic(t *testing.T) {
 						"coolify_destination.test_item", "engine", "/var/run/docker.sock"),
 					resource.TestCheckResourceAttrSet(
 						"coolify_destination.test_item", "id"),
-					resource.TestCheckResourceAttrSet(
-						"coolify_destination.test_item", "status.network"),
 				),
 			},
 		},
@@ -69,11 +67,11 @@ func testAccCheckItemDestroy(s *tf.State) error {
 	return nil
 }
 
-func testAccCheckExampleItemExists(resource string) resource.TestCheckFunc {
+func testAccCheckExampleItemExists(resourceOrDataSource string) resource.TestCheckFunc {
 	return func(state *tf.State) error {
-		rs, ok := state.RootModule().Resources[resource]
+		rs, ok := state.RootModule().Resources[resourceOrDataSource]
 		if !ok {
-			return fmt.Errorf("Not found: %s", resource)
+			return fmt.Errorf("Not found: %s", resourceOrDataSource)
 		}
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("No Record ID is set")
@@ -82,8 +80,26 @@ func testAccCheckExampleItemExists(resource string) resource.TestCheckFunc {
 		apiClient := TestAccProvider.Meta().(*client.Client)
 		_, err := apiClient.GetDestination(id)
 		if err != nil {
-			return fmt.Errorf("error fetching item with resource %s. %s", resource, err)
+			return fmt.Errorf("error fetching item with resource %s. %s", resourceOrDataSource, err)
 		}
+
+		return nil
+	}
+}
+
+func checkAttribute(resourceOrDataSource string, key string, value string) resource.TestCheckFunc {
+	return func(state *tf.State) error {
+		rs, ok := state.RootModule().Resources[resourceOrDataSource]
+		if !ok {
+			return fmt.Errorf("Not found: %s", resourceOrDataSource)
+		}
+		if rs.Primary.ID == "" {
+			return fmt.Errorf("No Record ID is set")
+		}
+		if rs.Primary.Attributes[key] != value {
+			return fmt.Errorf(key + "is not set")
+		}
+
 		return nil
 	}
 }

@@ -11,9 +11,9 @@ description: |-
 
 The order resource to create a database on Coolify.
 
-# coolify_database
+## coolify_database
 
-## Example Usage - basic PostgreSQL
+### Example Usage - basic PostgreSQL
 ```hcl
 resource "coolify_database" "my_db" {
   name           = "my-db"

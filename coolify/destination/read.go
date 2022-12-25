@@ -13,7 +13,7 @@ func destinationReadItem(ctx context.Context, d *schema.ResourceData, m interfac
 	apiClient := m.(*client.Client)
 	destinationId := d.Id()
 
-	item, err := apiClient.GetDestination(destinationId)
+	destination, err := apiClient.GetDestination(destinationId)
 	if err != nil {
 		if strings.Contains(err.Error(), "not found") {
 			d.SetId("")
@@ -22,13 +22,11 @@ func destinationReadItem(ctx context.Context, d *schema.ResourceData, m interfac
 		}
 	}
 
-	d.SetId(item.Destination.Id)
-	d.Set("name", item.Destination.Name)
-	d.Set("engine", item.Destination.Engine)
+	d.SetId(destination.Id)
 
-	status := make(map[string]string)
-	status["network"] = item.Destination.Network
-	d.Set("status", status)
+	d.Set("name", destination.Name)
+	d.Set("engine", destination.Engine)
+	d.Set("network", destination.Network)
 
 	return nil
 }
