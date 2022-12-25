@@ -29,6 +29,10 @@ func Provider() *schema.Provider {
 			"coolify_destination": destination.Resource(),
 			"coolify_application": application.Resource(),
 		},
+
+		DataSourcesMap: map[string]*schema.Resource{
+			"coolify_destination": destination.DataSource(),
+		},
 		ConfigureFunc: providerConfigure,
 	}
 }

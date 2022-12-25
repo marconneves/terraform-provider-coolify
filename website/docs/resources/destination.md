@@ -1,6 +1,6 @@
 ---
-page_title: "destination Resource - terraform-provider-coolify"
-subcategory: ""
+subcategory: "Destination"
+page_title: "Coolify: coolify_destination"
 description: |-
   Destinations define where to deploy your application, database, or service.
 ---
@@ -13,9 +13,9 @@ Destinations define where to deploy your application, database, or service.
 
 ~> **Note:** Now is available only Local Docker.
 
-# coolify_destination
+## coolify_destination
 
-## Example Usage
+### Example Usage
 When your not define network, we generate a UUID for here.
 ```hcl
 resource "coolify_destination" "my_network" {
@@ -23,7 +23,7 @@ resource "coolify_destination" "my_network" {
 }
 ```
 
-## Example Usage - with network
+### Example Usage - with network
 ```hcl
 resource "coolify_destination" "my_network" {
   name      = "Project Terraform"
@@ -31,7 +31,7 @@ resource "coolify_destination" "my_network" {
 }
 ```
 
-## Example Usage - Create a destination and a database
+### Example Usage - Create a destination and a database
 ```hcl
 resource "coolify_destination" "my_network" {
   name      = "Project Terraform"
@@ -77,6 +77,5 @@ In addition to all the arguments above, the following attributes are exported.
 * `id` -
   The ID of the destination.
 
-The `status` block supports:
 * `network` -
     The network, when whe generate the UUID, return here.

@@ -20,6 +20,7 @@ func Resource() *schema.Resource {
 			"network": {
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
 				ForceNew: true,
 			},
 			"engine": {
@@ -28,15 +29,7 @@ func Resource() *schema.Resource {
 				ForceNew: true,
 				Default:  "/var/run/docker.sock",
 			},
-
-			"status": {
-				Type:     schema.TypeMap,
-				Computed: true,
-				Elem: &schema.Schema{
-					Type:     schema.TypeString,
-					Computed: true,
-				},
-			},
 		},
+		UseJSONNumber: true,
 	}
 }

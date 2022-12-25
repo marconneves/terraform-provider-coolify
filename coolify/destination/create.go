@@ -10,8 +10,6 @@ import (
 )
 
 func destinationCreateItem(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	status := make(map[string]string)
-
 	networkId := d.Get("network").(string)
 	if networkId == "" {
 		networkId = uuid.New().String()
@@ -36,10 +34,7 @@ func destinationCreateItem(ctx context.Context, d *schema.ResourceData, m interf
 		return diag.FromErr(err)
 	}
 
-	status["network"] = networkId
-	d.Set("status", status)
-
 	d.SetId(*destinationId)
 
-	return nil
+	return destinationReadItem(ctx, d, m)
 }
