@@ -1,6 +1,6 @@
 # Documentation
 
-[Coolify - Doc](https://docs.coollabs.io/coolify)
+[Coolify - Doc](https://docs.coollabs.io/coolify)<br/>
 [Terraform Provider - Doc](https://registry.terraform.io/providers/themarkwill/coolify/latest/docs)
 
 # terraform-provider-coolify
