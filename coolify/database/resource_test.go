@@ -2,15 +2,14 @@ package database_test
 
 import (
 	"fmt"
-	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	tf "github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
 	"terraform-provider-coolify/api/client"
 	"terraform-provider-coolify/coolify"
+	"terraform-provider-coolify/shared/tests"
 )
 
 var TestAccProviders map[string]*schema.Provider
@@ -23,16 +22,27 @@ func init() {
 	}
 }
 
+func GetDatabase(client *client.Client, id string) (interface{}, error) {
+	return client.GetDatabase(id)
+}
+
 func TestAccDatabase_Basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() {},
-		Providers:    TestAccProviders,
-		CheckDestroy: testAccCheckItemDestroy,
+		PreCheck:  func() {},
+		Providers: TestAccProviders,
+		CheckDestroy: tests.TestAccCheckDestroy(
+			TestAccProvider,
+			GetDatabase,
+		),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckItemBasic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckExampleItemExists("coolify_database.test_item"),
+					tests.TestAccCheckExists(
+						"coolify_database.test_item",
+						TestAccProvider,
+						GetDatabase,
+					),
 					resource.TestCheckResourceAttr(
 						"coolify_database.test_item", "name", "my-db"),
 					resource.TestCheckResourceAttr(
@@ -43,47 +53,6 @@ func TestAccDatabase_Basic(t *testing.T) {
 			},
 		},
 	})
-}
-
-func testAccCheckItemDestroy(s *tf.State) error {
-	apiClient := TestAccProvider.Meta().(*client.Client)
-
-	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "example_item" {
-			continue
-		}
-
-		_, err := apiClient.GetDatabase(rs.Primary.ID)
-		if err == nil {
-			return fmt.Errorf("Alert still exists")
-		}
-		notFoundErr := "not found"
-		expectedErr := regexp.MustCompile(notFoundErr)
-		if !expectedErr.Match([]byte(err.Error())) {
-			return fmt.Errorf("expected %s, got %s", notFoundErr, err)
-		}
-	}
-
-	return nil
-}
-
-func testAccCheckExampleItemExists(resource string) resource.TestCheckFunc {
-	return func(state *tf.State) error {
-		rs, ok := state.RootModule().Resources[resource]
-		if !ok {
-			return fmt.Errorf("Not found: %s", resource)
-		}
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("No Record ID is set")
-		}
-		id := rs.Primary.ID
-		apiClient := TestAccProvider.Meta().(*client.Client)
-		_, err := apiClient.GetDatabase(id)
-		if err != nil {
-			return fmt.Errorf("error fetching item with resource %s. %s", resource, err)
-		}
-		return nil
-	}
 }
 
 func testAccCheckItemBasic() string {
