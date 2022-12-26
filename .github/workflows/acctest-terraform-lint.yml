@@ -19,7 +19,7 @@ jobs:
           go-version-file: .go-version
 
       - name: Test terraform-provider-coolify
-        run: go test -timeout 30s -run '^(TestProvider|TestProvider_impl|TestAccPreCheck)$' terraform-provider-coolify/coolify
+        run: go test -timeout 90s -run '^(TestProvider|TestProvider_impl|TestAccPreCheck)$' terraform-provider-coolify/coolify
 
       - name: Test Shared
         run: go test -timeout 30s -run '^TestValidateEngine$' terraform-provider-coolify/shared
