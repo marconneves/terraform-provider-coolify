@@ -2,7 +2,7 @@ terraform {
   required_providers {
     coolify = {
       source  = "themarkwill/coolify"
-      version = "0.3.0-beta.4"
+      version = "0.4.4"
     }
   }
 }
