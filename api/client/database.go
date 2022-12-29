@@ -109,11 +109,11 @@ type UpdateDatabaseDTO struct {
 	Name    string `json:"name"`
 	Version string `json:"version"`
 
-	DefaultDatabase  string `json:"defaultDatabase"`
-	DbUser           string `json:"dbUser"`
-	DbUserPassword   string `json:"dbUserPassword"`
-	RootUser         string `json:"rootUser"`
-	RootUserPassword string `json:"rootUserPassword"`
+	DefaultDatabase  *string `json:"defaultDatabase,omitempty"`
+	DbUser           *string `json:"dbUser,omitempty"`
+	DbUserPassword   *string `json:"dbUserPassword,omitempty"`
+	RootUser         *string `json:"rootUser,omitempty"`
+	RootUserPassword *string `json:"rootUserPassword,omitempty"`
 }
 
 func (c *Client) UpdateDatabase(id string, database *UpdateDatabaseDTO) error {
