@@ -88,5 +88,5 @@ func dataSourceReadDatabase(ctx context.Context, d *schema.ResourceData, m inter
 	databaseId := d.Get("database_id").(string)
 	d.SetId(databaseId)
 
-	return databaseReadItem(ctx, d, m)
+	return databaseRead(ctx, d, m)
 }

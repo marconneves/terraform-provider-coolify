@@ -2,7 +2,6 @@ package database
 
 import (
 	"context"
-	"strconv"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -15,7 +14,6 @@ import (
 func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 
 	db := &Database{}
-	status := make(map[string]string)
 	db.Name = d.Get("name").(string)
 
 	engineParts := strings.Split(d.Get("engine").(string), ":")
@@ -28,7 +26,7 @@ func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 
 		db.Settings.AppendOnly = i["append_only"].(bool)
 		db.Settings.DestinationId = i["destination_id"].(string)
-		db.Settings.IsPublic = i["is_public"].(bool)
+		db.Settings.IsPublic = i["is_public"].(bool) == true
 
 		db.Settings.DefaultDatabase = i["default_database"].(string)
 		db.Settings.User = i["user"].(string)
@@ -140,13 +138,28 @@ func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 	}
 
 	databaseToUpdate := &client.UpdateDatabaseDTO{
-		Name:             db.Name,
-		Version:          db.Engine.Version,
-		DefaultDatabase:  db.Settings.DefaultDatabase,
-		DbUser:           db.Settings.User,
-		DbUserPassword:   db.Settings.Password,
-		RootUser:         db.Settings.RootUser,
-		RootUserPassword: db.Settings.RootPassword,
+		Name:    db.Name,
+		Version: db.Engine.Version,
+	}
+
+	if db.Settings.DefaultDatabase != "" {
+		databaseToUpdate.DefaultDatabase = &db.Settings.DefaultDatabase
+	}
+
+	if db.Settings.User != "" {
+		databaseToUpdate.DbUser = &db.Settings.User
+	}
+
+	if db.Settings.Password != "" {
+		databaseToUpdate.DbUserPassword = &db.Settings.Password
+	}
+
+	if db.Settings.RootUser != "" {
+		databaseToUpdate.RootUser = &db.Settings.RootUser
+	}
+
+	if db.Settings.RootPassword != "" {
+		databaseToUpdate.RootUserPassword = &db.Settings.RootPassword
 	}
 
 	err = apiClient.UpdateDatabase(*id, databaseToUpdate)
@@ -169,40 +182,5 @@ func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 		return diag.FromErr(err)
 	}
 
-	item, err := apiClient.GetDatabase(*id)
-	if err != nil {
-		return diag.Errorf("error getting database: %s", err)
-	}
-
-	if item.Database.Settings.IsPublic {
-		if item.Settings.IpV4 != nil {
-			status["host"] = *item.Settings.IpV4
-		} else {
-			status["host"] = *item.Settings.IpV6
-		}
-		status["port"] = strconv.Itoa(*item.Database.PublicPort)
-	} else {
-		status["host"] = *&item.Database.Id
-		status["port"] = strconv.Itoa(item.PrivatePort)
-	}
-
-	if *&item.Database.DefaultDatabase != "" {
-		status["default_database"] = *&item.Database.DefaultDatabase
-	}
-	if *&item.Database.User != "" {
-		status["user"] = *&item.Database.User
-	}
-	if *&item.Database.Password != "" {
-		status["password"] = *&item.Database.Password
-	}
-	if *&item.Database.RootUser != "" {
-		status["root_user"] = *&item.Database.RootUser
-	}
-	if *&item.Database.RootPassword != "" {
-		status["root_password"] = *&item.Database.RootPassword
-	}
-
-	d.Set("status", status)
-
-	return nil
+	return databaseRead(ctx, d, m)
 }

@@ -35,5 +35,5 @@ func databaseUpdateItem(ctx context.Context, d *schema.ResourceData, m interface
 		return diag.FromErr(err)
 	}
 
-	return databaseReadItem(ctx, d, m)
+	return databaseRead(ctx, d, m)
 }

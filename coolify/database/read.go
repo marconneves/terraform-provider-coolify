@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func databaseReadItem(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func databaseRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	apiClient := m.(*client.Client)
 	databaseId := d.Id()
 
@@ -23,7 +23,6 @@ func databaseReadItem(ctx context.Context, d *schema.ResourceData, m interface{}
 		}
 	}
 
-	d.SetId(item.Database.Id)
 	d.Set("name", item.Database.Name)
 	d.Set("engine", item.Database.Type+":"+item.Database.Version)
 

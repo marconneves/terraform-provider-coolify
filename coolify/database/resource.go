@@ -32,7 +32,7 @@ type Database struct {
 func Resource() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: databaseCreateItem,
-		ReadContext:   databaseReadItem,
+		ReadContext:   databaseRead,
 		UpdateContext: databaseUpdateItem,
 		DeleteContext: databaseDeleteItem,
 		Exists:        databaseExistsItem,
@@ -70,7 +70,7 @@ func Resource() *schema.Resource {
 						"is_public": {
 							Type:     schema.TypeBool,
 							Optional: true,
-							Default:  false,
+							Computed: true,
 						},
 						"append_only": {
 							Type:     schema.TypeBool,
@@ -81,42 +81,41 @@ func Resource() *schema.Resource {
 							Type:     schema.TypeString,
 							Optional: true,
 							ForceNew: true,
-							Default:  "",
+							Computed: true,
 						},
 						"user": {
 							Type:     schema.TypeString,
 							Optional: true,
 							ForceNew: true,
-							Default:  "",
+							Computed: true,
 						},
 						"password": {
 							Type:      schema.TypeString,
 							Optional:  true,
 							ForceNew:  true,
 							Sensitive: true,
-							Default:   "",
+							Computed:  true,
 						},
 						"root_user": {
 							Type:     schema.TypeString,
 							Optional: true,
 							ForceNew: true,
-							Default:  "",
+							Computed: true,
 						},
 						"root_password": {
 							Type:      schema.TypeString,
 							Optional:  true,
 							ForceNew:  true,
 							Sensitive: true,
-							Default:   "",
+							Computed:  true,
 						},
 					},
 				},
 			},
 
 			"status": {
-				Type:         schema.TypeMap,
-				Computed:     true,
-				ComputedWhen: []string{"status.0.is_public", "status.0.append_only"},
+				Type:     schema.TypeMap,
+				Computed: true,
 				Elem: &schema.Schema{
 					Type:     schema.TypeString,
 					Computed: true,

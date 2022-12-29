@@ -5,7 +5,7 @@ description: |-
   Destinations define where to deploy your application, database, or service.
 ---
 
-# Resource `coolify_destination`
+# Resource `coolify_destination` (Data Source)
 
 Destinations define where to deploy your application, database, or service.
 
@@ -13,7 +13,6 @@ Destinations define where to deploy your application, database, or service.
 ## coolify_destination
 
 ### Example Usage
-When your not define network, we generate a UUID for here.
 ```hcl
 data "coolify_destination" "network" {
   network = "Project Terraform"
