@@ -81,11 +81,11 @@ func GetHost(item *client.Database) string {
 	}
 }
 
-func GetPort(item *client.Database) int {
+func GetPort(item *client.Database) string {
 	if item.Database.Settings.IsPublic {
-		return *item.Database.PublicPort
+		return strconv.Itoa(*item.Database.PublicPort)
 	} else {
-		return item.PrivatePort
+		return strconv.Itoa(item.PrivatePort)
 	}
 }
 
@@ -121,7 +121,7 @@ func GetUrl(item *client.Database) string {
 	databaseDefault, databaseDbUser, databaseDbUserPassword := GenerateDbDetails(item)
 	databaseDbUser = GetUser(&databaseDbUser)
 	host := GetHost(item)
-	port := strconv.Itoa(GetPort(item))
+	port := GetPort(item)
 
 	return fmt.Sprintf(
 		"%s://%s%s@%s:%s/%s",
