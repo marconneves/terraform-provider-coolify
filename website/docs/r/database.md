@@ -55,10 +55,10 @@ The `settings` block supports:
     Optional. The default database of the database. *(Only for MySQL, MariaDB, PostgreSQL or CouchDB)
 * `user` - 
     (Optional)
-    Optional. The user of the database. *(Only for MySQL, MariaDB, PostgreSQL  or CouchDB)
+    Optional. The user of the database. *(Only for MySQL, MariaDB, PostgreSQL or CouchDB)
 * `password` -
     (Optional)
-    Optional. The password of the database. *(Only for MySQL, MariaDB, PostgreSQL, Redis  or CouchDB)
+    Optional. The password of the database. *(Only for MySQL, MariaDB, PostgreSQL, Redis or CouchDB)
 * `root_user` -
     (Optional)
     Optional. The root user of the database. *(Only for MongoDB, MySQL, MariaDB, CouchDB or EdgeDB)

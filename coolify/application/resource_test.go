@@ -57,7 +57,7 @@ func testAccCheckItemBasic() string {
 	return fmt.Sprintf(`
 resource "coolify_application" "test_item" {
 	name           = "first-app"
-	domain		   = "first-app.s.b4.run"
+	is_bot		   = true
 
 	template {
 		build_pack = "node"

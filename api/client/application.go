@@ -239,7 +239,7 @@ func (c *Client) DeployApplication(id string, deploy *DeployApplicationDTO) (*st
 type ApplicationEnvironmentDTO struct {
 	Name          string `json:"name"`
 	Value         string `json:"value"`
-	IsBuildEnv    bool   `json:"isBuildEnv"`
+	IsBuildEnv    bool   `json:"isBuildSecret"`
 	IsNew         bool   `json:"isNew"`
 	PreviewSecret bool   `json:"previewSecret"`
 }
