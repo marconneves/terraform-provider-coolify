@@ -279,3 +279,30 @@ func (c *Client) DeleteEnvironmentFromApplication(id string, name string) error 
 
 	return nil
 }
+
+type UpdateApplicationSettingsDTO struct {
+	Debug         *bool   `json:"debug,omitempty"`
+	Previews      *bool   `json:"previews,omitempty"`
+	DualCerts     *bool   `json:"dualCerts,omitempty"`
+	AutoDeploy    *bool   `json:"autodeploy,omitempty"`
+	Branch        *string `json:"branch,omitempty"`
+	ProjectId     *string `json:"projectId,omitempty"`
+	IsBot         *bool   `json:"isBot,omitempty"`
+	IsDBBranching *bool   `json:"isDBBranching,omitempty"`
+	IsCustomSSL   *bool   `json:"isCustomSSL,omitempty"`
+}
+
+func (c *Client) UpdateApplicationSettings(id string, settings *UpdateApplicationSettingsDTO) error {
+	buf := bytes.Buffer{}
+	err := json.NewEncoder(&buf).Encode(settings)
+	if err != nil {
+		return err
+	}
+
+	_, err = c.httpRequest(fmt.Sprintf("api/v1/applications/%v/settings", id), "POST", buf)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

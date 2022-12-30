@@ -40,21 +40,22 @@ func databaseRead(ctx context.Context, d *schema.ResourceData, m interface{}) di
 
 	uri := GetUrl(item)
 
-	d.Set("host", GetHost(item))
-	d.Set("port", GetPort(item))
 	d.Set("uri", uri)
 
+	status := make(map[string]interface{})
+	status["host"] = GetHost(item)
+	status["port"] = GetPort(item)
+
 	if *&item.Database.DefaultDatabase != "" {
-		d.Set("default_database", *&item.Database.DefaultDatabase)
+		status["default_database"] = *&item.Database.DefaultDatabase
 	}
 	if *&item.Database.User != "" {
-		d.Set("user", *&item.Database.User)
+		status["user"] = *&item.Database.User
 	}
 	if *&item.Database.Password != "" {
-		d.Set("password", *&item.Database.Password)
+		status["password"] = *&item.Database.Password
 	}
 
-	status := make(map[string]interface{})
 	if *&item.Database.RootUser != "" {
 		status["root_user"] = *&item.Database.RootUser
 	}

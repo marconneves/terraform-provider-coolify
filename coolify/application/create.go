@@ -137,6 +137,14 @@ func applicationCreateItem(ctx context.Context, d *schema.ResourceData, m interf
 		}
 	}
 
+	settingsToUpdate := &client.UpdateApplicationSettingsDTO{
+		IsBot: &app.IsBot,
+	}
+	err = apiClient.UpdateApplicationSettings(*id, settingsToUpdate)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
 	deploy := &client.DeployApplicationDTO{
 		PullMergeRequestId: nil,
 		Branch:             app.Repository.Branch,

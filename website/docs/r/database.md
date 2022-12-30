@@ -72,21 +72,20 @@ In addition to all the arguments above, the following attributes are exported.
 
 * `id` -
   The ID of the database.
-
-* `host` -
-  The host of the database.
-* `port` -
-  The port of the database.
 * `uri` -
   The Connection string of database.
-* `default_database` -
-  The default database of the database. *(Only for MySQL, MariaDB, PostgreSQL or CouchDB)
-* `user` -
-  The user of the database. *(Only for MySQL, MariaDB, PostgreSQL  or CouchDB)
-* `password` -
-  The password of the database. *(Only for MySQL, MariaDB, PostgreSQL, Redis  or CouchDB)
 
 The `status` block supports:
+* `host` -
+    The host of the database.
+* `port` -
+    The port of the database.
+* `default_database` -
+    The default database of the database. *(Only for MySQL, MariaDB, PostgreSQL or CouchDB)
+* `user` -
+    The user of the database. *(Only for MySQL, MariaDB, PostgreSQL or CouchDB)
+* `password` -
+    The password of the database. *(Only for MySQL, MariaDB, PostgreSQL, Redis or CouchDB)
 * `root_user` -
     The root user of the database. *(Only for MongoDB, MySQL, MariaDB, CouchDB or EdgeDB)
 * `root_password` -
