@@ -41,17 +41,19 @@ func databaseRead(ctx context.Context, d *schema.ResourceData, m interface{}) di
 	if item.Database.Settings.IsPublic {
 		if item.Settings.IpV4 != nil {
 			status["host"] = *item.Settings.IpV4
+			d.Set("host", *item.Settings.IpV4)
 		} else {
 			status["host"] = *item.Settings.IpV6
+			d.Set("host", *item.Settings.IpV6)
 		}
 		status["port"] = strconv.Itoa(*item.Database.PublicPort)
+		d.Set("port", strconv.Itoa(*item.Database.PublicPort))
 	} else {
 		status["host"] = *&item.Database.Id
+		d.Set("host", *&item.Database.Id)
 		status["port"] = strconv.Itoa(item.PrivatePort)
+		d.Set("port", strconv.Itoa(item.PrivatePort))
 	}
-
-	d.Set("host", status["host"])
-	d.Set("port", status["port"])
 
 	if *&item.Database.DefaultDatabase != "" {
 		status["default_database"] = *&item.Database.DefaultDatabase
