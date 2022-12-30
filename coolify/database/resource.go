@@ -70,7 +70,7 @@ func Resource() *schema.Resource {
 						"is_public": {
 							Type:     schema.TypeBool,
 							Optional: true,
-							Computed: true,
+							ForceNew: true,
 						},
 						"append_only": {
 							Type:     schema.TypeBool,
@@ -81,90 +81,59 @@ func Resource() *schema.Resource {
 							Type:     schema.TypeString,
 							Optional: true,
 							ForceNew: true,
-							Computed: true,
 						},
 						"user": {
 							Type:     schema.TypeString,
 							Optional: true,
 							ForceNew: true,
-							Computed: true,
 						},
 						"password": {
 							Type:      schema.TypeString,
 							Optional:  true,
 							ForceNew:  true,
 							Sensitive: true,
-							Computed:  true,
 						},
 						"root_user": {
 							Type:     schema.TypeString,
 							Optional: true,
 							ForceNew: true,
-							Computed: true,
 						},
 						"root_password": {
 							Type:      schema.TypeString,
 							Optional:  true,
 							ForceNew:  true,
 							Sensitive: true,
-							Computed:  true,
 						},
 					},
 				},
 			},
 
 			"host": {
-				Type:                  schema.TypeString,
-				Optional:              true,
-				Computed:              true,
-				DiffSuppressOnRefresh: true,
-				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
-					var port bool
-					var portChecker bool
-
-					settings := d.Get("settings").([]interface{})
-					for _, setting := range settings {
-						i := setting.(map[string]interface{})
-						if i["is_public"] != nil {
-							port = i["is_public"].(bool) == true
-						}
-					}
-
-					status := d.Get("status").(map[string]interface{})
-					if status["old_is_public_check"] != nil {
-						portChecker = status["old_is_public_check"].(string) == "true"
-					}
-
-					return port == portChecker
-				},
+				Type:     schema.TypeString,
+				Computed: true,
 			},
-
 			"port": {
-				Type:                  schema.TypeString,
-				Optional:              true,
-				Computed:              true,
-				DiffSuppressOnRefresh: true,
-				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
-					var port bool
-					var portChecker bool
-
-					settings := d.Get("settings").([]interface{})
-					for _, setting := range settings {
-						i := setting.(map[string]interface{})
-						if i["is_public"] != nil {
-							port = i["is_public"].(bool) == true
-						}
-					}
-
-					status := d.Get("status").(map[string]interface{})
-					if status["old_is_public_check"] != nil {
-						portChecker = status["old_is_public_check"].(string) == "true"
-					}
-
-					return port == portChecker
-				},
+				Type:     schema.TypeInt,
+				Computed: true,
 			},
-
+			"default_database": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"user": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"password": {
+				Type:      schema.TypeString,
+				Computed:  true,
+				Sensitive: true,
+			},
+			"uri": {
+				Type:      schema.TypeString,
+				Computed:  true,
+				Sensitive: true,
+			},
 			"status": {
 				Type:     schema.TypeMap,
 				Computed: true,
