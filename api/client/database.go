@@ -41,7 +41,14 @@ type Database struct {
 		DestinationDockerId string `json:"destinationDockerId"`
 		CreatedAt           string `json:"createdAt"`
 		UpdatedAt           string `json:"updatedAt"`
-		Settings            struct {
+		DestinationDocker   struct {
+			Id              string `json:"id"`
+			Name            string `json:"name"`
+			Network         string `json:"network"`
+			RemoteEngine    bool   `json:"remoteEngine"`
+			RemoteIpAddress string `json:"remoteIpAddress"`
+		} `json:"destinationDocker"`
+		Settings struct {
 			IsPublic   bool `json:"isPublic"`
 			AppendOnly bool `json:"appendOnly"`
 		} `json:"settings"`

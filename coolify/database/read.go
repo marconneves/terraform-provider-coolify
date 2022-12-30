@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 	"strings"
 	"terraform-provider-coolify/api/client"
@@ -37,47 +38,97 @@ func databaseRead(ctx context.Context, d *schema.ResourceData, m interface{}) di
 	settings["root_password"] = item.Database.RootPassword
 	d.Set("settings", []interface{}{settings})
 
-	status := make(map[string]interface{})
-	if item.Database.Settings.IsPublic {
-		if item.Settings.IpV4 != nil {
-			status["host"] = *item.Settings.IpV4
-			d.Set("host", *item.Settings.IpV4)
-		} else {
-			status["host"] = *item.Settings.IpV6
-			d.Set("host", *item.Settings.IpV6)
-		}
-		status["port"] = strconv.Itoa(*item.Database.PublicPort)
-		d.Set("port", strconv.Itoa(*item.Database.PublicPort))
-	} else {
-		status["host"] = *&item.Database.Id
-		d.Set("host", *&item.Database.Id)
-		status["port"] = strconv.Itoa(item.PrivatePort)
-		d.Set("port", strconv.Itoa(item.PrivatePort))
-	}
+	uri := GetUrl(item)
+
+	d.Set("host", GetHost(item))
+	d.Set("port", GetPort(item))
+	d.Set("uri", uri)
 
 	if *&item.Database.DefaultDatabase != "" {
-		status["default_database"] = *&item.Database.DefaultDatabase
+		d.Set("default_database", *&item.Database.DefaultDatabase)
 	}
 	if *&item.Database.User != "" {
-		status["user"] = *&item.Database.User
+		d.Set("user", *&item.Database.User)
 	}
 	if *&item.Database.Password != "" {
-		status["password"] = *&item.Database.Password
+		d.Set("password", *&item.Database.Password)
 	}
+
+	status := make(map[string]interface{})
 	if *&item.Database.RootUser != "" {
 		status["root_user"] = *&item.Database.RootUser
 	}
 	if *&item.Database.RootPassword != "" {
 		status["root_password"] = *&item.Database.RootPassword
 	}
-
-	if item.Database.Settings.IsPublic {
-		status["old_is_public_check"] = "true"
-	} else {
-		status["old_is_public_check"] = "false"
-	}
-
 	d.Set("status", status)
 
 	return nil
+}
+
+func GetHost(item *client.Database) string {
+	if item.Database.Settings.IsPublic {
+		if item.Database.DestinationDocker.RemoteEngine {
+			return item.Database.DestinationDocker.RemoteIpAddress
+		} else if item.Settings.IpV4 != nil {
+			return *item.Settings.IpV4
+		} else {
+			return *item.Settings.IpV6
+		}
+	} else {
+		return *&item.Database.Id
+	}
+}
+
+func GetPort(item *client.Database) int {
+	if item.Database.Settings.IsPublic {
+		return *item.Database.PublicPort
+	} else {
+		return item.PrivatePort
+	}
+}
+
+func GetUser(databaseUser *string) string {
+
+	if databaseUser != nil {
+		return *databaseUser + ":"
+	}
+	return ""
+}
+
+func GenerateDbDetails(item *client.Database) (string, string, string) {
+	db := item.Database
+	databaseDefault := db.DefaultDatabase
+	databaseDbUser := db.User
+	databaseDbUserPassword := db.Password
+
+	if db.Type == "mongodb" || db.Type == "edgedb" {
+		if db.Type == "mongodb" {
+			databaseDefault = "?readPreference=primary&ssl=false"
+		}
+		databaseDbUser = db.RootUser
+		databaseDbUserPassword = db.RootPassword
+	} else if db.Type == "redis" {
+		databaseDefault = ""
+		databaseDbUser = ""
+	}
+
+	return databaseDefault, databaseDbUser, databaseDbUserPassword
+}
+
+func GetUrl(item *client.Database) string {
+	databaseDefault, databaseDbUser, databaseDbUserPassword := GenerateDbDetails(item)
+	databaseDbUser = GetUser(&databaseDbUser)
+	host := GetHost(item)
+	port := strconv.Itoa(GetPort(item))
+
+	return fmt.Sprintf(
+		"%s://%s%s@%s:%s/%s",
+		item.Database.Type,
+		databaseDbUser,
+		databaseDbUserPassword,
+		host,
+		port,
+		databaseDefault,
+	)
 }

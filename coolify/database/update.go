@@ -28,7 +28,8 @@ func databaseUpdateItem(ctx context.Context, d *schema.ResourceData, m interface
 	}
 
 	settingsToUpdate := &client.UpdateSettingsDatabaseDTO{
-		IsPublic: db.Settings.IsPublic,
+		IsPublic:   db.Settings.IsPublic,
+		AppendOnly: db.Settings.AppendOnly,
 	}
 	_, err = apiClient.UpdateSettings(databaseId, settingsToUpdate)
 	if err != nil {

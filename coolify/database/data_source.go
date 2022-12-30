@@ -55,21 +55,44 @@ func DataSource() *schema.Resource {
 							Computed: true,
 						},
 						"password": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:      schema.TypeString,
+							Computed:  true,
+							Sensitive: true,
 						},
 						"root_user": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
 						"root_password": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:      schema.TypeString,
+							Computed:  true,
+							Sensitive: true,
 						},
 					},
 				},
 			},
 
+			"host": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"port": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"default_database": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"user": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"password": {
+				Type:      schema.TypeString,
+				Computed:  true,
+				Sensitive: true,
+			},
 			"status": {
 				Type:     schema.TypeMap,
 				Computed: true,
