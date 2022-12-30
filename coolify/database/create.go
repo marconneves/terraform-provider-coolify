@@ -138,28 +138,13 @@ func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 	}
 
 	databaseToUpdate := &client.UpdateDatabaseDTO{
-		Name:    db.Name,
-		Version: db.Engine.Version,
-	}
-
-	if db.Settings.DefaultDatabase != "" {
-		databaseToUpdate.DefaultDatabase = &db.Settings.DefaultDatabase
-	}
-
-	if db.Settings.User != "" {
-		databaseToUpdate.DbUser = &db.Settings.User
-	}
-
-	if db.Settings.Password != "" {
-		databaseToUpdate.DbUserPassword = &db.Settings.Password
-	}
-
-	if db.Settings.RootUser != "" {
-		databaseToUpdate.RootUser = &db.Settings.RootUser
-	}
-
-	if db.Settings.RootPassword != "" {
-		databaseToUpdate.RootUserPassword = &db.Settings.RootPassword
+		Name:             db.Name,
+		Version:          db.Engine.Version,
+		DefaultDatabase:  &db.Settings.DefaultDatabase,
+		DbUser:           &db.Settings.User,
+		DbUserPassword:   &db.Settings.Password,
+		RootUser:         &db.Settings.RootUser,
+		RootUserPassword: &db.Settings.RootPassword,
 	}
 
 	err = apiClient.UpdateDatabase(*id, databaseToUpdate)
