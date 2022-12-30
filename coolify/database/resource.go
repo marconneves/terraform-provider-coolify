@@ -71,6 +71,7 @@ func Resource() *schema.Resource {
 							Type:     schema.TypeBool,
 							Optional: true,
 							ForceNew: true,
+							Default:  true,
 						},
 						"append_only": {
 							Type:     schema.TypeBool,
@@ -81,28 +82,33 @@ func Resource() *schema.Resource {
 							Type:     schema.TypeString,
 							Optional: true,
 							ForceNew: true,
+							Computed: true,
 						},
 						"user": {
 							Type:     schema.TypeString,
 							Optional: true,
 							ForceNew: true,
+							Computed: true,
 						},
 						"password": {
 							Type:      schema.TypeString,
 							Optional:  true,
 							ForceNew:  true,
 							Sensitive: true,
+							Computed:  true,
 						},
 						"root_user": {
 							Type:     schema.TypeString,
 							Optional: true,
 							ForceNew: true,
+							Computed: true,
 						},
 						"root_password": {
 							Type:      schema.TypeString,
 							Optional:  true,
 							ForceNew:  true,
 							Sensitive: true,
+							Computed:  true,
 						},
 					},
 				},
@@ -130,9 +136,8 @@ func Resource() *schema.Resource {
 				Sensitive: true,
 			},
 			"uri": {
-				Type:      schema.TypeString,
-				Computed:  true,
-				Sensitive: true,
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 			"status": {
 				Type:     schema.TypeMap,
