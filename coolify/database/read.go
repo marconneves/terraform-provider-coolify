@@ -50,6 +50,9 @@ func databaseRead(ctx context.Context, d *schema.ResourceData, m interface{}) di
 		status["port"] = strconv.Itoa(item.PrivatePort)
 	}
 
+	d.Set("host", status["host"])
+	d.Set("port", status["port"])
+
 	if *&item.Database.DefaultDatabase != "" {
 		status["default_database"] = *&item.Database.DefaultDatabase
 	}
