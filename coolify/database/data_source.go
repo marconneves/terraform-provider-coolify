@@ -77,7 +77,7 @@ func DataSource() *schema.Resource {
 				Computed: true,
 			},
 			"port": {
-				Type:     schema.TypeString,
+				Type:     schema.TypeInt,
 				Computed: true,
 			},
 			"default_database": {
