@@ -66,6 +66,12 @@ func databaseRead(ctx context.Context, d *schema.ResourceData, m interface{}) di
 		status["root_password"] = *&item.Database.RootPassword
 	}
 
+	if item.Database.Settings.IsPublic {
+		status["old_is_public_check"] = "true"
+	} else {
+		status["old_is_public_check"] = "false"
+	}
+
 	d.Set("status", status)
 
 	return nil
