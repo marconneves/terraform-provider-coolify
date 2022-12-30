@@ -113,6 +113,31 @@ func Resource() *schema.Resource {
 				},
 			},
 
+			"port": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+					var port bool
+					var portChecker bool
+
+					settings := d.Get("settings").([]interface{})
+					for _, setting := range settings {
+						i := setting.(map[string]interface{})
+						if i["is_public"] != nil {
+							port = i["is_public"].(bool) == true
+						}
+					}
+
+					status := d.Get("status").(map[string]interface{})
+					if status["old_is_public_check"] != nil {
+						portChecker = status["old_is_public_check"].(string) == "true"
+					}
+
+					return port != portChecker
+				},
+			},
+
 			"status": {
 				Type:     schema.TypeMap,
 				Computed: true,
