@@ -114,9 +114,10 @@ func Resource() *schema.Resource {
 			},
 
 			"host": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
+				Type:                  schema.TypeString,
+				Optional:              true,
+				Computed:              true,
+				DiffSuppressOnRefresh: true,
 				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
 					var port bool
 					var portChecker bool
@@ -134,14 +135,15 @@ func Resource() *schema.Resource {
 						portChecker = status["old_is_public_check"].(string) == "true"
 					}
 
-					return port != portChecker
+					return port == portChecker
 				},
 			},
 
 			"port": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
+				Type:                  schema.TypeString,
+				Optional:              true,
+				Computed:              true,
+				DiffSuppressOnRefresh: true,
 				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
 					var port bool
 					var portChecker bool
@@ -159,7 +161,7 @@ func Resource() *schema.Resource {
 						portChecker = status["old_is_public_check"].(string) == "true"
 					}
 
-					return port != portChecker
+					return port == portChecker
 				},
 			},
 
