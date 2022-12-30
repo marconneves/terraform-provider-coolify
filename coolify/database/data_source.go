@@ -93,6 +93,11 @@ func DataSource() *schema.Resource {
 				Computed:  true,
 				Sensitive: true,
 			},
+			"uri": {
+				Type:      schema.TypeString,
+				Computed:  true,
+				Sensitive: true,
+			},
 			"status": {
 				Type:     schema.TypeMap,
 				Computed: true,
