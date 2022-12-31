@@ -107,8 +107,8 @@ func applicationUpdateItem(ctx context.Context, d *schema.ResourceData, m interf
 
 		secret := &client.ApplicationEnvironmentDTO{
 			Name:          env.Key,
-			Value:         env.Value,
-			IsBuildEnv:    env.IsBuildEnv,
+			Value:         GetValueOrSetEmpty(&env.Value),
+			IsBuildEnv:    env.IsBuildEnv == true,
 			IsNew:         true,
 			PreviewSecret: false,
 		}

@@ -126,8 +126,8 @@ func applicationCreateItem(ctx context.Context, d *schema.ResourceData, m interf
 	for _, env := range app.Template.Envs {
 		secret := &client.ApplicationEnvironmentDTO{
 			Name:          env.Key,
-			Value:         env.Value,
-			IsBuildEnv:    env.IsBuildEnv,
+			Value:         GetValueOrSetEmpty(&env.Value),
+			IsBuildEnv:    env.IsBuildEnv == true,
 			IsNew:         true,
 			PreviewSecret: false,
 		}
@@ -160,4 +160,11 @@ func applicationCreateItem(ctx context.Context, d *schema.ResourceData, m interf
 	d.Set("status", status)
 
 	return nil
+}
+
+func GetValueOrSetEmpty(value *string) string {
+	if value != nil {
+		return *value
+	}
+	return ""
 }
