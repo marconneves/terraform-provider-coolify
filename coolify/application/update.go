@@ -105,16 +105,18 @@ func applicationUpdateItem(ctx context.Context, d *schema.ResourceData, m interf
 	for _, env := range app.Template.Envs {
 		apiClient.DeleteEnvironmentFromApplication(applicationId, env.Key)
 
-		secret := &client.ApplicationEnvironmentDTO{
-			Name:          env.Key,
-			Value:         GetValueOrSetEmpty(&env.Value),
-			IsBuildEnv:    env.IsBuildEnv == true,
-			IsNew:         true,
-			PreviewSecret: false,
-		}
-		err = apiClient.AddEnvironmentToApplication(applicationId, secret)
-		if err != nil {
-			return diag.FromErr(err)
+		if &env.Value != nil {
+			secret := &client.ApplicationEnvironmentDTO{
+				Name:          env.Key,
+				Value:         env.Value,
+				IsBuildEnv:    env.IsBuildEnv == true,
+				IsNew:         true,
+				PreviewSecret: false,
+			}
+			err = apiClient.AddEnvironmentToApplication(applicationId, secret)
+			if err != nil {
+				return diag.FromErr(err)
+			}
 		}
 	}
 
