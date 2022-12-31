@@ -105,7 +105,7 @@ func applicationUpdateItem(ctx context.Context, d *schema.ResourceData, m interf
 	for _, env := range app.Template.Envs {
 		apiClient.DeleteEnvironmentFromApplication(applicationId, env.Key)
 
-		if env.Key != "" {
+		if env.Value != "" {
 			secret := &client.ApplicationEnvironmentDTO{
 				Name:          env.Key,
 				Value:         env.Value,

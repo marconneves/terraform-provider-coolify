@@ -124,7 +124,7 @@ func applicationCreateItem(ctx context.Context, d *schema.ResourceData, m interf
 	}
 
 	for _, env := range app.Template.Envs {
-		if env.Key != "" {
+		if env.Value != "" {
 			secret := &client.ApplicationEnvironmentDTO{
 				Name:          env.Key,
 				Value:         env.Value,

@@ -79,6 +79,11 @@ resource "coolify_application" "test_item" {
 			key = "BASE_URL"
 			value = "https://front.s.b4.run"
 		}
+		
+		env {
+			key = "BASE_URL"
+			value = ""
+		}
 	}
 
 	repository {
