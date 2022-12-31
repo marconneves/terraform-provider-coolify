@@ -124,16 +124,18 @@ func applicationCreateItem(ctx context.Context, d *schema.ResourceData, m interf
 	}
 
 	for _, env := range app.Template.Envs {
-		secret := &client.ApplicationEnvironmentDTO{
-			Name:          env.Key,
-			Value:         GetValueOrSetEmpty(&env.Value),
-			IsBuildEnv:    env.IsBuildEnv == true,
-			IsNew:         true,
-			PreviewSecret: false,
-		}
-		err = apiClient.AddEnvironmentToApplication(*id, secret)
-		if err != nil {
-			return diag.FromErr(err)
+		if env.Key != "" {
+			secret := &client.ApplicationEnvironmentDTO{
+				Name:          env.Key,
+				Value:         env.Value,
+				IsBuildEnv:    env.IsBuildEnv == true,
+				IsNew:         true,
+				PreviewSecret: false,
+			}
+			err = apiClient.AddEnvironmentToApplication(*id, secret)
+			if err != nil {
+				return diag.FromErr(err)
+			}
 		}
 	}
 
