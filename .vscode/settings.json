@@ -5,6 +5,7 @@
         "edgedb",
         "github",
         "hashicorp",
+        "healthcheck",
         "mariadb",
         "mongodb",
         "mysql",
