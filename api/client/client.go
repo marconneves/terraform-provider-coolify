@@ -7,32 +7,32 @@ import (
 	"net/http"
 )
 
-// Client holds all of the information required to connect to a server
 type Client struct {
 	hostname   string
-	authToken  string
+	apiToken   string
 	httpClient *http.Client
 }
 
 // NewClient returns a new client configured to communicate on a server with the
 // given hostname and port and to send an Authorization Header with the value of
 // token
-func NewClient(hostname string, token string) *Client {
+func NewClient(hostname string, apiToken string) *Client {
 	return &Client{
 		hostname:   hostname,
-		authToken:  token,
+		apiToken:   apiToken,
 		httpClient: &http.Client{},
 	}
 }
 
 func (client *Client) httpRequest(path, method string, body bytes.Buffer) (closer io.ReadCloser, err error) {
 	url := client.requestPath(path)
+
 	req, err := http.NewRequest(method, url, &body)
 	if err != nil {
 		return nil, err
 	}
 
-	req.Header.Add("Authorization", "Bearer "+client.authToken)
+	req.Header.Add("Authorization", "Bearer "+client.apiToken)
 	if body.Len() > 0 {
 		req.Header.Add("Content-Type", "application/json")
 	}
