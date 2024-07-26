@@ -100,11 +100,8 @@ func (c *Client) CheckIfNetworkNameExist(networkName string) bool {
 	}
 
 	_, err = c.httpRequest("api/v1/destinations/check", "POST", buf)
-	if err != nil {
-		return true
-	}
 
-	return false
+	return err != nil
 }
 
 func (c *Client) StopDestination(id string) error {
