@@ -43,7 +43,7 @@ type EnableApiResponse struct {
 }
 
 func (a *Api) Enable() (*string, error) {
-	body, err := a.client.httpRequest("enable", "GET")
+	body, err := a.client.httpRequest("api/v1/enable", "GET")
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +65,7 @@ func (a *Api) Enable() (*string, error) {
 }
 
 func (a *Api) Disable() (*string, error) {
-	body, err := a.client.httpRequest("disable", "GET")
+	body, err := a.client.httpRequest("api/v1/disable", "GET")
 	if err != nil {
 		return nil, err
 	}
