@@ -2,6 +2,7 @@ package client
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -11,17 +12,25 @@ type Client struct {
 	hostname   string
 	apiToken   string
 	httpClient *http.Client
+
+	team   *TeamInstance
+	server *ServerInstance
 }
 
 // NewClient returns a new client configured to communicate on a server with the
 // given hostname and port and to send an Authorization Header with the value of
 // token
 func NewClient(hostname string, apiToken string) *Client {
-	return &Client{
+	client := &Client{
 		hostname:   hostname,
 		apiToken:   apiToken,
 		httpClient: &http.Client{},
 	}
+
+	client.team = &TeamInstance{client: client}
+	client.server = &ServerInstance{client: client}
+
+	return client
 }
 
 func (client *Client) httpRequest(path, method string, body ...bytes.Buffer) (closer io.ReadCloser, err error) {
@@ -68,5 +77,48 @@ func (client *Client) httpRequest(path, method string, body ...bytes.Buffer) (cl
 }
 
 func (c *Client) requestPath(path string) string {
-	return c.hostname + "/" + path
+	return c.hostname + "/api/v1/" + path
+}
+
+func (c *Client) HeathCheck() (*string, error) {
+	body, err := c.httpRequest("healthcheck", "GET", bytes.Buffer{})
+	if err != nil {
+		return nil, err
+	}
+	defer body.Close()
+
+	bodyBytes, err := io.ReadAll(body)
+	if err != nil {
+		return nil, err
+	}
+
+	var healCheckResponse string
+
+	if string(bodyBytes) == "OK" {
+		healCheckResponse = "success"
+	} else {
+		healCheckResponse = "failure"
+	}
+
+	return &healCheckResponse, nil
+}
+
+func decodeResponse[T any](body io.ReadCloser, target *T) (*T, error) {
+	err := json.NewDecoder(body).Decode(target)
+	if err != nil {
+		return nil, err
+	}
+
+	return target, nil
+}
+
+func encodeRequest[T any](target *T) (*bytes.Buffer, error) {
+	buf := &bytes.Buffer{}
+
+	err := json.NewEncoder(buf).Encode(target)
+	if err != nil {
+		return nil, err
+	}
+
+	return buf, nil
 }
