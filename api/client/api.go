@@ -1,40 +1,14 @@
 package client
 
 import (
-	"bytes"
 	"encoding/json"
-	"io"
 )
-
-func (c *Client) HeathCheck() (*string, error) {
-	body, err := c.httpRequest("api/v1/healthcheck", "GET", bytes.Buffer{})
-	if err != nil {
-		return nil, err
-	}
-	defer body.Close()
-
-	bodyBytes, err := io.ReadAll(body)
-	if err != nil {
-		return nil, err
-	}
-
-	var healCheckResponse string
-
-	if string(bodyBytes) == "OK" {
-		healCheckResponse = "success"
-	} else {
-		healCheckResponse = "failure"
-	}
-
-	return &healCheckResponse, nil
-
-}
 
 type Api struct {
 	client *Client
 }
 
-func (c *Client) NewApi() *Api {
+func (c *Client) Api() *Api {
 	return &Api{client: c}
 }
 
@@ -43,7 +17,7 @@ type EnableApiResponse struct {
 }
 
 func (a *Api) Enable() (*string, error) {
-	body, err := a.client.httpRequest("api/v1/enable", "GET")
+	body, err := a.client.httpRequest("enable", "GET")
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +39,7 @@ func (a *Api) Enable() (*string, error) {
 }
 
 func (a *Api) Disable() (*string, error) {
-	body, err := a.client.httpRequest("api/v1/disable", "GET")
+	body, err := a.client.httpRequest("disable", "GET")
 	if err != nil {
 		return nil, err
 	}
