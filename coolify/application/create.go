@@ -2,7 +2,8 @@ package application
 
 import (
 	"context"
-	"terraform-provider-coolify/api/client"
+
+	sdk "github.com/marconneves/coolify-sdk-go"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -69,7 +70,7 @@ func applicationCreateItem(ctx context.Context, d *schema.ResourceData, m interf
 		app.Settings.DestinationId = i["destination_id"].(string)
 	}
 
-	apiClient := m.(*client.Client)
+	apiClient := m.(*sdk.Client)
 
 	id, err := apiClient.NewApplication()
 	if err != nil {
@@ -82,7 +83,7 @@ func applicationCreateItem(ctx context.Context, d *schema.ResourceData, m interf
 		return diag.FromErr(err)
 	}
 
-	repository := &client.SetRepositoryDTO{
+	repository := &sdk.SetRepositoryDTO{
 		ProjectId:  app.Repository.RepositoryId,
 		Repository: app.Repository.Repository,
 		Branch:     app.Repository.Branch,
@@ -98,7 +99,7 @@ func applicationCreateItem(ctx context.Context, d *schema.ResourceData, m interf
 		return diag.FromErr(err)
 	}
 
-	appToUpdate := &client.UpdateApplicationDTO{
+	appToUpdate := &sdk.UpdateApplicationDTO{
 		Name: app.Name,
 		Fqdn: &app.Domain,
 		Port: nil,
@@ -125,7 +126,7 @@ func applicationCreateItem(ctx context.Context, d *schema.ResourceData, m interf
 
 	for _, env := range app.Template.Envs {
 		if env.Value != "" {
-			secret := &client.ApplicationEnvironmentDTO{
+			secret := &sdk.ApplicationEnvironmentDTO{
 				Name:          env.Key,
 				Value:         env.Value,
 				IsBuildEnv:    env.IsBuildEnv == true,
@@ -139,7 +140,7 @@ func applicationCreateItem(ctx context.Context, d *schema.ResourceData, m interf
 		}
 	}
 
-	settingsToUpdate := &client.UpdateApplicationSettingsDTO{
+	settingsToUpdate := &sdk.UpdateApplicationSettingsDTO{
 		IsBot: &app.IsBot,
 	}
 	err = apiClient.UpdateApplicationSettings(*id, settingsToUpdate)
@@ -147,7 +148,7 @@ func applicationCreateItem(ctx context.Context, d *schema.ResourceData, m interf
 		return diag.FromErr(err)
 	}
 
-	deploy := &client.DeployApplicationDTO{
+	deploy := &sdk.DeployApplicationDTO{
 		PullMergeRequestId: nil,
 		Branch:             app.Repository.Branch,
 		ForceRebuild:       true,

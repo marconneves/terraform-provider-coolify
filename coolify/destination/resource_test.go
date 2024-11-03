@@ -7,9 +7,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
-	"terraform-provider-coolify/api/client"
 	"terraform-provider-coolify/coolify"
 	"terraform-provider-coolify/shared/tests"
+
+	sdk "github.com/marconneves/coolify-sdk-go"
 )
 
 var TestAccProviders map[string]*schema.Provider
@@ -22,7 +23,7 @@ func init() {
 	}
 }
 
-func GetDestination(client *client.Client, id string) (interface{}, error) {
+func GetDestination(client *sdk.Client, id string) (interface{}, error) {
 	return client.GetDestination(id)
 }
 

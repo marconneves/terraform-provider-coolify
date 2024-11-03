@@ -5,14 +5,15 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	"terraform-provider-coolify/api/client"
+
+	sdk "github.com/marconneves/coolify-sdk-go"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func databaseRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*sdk.Client)
 	databaseId := d.Id()
 
 	item, err := apiClient.GetDatabase(databaseId)
@@ -67,7 +68,7 @@ func databaseRead(ctx context.Context, d *schema.ResourceData, m interface{}) di
 	return nil
 }
 
-func GetHost(item *client.Database) string {
+func GetHost(item *sdk.Database) string {
 	if item.Database.Settings.IsPublic {
 		if item.Database.DestinationDocker.RemoteEngine {
 			return item.Database.DestinationDocker.RemoteIpAddress
@@ -81,7 +82,7 @@ func GetHost(item *client.Database) string {
 	}
 }
 
-func GetPort(item *client.Database) string {
+func GetPort(item *sdk.Database) string {
 	if item.Database.Settings.IsPublic {
 		return strconv.Itoa(*item.Database.PublicPort)
 	} else {
@@ -97,7 +98,7 @@ func GetUser(databaseUser *string) string {
 	return ""
 }
 
-func GenerateDbDetails(item *client.Database) (string, string, string) {
+func GenerateDbDetails(item *sdk.Database) (string, string, string) {
 	db := item.Database
 	databaseDefault := db.DefaultDatabase
 	databaseDbUser := db.User
@@ -117,7 +118,7 @@ func GenerateDbDetails(item *client.Database) (string, string, string) {
 	return databaseDefault, databaseDbUser, databaseDbUserPassword
 }
 
-func GetUrl(item *client.Database) string {
+func GetUrl(item *sdk.Database) string {
 	databaseDefault, databaseDbUser, databaseDbUserPassword := GenerateDbDetails(item)
 	databaseDbUser = GetUser(&databaseDbUser)
 	host := GetHost(item)

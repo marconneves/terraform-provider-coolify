@@ -2,14 +2,15 @@ package application
 
 import (
 	"context"
-	"terraform-provider-coolify/api/client"
+
+	sdk "github.com/marconneves/coolify-sdk-go"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func applicationDeleteItem(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*sdk.Client)
 	itemId := d.Id()
 
 	err := apiClient.StopApplication(itemId)

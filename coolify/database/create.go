@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
-	"terraform-provider-coolify/api/client"
+	sdk "github.com/marconneves/coolify-sdk-go"
 )
 
 func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -119,7 +119,7 @@ func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 		}
 	}
 
-	apiClient := m.(*client.Client)
+	apiClient := m.(*sdk.Client)
 
 	id, err := apiClient.NewDatabase()
 	if err != nil {
@@ -137,7 +137,7 @@ func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 		return diag.FromErr(err)
 	}
 
-	databaseToUpdate := &client.UpdateDatabaseDTO{
+	databaseToUpdate := &sdk.UpdateDatabaseDTO{
 		Name:             db.Name,
 		Version:          db.Engine.Version,
 		DefaultDatabase:  &db.Settings.DefaultDatabase,
@@ -159,7 +159,7 @@ func databaseCreateItem(ctx context.Context, d *schema.ResourceData, m interface
 	}
 	tflog.Trace(ctx, "Data base started")
 
-	settingsToUpdate := &client.UpdateSettingsDatabaseDTO{
+	settingsToUpdate := &sdk.UpdateSettingsDatabaseDTO{
 		IsPublic: db.Settings.IsPublic,
 	}
 	_, err = apiClient.UpdateSettings(*id, settingsToUpdate)

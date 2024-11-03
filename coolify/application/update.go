@@ -2,7 +2,8 @@ package application
 
 import (
 	"context"
-	"terraform-provider-coolify/api/client"
+
+	sdk "github.com/marconneves/coolify-sdk-go"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -64,9 +65,9 @@ func applicationUpdateItem(ctx context.Context, d *schema.ResourceData, m interf
 		app.Repository.commitHash = i["commit_hash"].(string)
 	}
 
-	apiClient := m.(*client.Client)
+	apiClient := m.(*sdk.Client)
 
-	repository := &client.SetRepositoryDTO{
+	repository := &sdk.SetRepositoryDTO{
 		ProjectId:  app.Repository.RepositoryId,
 		Repository: app.Repository.Repository,
 		Branch:     app.Repository.Branch,
@@ -77,7 +78,7 @@ func applicationUpdateItem(ctx context.Context, d *schema.ResourceData, m interf
 		return diag.FromErr(err)
 	}
 
-	appToUpdate := &client.UpdateApplicationDTO{
+	appToUpdate := &sdk.UpdateApplicationDTO{
 		Name: app.Name,
 		Fqdn: &app.Domain,
 		Port: nil,
@@ -106,7 +107,7 @@ func applicationUpdateItem(ctx context.Context, d *schema.ResourceData, m interf
 		apiClient.DeleteEnvironmentFromApplication(applicationId, env.Key)
 
 		if env.Value != "" {
-			secret := &client.ApplicationEnvironmentDTO{
+			secret := &sdk.ApplicationEnvironmentDTO{
 				Name:          env.Key,
 				Value:         env.Value,
 				IsBuildEnv:    env.IsBuildEnv == true,
@@ -120,7 +121,7 @@ func applicationUpdateItem(ctx context.Context, d *schema.ResourceData, m interf
 		}
 	}
 
-	deploy := &client.DeployApplicationDTO{
+	deploy := &sdk.DeployApplicationDTO{
 		PullMergeRequestId: nil,
 		Branch:             app.Repository.Branch,
 		ForceRebuild:       true,

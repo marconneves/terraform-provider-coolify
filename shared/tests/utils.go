@@ -3,7 +3,8 @@ package tests
 import (
 	"fmt"
 	"regexp"
-	"terraform-provider-coolify/api/client"
+
+	sdk "github.com/marconneves/coolify-sdk-go"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -27,9 +28,9 @@ func CheckAttribute(resourceOrDataSource string, key string, value string) resou
 	}
 }
 
-func TestAccCheckDestroy(TestAccProvider *schema.Provider, Verify func(client *client.Client, id string) (interface{}, error)) resource.TestCheckFunc {
+func TestAccCheckDestroy(TestAccProvider *schema.Provider, Verify func(client *sdk.Client, id string) (interface{}, error)) resource.TestCheckFunc {
 	return func(s *tf.State) error {
-		apiClient := TestAccProvider.Meta().(*client.Client)
+		apiClient := TestAccProvider.Meta().(*sdk.Client)
 
 		for _, rs := range s.RootModule().Resources {
 			if rs.Type != "example_item" {
@@ -51,7 +52,7 @@ func TestAccCheckDestroy(TestAccProvider *schema.Provider, Verify func(client *c
 	}
 }
 
-func TestAccCheckExists(resourceOrDataSource string, TestAccProvider *schema.Provider, Verify func(client *client.Client, id string) (interface{}, error)) resource.TestCheckFunc {
+func TestAccCheckExists(resourceOrDataSource string, TestAccProvider *schema.Provider, Verify func(client *sdk.Client, id string) (interface{}, error)) resource.TestCheckFunc {
 	return func(state *tf.State) error {
 		rs, ok := state.RootModule().Resources[resourceOrDataSource]
 		if !ok {
@@ -61,7 +62,7 @@ func TestAccCheckExists(resourceOrDataSource string, TestAccProvider *schema.Pro
 			return fmt.Errorf("No Record ID is set")
 		}
 
-		apiClient := TestAccProvider.Meta().(*client.Client)
+		apiClient := TestAccProvider.Meta().(*sdk.Client)
 		_, err := Verify(apiClient, rs.Primary.ID)
 		if err != nil {
 			return fmt.Errorf("error fetching item with resource %s. %s", resourceOrDataSource, err)

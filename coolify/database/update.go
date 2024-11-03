@@ -2,14 +2,15 @@ package database
 
 import (
 	"context"
-	"terraform-provider-coolify/api/client"
+
+	sdk "github.com/marconneves/coolify-sdk-go"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func databaseUpdateItem(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*sdk.Client)
 	databaseId := d.Id()
 	db := &Database{}
 
@@ -27,7 +28,7 @@ func databaseUpdateItem(ctx context.Context, d *schema.ResourceData, m interface
 		db.Settings.AppendOnly = i["append_only"].(bool)
 	}
 
-	settingsToUpdate := &client.UpdateSettingsDatabaseDTO{
+	settingsToUpdate := &sdk.UpdateSettingsDatabaseDTO{
 		IsPublic:   db.Settings.IsPublic,
 		AppendOnly: db.Settings.AppendOnly,
 	}
