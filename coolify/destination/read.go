@@ -3,14 +3,15 @@ package destination
 import (
 	"context"
 	"strings"
-	"terraform-provider-coolify/api/client"
+
+	sdk "github.com/marconneves/coolify-sdk-go"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func destinationReadItem(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*sdk.Client)
 	destinationId := d.Id()
 
 	destination, err := apiClient.GetDestination(destinationId)

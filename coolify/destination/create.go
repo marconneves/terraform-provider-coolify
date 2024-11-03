@@ -2,7 +2,8 @@ package destination
 
 import (
 	"context"
-	"terraform-provider-coolify/api/client"
+
+	sdk "github.com/marconneves/coolify-sdk-go"
 
 	"github.com/google/uuid"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -15,14 +16,14 @@ func destinationCreateItem(ctx context.Context, d *schema.ResourceData, m interf
 		networkId = uuid.New().String()
 	}
 
-	apiClient := m.(*client.Client)
+	apiClient := m.(*sdk.Client)
 
 	networkAlreadyExist := apiClient.CheckIfNetworkNameExist(networkId)
 	if networkAlreadyExist == true {
 		return diag.Errorf("This network already exist. Got %v", networkId)
 	}
 
-	destination := &client.CreateDestinationDTO{
+	destination := &sdk.CreateDestinationDTO{
 		Name:               d.Get("name").(string),
 		Network:            networkId,
 		Engine:             d.Get("engine").(string),

@@ -2,13 +2,14 @@ package application
 
 import (
 	"strings"
-	"terraform-provider-coolify/api/client"
+
+	sdk "github.com/marconneves/coolify-sdk-go"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func applicationExistsItem(d *schema.ResourceData, m interface{}) (bool, error) {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*sdk.Client)
 	databaseId := d.Id()
 
 	_, err := apiClient.GetApplication(databaseId)

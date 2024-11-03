@@ -2,15 +2,16 @@ package destination
 
 import (
 	"context"
-	"terraform-provider-coolify/api/client"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
+	sdk "github.com/marconneves/coolify-sdk-go"
 )
 
 func destinationDeleteItem(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*sdk.Client)
 	destinationId := d.Id()
 
 	// For finish exclude all items used on destination

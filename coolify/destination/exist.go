@@ -2,13 +2,14 @@ package destination
 
 import (
 	"strings"
-	"terraform-provider-coolify/api/client"
+
+	sdk "github.com/marconneves/coolify-sdk-go"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func destinationExistItem(d *schema.ResourceData, m interface{}) (bool, error) {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*sdk.Client)
 	destinationId := d.Id()
 
 	_, err := apiClient.GetDestination(destinationId)
