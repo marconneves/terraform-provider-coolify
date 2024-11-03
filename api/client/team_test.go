@@ -110,7 +110,7 @@ func TestGetTeamMembers(t *testing.T) {
 		t.Run(testName, func(t *testing.T) {
 			var client = NewClient(testComponent.Host, testComponent.ApiKey)
 
-			_, errors := client.team.GetMembers(testComponent.Id)
+			_, errors := client.team.Members(testComponent.Id)
 
 			if errors != nil && !testComponent.Error {
 				t.Errorf("Host (%s), Key (%s) produced an unexpected error", testComponent.Host, testComponent.ApiKey)
