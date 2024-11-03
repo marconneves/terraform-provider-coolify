@@ -138,3 +138,95 @@ func (t *ServerInstance) Create(server *CreateServerDTO) (*string, error) {
 
 	return &response.UUID, nil
 }
+
+func (t *ServerInstance) Delete(uuid string) error {
+	if uuid == "" {
+		return errors.New("uuid is required")
+	}
+
+	_, err := t.client.httpRequest(fmt.Sprintf("servers/%v", uuid), "DELETE")
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+type UpdateServerDTO struct {
+	Name            string `json:"name"`
+	Description     string `json:"description"`
+	IP              string `json:"ip"`
+	Port            int    `json:"port"`
+	User            string `json:"user"`
+	PrivateKeyUUID  string `json:"private_key_uuid"`
+	IsBuildServer   bool   `json:"is_build_server"`
+	InstantValidate bool   `json:"instant_validate"`
+}
+
+func (t *ServerInstance) Update(uuid string, server *UpdateServerDTO) error {
+	if uuid == "" {
+		return errors.New("uuid is required")
+	}
+
+	buf, err := encodeRequest(server)
+	if err != nil {
+		return err
+	}
+
+	_, err = t.client.httpRequest(fmt.Sprintf("servers/%v", uuid), "PATCH", *buf)
+	return err
+}
+
+type Resource struct {
+	Id        int       `json:"id"`
+	UUID      string    `json:"uuid"`
+	Name      string    `json:"name"`
+	Type      string    `json:"type"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	Status    string    `json:"status"`
+}
+
+func (t *ServerInstance) Resources(uuid string) (*[]Resource, error) {
+	if uuid == "" {
+		return nil, errors.New("uuid is required")
+	}
+
+	body, err := t.client.httpRequest(fmt.Sprintf("servers/%v/resources", uuid), "GET", bytes.Buffer{})
+	if err != nil {
+		return nil, err
+	}
+
+	return decodeResponse(body, &[]Resource{})
+}
+
+type Domain struct {
+	Id      int      `json:"id"`
+	Domains []string `json:"domains"`
+}
+
+func (t *ServerInstance) Domains(uuid string) (*[]Domain, error) {
+	if uuid == "" {
+		return nil, errors.New("uuid is required")
+	}
+
+	body, err := t.client.httpRequest(fmt.Sprintf("servers/%v/domains", uuid), "GET", bytes.Buffer{})
+	if err != nil {
+		return nil, err
+	}
+
+	return decodeResponse(body, &[]Domain{})
+}
+
+func (t *ServerInstance) Validate(uuid string) error {
+	if uuid == "" {
+		return errors.New("uuid is required")
+	}
+
+	_, err := t.client.httpRequest(fmt.Sprintf("servers/%v/validate", uuid), "GET", bytes.Buffer{})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
