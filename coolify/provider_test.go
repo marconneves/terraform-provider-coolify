@@ -7,35 +7,12 @@ import (
 	"os"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-framework/providerserver"
 	"github.com/hashicorp/terraform-plugin-go/tfprotov6"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
+	"github.com/marconneves/terraform-provider-coolify/shared/tests"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-
-	provider "github.com/marconneves/terraform-provider-coolify/coolify"
 )
-
-var (
-	providerFactories = map[string]func() (tfprotov6.ProviderServer, error){
-		"coolify": providerserver.NewProtocol6WithError(provider.New("test")()),
-	}
-)
-
-func checkEnvironmentVariables(t *testing.T) {
-	if os.Getenv("TF_ACC") != "1" {
-		t.Skip("Skipping acceptance tests unless 'TF_ACC' is set")
-	}
-	requiredVars := []string{
-		"COOLIFY_API_URL",
-		"COOLIFY_API_KEY",
-	}
-	for _, envVar := range requiredVars {
-		if os.Getenv(envVar) == "" {
-			t.Fatalf("Environment variable `%s` must be set for tests!", envVar)
-		}
-	}
-}
 
 func createDynamicProviderConfig(config map[string]interface{}) (tfprotov6.DynamicValue, error) {
 	configTypes := map[string]tftypes.Type{
@@ -56,7 +33,7 @@ func createDynamicProviderConfig(config map[string]interface{}) (tfprotov6.Dynam
 
 func TestProviderSchemaVersion(t *testing.T) {
 	t.Parallel()
-	providerServer, err := providerFactories["coolify"]()
+	providerServer, err := tests.ProviderFactories["coolify"]()
 	require.NoError(t, err)
 	require.NotNil(t, providerServer)
 
@@ -69,9 +46,9 @@ func TestProviderSchemaVersion(t *testing.T) {
 }
 
 func TestProviderConfiguration(t *testing.T) {
-	checkEnvironmentVariables(t)
-	apiURL := os.Getenv("COOLIFY_API_URL")
-	apiKey := os.Getenv("COOLIFY_API_KEY")
+	tests.TestAccPreCheck(t)
+	apiURL := os.Getenv("COOLIFY_ADDRESS")
+	apiKey := os.Getenv("COOLIFY_TOKEN")
 
 	testCases := map[string]struct {
 		config        map[string]interface{}
@@ -113,14 +90,14 @@ func TestProviderConfiguration(t *testing.T) {
 		},
 		"url in env": {
 			envVars: map[string]string{
-				"COOLIFY_API_URL": apiURL,
+				"COOLIFY_ADDRESS": apiURL,
 			},
 			expectSuccess: false,
 		},
 		"url and key in env": {
 			envVars: map[string]string{
-				"COOLIFY_API_URL": apiURL,
-				"COOLIFY_API_KEY": apiKey,
+				"COOLIFY_ADDRESS": apiURL,
+				"COOLIFY_TOKEN":   apiKey,
 			},
 			expectSuccess: true,
 		},
@@ -129,7 +106,7 @@ func TestProviderConfiguration(t *testing.T) {
 				"url": apiURL,
 			},
 			envVars: map[string]string{
-				"COOLIFY_API_KEY": apiKey,
+				"COOLIFY_TOKEN": apiKey,
 			},
 			expectSuccess: true,
 		},
@@ -137,13 +114,13 @@ func TestProviderConfiguration(t *testing.T) {
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			t.Setenv("COOLIFY_API_URL", "")
-			t.Setenv("COOLIFY_API_KEY", "")
+			t.Setenv("COOLIFY_ADDRESS", "")
+			t.Setenv("COOLIFY_TOKEN", "")
 			for key, value := range tc.envVars {
 				t.Setenv(key, value)
 			}
 
-			providerServer, err := providerFactories["coolify"]()
+			providerServer, err := tests.ProviderFactories["coolify"]()
 			require.NoError(t, err)
 			require.NotNil(t, providerServer)
 
