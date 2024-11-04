@@ -18,8 +18,8 @@ When you .
 terraform {
   required_providers {
     coolify = {
-      source = "themarkwill/coolify"
-      version = "0.4.4"
+      source = "marconneves/coolify"
+      version = "4.0.2"
     }
   }
 }
@@ -29,13 +29,7 @@ provider "coolify" {
   token = "token"
 }
 
-resource "coolify_database" "my_db" {
-  name           = "outro-db"
-  engine         = "redis:7.0"
-
-  settings {
-    destination_id = "id-destination"
-    is_public      = true
-  }
+resource "coolify_team" "my_team" {
+  name           = "example-team"
 }
 ```
