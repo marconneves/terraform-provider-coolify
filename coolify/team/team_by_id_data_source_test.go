@@ -4,14 +4,14 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/marconneves/terraform-provider-coolify/shared/tests"
 )
 
 func TestAccTeamByIDDataSource(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck:                 func() { testAccPreCheck(t) },
-		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		PreCheck:                 func() { tests.TestAccPreCheck(t) },
+		ProtoV6ProviderFactories: tests.ProviderFactories,
 		Steps: []resource.TestStep{
-			// Read testing
 			{
 				Config: testAccTeamByIDDataSourceConfig,
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -26,6 +26,6 @@ func TestAccTeamByIDDataSource(t *testing.T) {
 
 const testAccTeamByIDDataSourceConfig = `
 data "coolify_team_by_id" "test" {
-  team_id = 123
+  id = 123
 }
 `
