@@ -5,8 +5,9 @@ import (
 	"flag"
 	"log"
 
+	provider "github.com/marconneves/terraform-provider-coolify/coolify"
+
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
-	"github.com/hashicorp/terraform-provider-scaffolding-framework/internal/provider"
 )
 
 var (

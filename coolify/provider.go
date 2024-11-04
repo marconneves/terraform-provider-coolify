@@ -3,9 +3,9 @@ package provider
 import (
 	"context"
 
-	"terraform-provider-coolify/coolify/team"
+	"github.com/marconneves/terraform-provider-coolify/coolify/team"
 
-	"github.com/marconneves/coolify-sdk-go"
+	coolify_sdk "github.com/marconneves/coolify-sdk-go"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
