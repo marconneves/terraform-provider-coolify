@@ -12,11 +12,13 @@ import (
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	provider "github.com/marconneves/terraform-provider-coolify/coolify"
 )
 
 var (
 	providerFactories = map[string]func() (tfprotov6.ProviderServer, error){
-		"coolify": providerserver.NewProtocol6WithError(New("test")()),
+		"coolify": providerserver.NewProtocol6WithError(provider.New("test")()),
 	}
 )
 
