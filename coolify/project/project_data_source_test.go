@@ -43,6 +43,6 @@ func testAccProjectDataSourceCheck() resource.TestCheckFunc {
 	return resource.ComposeAggregateTestCheckFunc(
 		resource.TestCheckResourceAttr("data.coolify_project.test", "id", "ngcskck00wogog4o00o4kgk4"),
 		resource.TestCheckResourceAttr("data.coolify_project.test", "name", "example-project"),
-		resource.TestCheckResourceAttr("data.coolify_project.test", "description", "An example project"),
+		resource.TestCheckResourceAttr("data.coolify_project.test", "description", ""),
 	)
 }

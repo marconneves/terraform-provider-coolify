@@ -23,9 +23,19 @@ type ProjectDataSource struct {
 }
 
 type ProjectDataSourceModel struct {
-	Id          types.String `tfsdk:"id"`
+	Id           types.String       `tfsdk:"id"`
+	Name         types.String       `tfsdk:"name"`
+	Description  types.String       `tfsdk:"description"`
+	Environments []EnvironmentModel `tfsdk:"environments"`
+}
+
+type EnvironmentModel struct {
+	Id          types.Int64  `tfsdk:"id"`
 	Name        types.String `tfsdk:"name"`
 	Description types.String `tfsdk:"description"`
+	ProjectId   types.Int64  `tfsdk:"project_id"`
+	CreatedAt   types.String `tfsdk:"created_at"`
+	UpdatedAt   types.String `tfsdk:"updated_at"`
 }
 
 func (d *ProjectDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -48,6 +58,38 @@ func (d *ProjectDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 			"description": schema.StringAttribute{
 				MarkdownDescription: "Project description",
 				Computed:            true,
+			},
+			"environments": schema.ListNestedAttribute{
+				MarkdownDescription: "List of environments associated with the project",
+				Computed:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"id": schema.Int64Attribute{
+							MarkdownDescription: "Environment identifier",
+							Computed:            true,
+						},
+						"name": schema.StringAttribute{
+							MarkdownDescription: "Environment name",
+							Computed:            true,
+						},
+						"description": schema.StringAttribute{
+							MarkdownDescription: "Environment description",
+							Computed:            true,
+						},
+						"project_id": schema.Int64Attribute{
+							MarkdownDescription: "Associated project identifier",
+							Computed:            true,
+						},
+						"created_at": schema.StringAttribute{
+							MarkdownDescription: "Environment creation timestamp",
+							Computed:            true,
+						},
+						"updated_at": schema.StringAttribute{
+							MarkdownDescription: "Environment last update timestamp",
+							Computed:            true,
+						},
+					},
+				},
 			},
 		},
 	}
@@ -129,6 +171,28 @@ func (d *ProjectDataSource) Read(ctx context.Context, req datasource.ReadRequest
 	data.Name = types.StringValue(project.Name)
 	if project.Description != nil {
 		data.Description = types.StringValue(*project.Description)
+	}
+
+	if project.Environments != nil {
+		environments := make([]EnvironmentModel, len(project.Environments))
+		for i, env := range project.Environments {
+			var description types.String
+			if env.Description != nil {
+				description = types.StringValue(*env.Description)
+			} else {
+				description = types.StringNull()
+			}
+
+			environments[i] = EnvironmentModel{
+				Id:          types.Int64Value(env.ID),
+				Name:        types.StringValue(env.Name),
+				Description: description,
+				ProjectId:   types.Int64Value(env.ProjectId),
+				CreatedAt:   types.StringValue(env.CreatedAt.String()),
+				UpdatedAt:   types.StringValue(env.UpdatedAt.String()),
+			}
+		}
+		data.Environments = environments
 	}
 
 	tflog.Trace(ctx, "read a project by ID or Name data source")

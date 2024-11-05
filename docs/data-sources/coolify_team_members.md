@@ -1,6 +1,6 @@
 ---
 subcategory: "Team"
-page_title: "Coolify: coolify_team"
+page_title: "Coolify: coolify_team_members"
 description: |-
   The order resource to manage a team on Coolify.
 ---
