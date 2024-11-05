@@ -23,8 +23,8 @@ Do not keep your authentication password in HCL for production environments, use
 terraform {
   required_providers {
     coolify = {
-      source = "themarkwill/coolify"
-      version = "0.4.4"
+      source = "marconneves/coolify"
+      version = "4.1.1"
     }
   }
 }
