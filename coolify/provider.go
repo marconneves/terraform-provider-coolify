@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 
+	"github.com/marconneves/terraform-provider-coolify/coolify/project"
 	"github.com/marconneves/terraform-provider-coolify/coolify/team"
 
 	coolify_sdk "github.com/marconneves/coolify-sdk-go"
@@ -70,6 +71,7 @@ func (p *CoolifyProvider) DataSources(ctx context.Context) []func() datasource.D
 	return []func() datasource.DataSource{
 		team.NewTeamDataSource,
 		team.NewTeamMembersDataSource,
+		project.NewProjectDataSource,
 	}
 }
 

@@ -13,7 +13,7 @@
             "env": {
                 "TF_ACC":1,
                 "COOLIFY_ADDRESS": "https://cloud.ferramenta.digital",
-                "COOLIFY_TOKEN": "2|KW6agoFYngIF6uTtW4NV6EqXuVCtIQpPSWqzc1UM03428da4"
+                "COOLIFY_TOKEN": "3|Tt6iybaozpfPZojdlK5gGGotoxK8Cn1u1xTUCe2T1e65744d"
             }
         }
     ]
