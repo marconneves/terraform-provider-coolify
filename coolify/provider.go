@@ -72,6 +72,7 @@ func (p *CoolifyProvider) DataSources(ctx context.Context) []func() datasource.D
 		team.NewTeamDataSource,
 		team.NewTeamMembersDataSource,
 		project.NewProjectDataSource,
+		project.NewEnvironmentDataSource,
 	}
 }
 
