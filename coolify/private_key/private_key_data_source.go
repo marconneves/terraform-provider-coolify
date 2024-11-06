@@ -23,6 +23,7 @@ type PrivateKeyDataSource struct {
 
 func (d *PrivateKeyDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_private_key"
+
 }
 
 func (d *PrivateKeyDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
