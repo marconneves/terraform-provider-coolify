@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	coolify_sdk "github.com/marconneves/coolify-sdk-go"
 )
 
@@ -479,6 +480,9 @@ func (s *ServerDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 	data.UpdatedAt = types.StringValue(server.UpdatedAt.Format(time.RFC3339))
 
 	diags = resp.State.Set(ctx, &data)
+
+	tflog.Trace(ctx, "read a team by ID or Name data source")
+
 	resp.Diagnostics.Append(diags...)
 
 }
