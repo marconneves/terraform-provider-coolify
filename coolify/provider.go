@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 
+	"github.com/marconneves/terraform-provider-coolify/coolify/private_key"
 	"github.com/marconneves/terraform-provider-coolify/coolify/project"
 	"github.com/marconneves/terraform-provider-coolify/coolify/project_environment"
 	"github.com/marconneves/terraform-provider-coolify/coolify/server"
@@ -77,6 +78,7 @@ func (p *CoolifyProvider) DataSources(ctx context.Context) []func() datasource.D
 		project.NewProjectDataSource,
 		project_environment.NewEnvironmentDataSource,
 		server.NewServerDataSource,
+		private_key.NewPrivateKeyDataSource,
 	}
 }
 
