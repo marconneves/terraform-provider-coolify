@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
@@ -10,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	coolify_sdk "github.com/marconneves/coolify-sdk-go"
+	configure "github.com/marconneves/terraform-provider-coolify/shared"
 )
 
 var _ datasource.DataSource = &ServerDataSource{}
@@ -283,22 +283,7 @@ func (s *ServerDataSource) Schema(_ context.Context, _ datasource.SchemaRequest,
 }
 
 func (s *ServerDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
-	if req.ProviderData == nil {
-		return
-	}
-
-	client, ok := req.ProviderData.(*coolify_sdk.Sdk)
-
-	if !ok {
-		resp.Diagnostics.AddError(
-			"Unexpected Data Source Configure Type",
-			fmt.Sprintf("Expected *client.Client, got: %T. Please report this issue to the provider developers.", req.ProviderData),
-		)
-
-		return
-	}
-
-	s.client = client
+	resp.Diagnostics.Append(configure.ConfigureClient(ctx, req, &s.client)...)
 }
 
 func (s *ServerDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
