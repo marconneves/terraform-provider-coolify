@@ -117,6 +117,10 @@ github.com/marconneves/coolify-sdk-go v1.4.4 h1:v66exvaOuFW4V6/d5IfvyMGA74pBb2TO
 github.com/marconneves/coolify-sdk-go v1.4.4/go.mod h1:uHVsnJhkh5XHqwR+vX/sFJnfn7vfmbiWBgq0aOdoiV8=
 github.com/marconneves/coolify-sdk-go v1.4.5 h1:AmtEWXaH3dSaTb64wwfQO63n5PHhGyyMA8s0q6tdnFg=
 github.com/marconneves/coolify-sdk-go v1.4.5/go.mod h1:uHVsnJhkh5XHqwR+vX/sFJnfn7vfmbiWBgq0aOdoiV8=
+github.com/marconneves/coolify-sdk-go v1.5.1 h1:UvGteZVmiuVgbxC/+d9bx/eOR1yUi3MmqO8GHAE0THM=
+github.com/marconneves/coolify-sdk-go v1.5.1/go.mod h1:uHVsnJhkh5XHqwR+vX/sFJnfn7vfmbiWBgq0aOdoiV8=
+github.com/marconneves/coolify-sdk-go v1.5.2 h1:bMr2Y4iVVO71vGJcuXxYPnf/kOrFF8kADdRF8pjk9i8=
+github.com/marconneves/coolify-sdk-go v1.5.2/go.mod h1:uHVsnJhkh5XHqwR+vX/sFJnfn7vfmbiWBgq0aOdoiV8=
 github.com/mattn/go-colorable v0.1.9/go.mod h1:u6P/XSegPjTcexA+o6vUJrdnUu04hMope9wVRipJSqc=
 github.com/mattn/go-colorable v0.1.12/go.mod h1:u5H1YNBxpqRaxsYJYSkiCWKzEfiAb1Gb520KVy5xxl4=
 github.com/mattn/go-colorable v0.1.13 h1:fFA4WZxdEF4tXPZVKMLwD8oUnCTTo08duU7wxecdEvA=
