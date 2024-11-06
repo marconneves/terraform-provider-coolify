@@ -49,6 +49,7 @@ func (d *PrivateKeyDataSource) Schema(ctx context.Context, req datasource.Schema
 			"private_key": schema.StringAttribute{
 				MarkdownDescription: "Private Key content",
 				Computed:            true,
+				Sensitive:           true,
 			},
 			"is_git_related": schema.BoolAttribute{
 				MarkdownDescription: "Indicates if the key is related to Git",
