@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	coolify_sdk "github.com/marconneves/coolify-sdk-go"
+	configure "github.com/marconneves/terraform-provider-coolify/shared"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
@@ -33,11 +34,11 @@ type MemberModel struct {
 	Email types.String `tfsdk:"email"`
 }
 
-func (d *TeamMembersDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+func (t *TeamMembersDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_team_members"
 }
 
-func (d *TeamMembersDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (t *TeamMembersDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Team members data source",
 
@@ -70,26 +71,11 @@ func (d *TeamMembersDataSource) Schema(ctx context.Context, req datasource.Schem
 	}
 }
 
-func (d *TeamMembersDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
-	if req.ProviderData == nil {
-		return
-	}
-
-	client, ok := req.ProviderData.(*coolify_sdk.Sdk)
-
-	if !ok {
-		resp.Diagnostics.AddError(
-			"Unexpected Data Source Configure Type",
-			fmt.Sprintf("Expected *client.Client, got: %T. Please report this issue to the provider developers.", req.ProviderData),
-		)
-
-		return
-	}
-
-	d.client = client
+func (t *TeamMembersDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
+	resp.Diagnostics.Append(configure.ConfigureClient(ctx, req, &t.client)...)
 }
 
-func (d *TeamMembersDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+func (t *TeamMembersDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var data TeamMembersDataSourceModel
 
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
@@ -98,10 +84,9 @@ func (d *TeamMembersDataSource) Read(ctx context.Context, req datasource.ReadReq
 		return
 	}
 
-	// Convert int64 to int
 	teamID := int(data.TeamId.ValueInt64())
 
-	members, err := d.client.Team.Members(teamID)
+	members, err := t.client.Team.Members(teamID)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Client Error",

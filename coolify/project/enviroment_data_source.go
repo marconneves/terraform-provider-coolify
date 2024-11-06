@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	coolify_sdk "github.com/marconneves/coolify-sdk-go"
+	configure "github.com/marconneves/terraform-provider-coolify/shared"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
@@ -74,22 +75,7 @@ func (d *EnvironmentDataSource) Schema(ctx context.Context, req datasource.Schem
 }
 
 func (d *EnvironmentDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
-	if req.ProviderData == nil {
-		return
-	}
-
-	client, ok := req.ProviderData.(*coolify_sdk.Sdk)
-
-	if !ok {
-		resp.Diagnostics.AddError(
-			"Unexpected Data Source Configure Type",
-			fmt.Sprintf("Expected *coolify_sdk.Sdk, got: %T. Please report this issue to the provider developers.", req.ProviderData),
-		)
-
-		return
-	}
-
-	d.client = client
+	resp.Diagnostics.Append(configure.ConfigureClient(ctx, req, &d.client)...)
 }
 
 func (d *EnvironmentDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
