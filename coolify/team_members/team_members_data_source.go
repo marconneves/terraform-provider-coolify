@@ -2,14 +2,12 @@ package team_members
 
 import (
 	"context"
-	"fmt"
 
 	coolify_sdk "github.com/marconneves/coolify-sdk-go"
 	configure "github.com/marconneves/terraform-provider-coolify/shared"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
@@ -21,17 +19,6 @@ func NewTeamMembersDataSource() datasource.DataSource {
 
 type TeamMembersDataSource struct {
 	client *coolify_sdk.Sdk
-}
-
-type TeamMembersDataSourceModel struct {
-	TeamId  types.Int64   `tfsdk:"team_id"`
-	Members []MemberModel `tfsdk:"members"`
-}
-
-type MemberModel struct {
-	Id    types.String `tfsdk:"id"`
-	Name  types.String `tfsdk:"name"`
-	Email types.String `tfsdk:"email"`
 }
 
 func (t *TeamMembersDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -76,34 +63,25 @@ func (t *TeamMembersDataSource) Configure(ctx context.Context, req datasource.Co
 }
 
 func (t *TeamMembersDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data TeamMembersDataSourceModel
+	var teamMembers TeamMembersModel
 
-	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
+	resp.Diagnostics.Append(req.Config.Get(ctx, &teamMembers)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	teamID := int(data.TeamId.ValueInt64())
-
-	members, err := t.client.Team.Members(teamID)
-	if err != nil {
-		resp.Diagnostics.AddError(
-			"Client Error",
-			fmt.Sprintf("Unable to read team members, got error: %s", err),
-		)
+	members, diags := readTeamMembers(*t.client, teamMembers.TeamId)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	for _, member := range *members {
-		data.Members = append(data.Members, MemberModel{
-			Id:    types.StringValue(fmt.Sprintf("%d", member.Id)),
-			Name:  types.StringValue(member.Name),
-			Email: types.StringValue(member.Email),
-		})
-	}
+	mapTeamMembersModel(&teamMembers, members)
 
-	tflog.Trace(ctx, "read team members data source")
+	tflog.Trace(ctx, "Successfully read team data", map[string]interface{}{
+		"team_id": teamMembers.TeamId,
+	})
 
-	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &teamMembers)...)
 }
