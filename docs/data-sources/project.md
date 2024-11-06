@@ -12,7 +12,6 @@ Project by ID or Name data source
 
 ## Exemplo de Uso
 
-```hcl
 ```terraform
 data "coolify_project" "example" {
   id = "12345"
@@ -21,7 +20,6 @@ data "coolify_project" "example" {
 output "project_name" {
   value = data.coolify_project.example.name
 }
-```
 ```
 
 ## Argumentos e Atributos

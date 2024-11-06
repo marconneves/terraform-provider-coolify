@@ -12,7 +12,6 @@ Team by ID or Name data source
 
 ## Exemplo de Uso
 
-```hcl
 ```terraform
 data "coolify_team" "example" {
   id = "12345"
@@ -21,7 +20,6 @@ data "coolify_team" "example" {
 output "team_name" {
   value = data.coolify_team.example.name
 }
-```
 ```
 
 ## Argumentos e Atributos

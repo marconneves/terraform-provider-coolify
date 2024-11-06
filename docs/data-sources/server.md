@@ -12,7 +12,6 @@ description: |-
 
 ## Exemplo de Uso
 
-```hcl
 ```terraform
 data "coolify_server" "example" {
   uuid = "example-id"
@@ -22,7 +21,6 @@ output "server_name" {
   value = data.coolify_server.example.name
 }
 ```
-```
 
 ## Argumentos e Atributos
 
@@ -31,36 +29,36 @@ output "server_name" {
 
 ### Optional
 
-- `name` (String)
-- `uuid` (String)
+- `name` (String) The name of the server.
+- `uuid` (String) The unique identifier of the server.
 
 ### Read-Only
 
-- `created_at` (String)
-- `description` (String)
-- `high_disk_usage_notification_sent` (Boolean)
-- `ip` (String)
-- `log_drain_notification_sent` (Boolean)
-- `port` (String)
-- `private_key_id` (Number)
-- `proxy` (Attributes) (see [below for nested schema](#nestedatt--proxy))
-- `settings` (Attributes) (see [below for nested schema](#nestedatt--settings))
-- `swarm_cluster` (String)
-- `team_id` (Number)
-- `unreachable_count` (Number)
-- `unreachable_notification_sent` (Boolean)
-- `updated_at` (String)
-- `user` (String)
-- `validation_logs` (String)
+- `created_at` (String) The creation timestamp of the server.
+- `description` (String) A description of the server.
+- `high_disk_usage_notification_sent` (Boolean) Indicates if a high disk usage notification has been sent.
+- `ip` (String) The IP address of the server.
+- `log_drain_notification_sent` (Boolean) Indicates if a log drain notification has been sent.
+- `port` (String) The port used by the server.
+- `private_key_id` (Number) The ID of the private key associated with the server.
+- `proxy` (Attributes) Proxy settings for the server. (see [below for nested schema](#nestedatt--proxy))
+- `settings` (Attributes) Settings related to the server. (see [below for nested schema](#nestedatt--settings))
+- `swarm_cluster` (String) The swarm cluster associated with the server.
+- `team_id` (Number) The ID of the team that owns the server.
+- `unreachable_count` (Number) The count of times the server was unreachable.
+- `unreachable_notification_sent` (Boolean) Indicates if an unreachable notification has been sent.
+- `updated_at` (String) The last update timestamp of the server.
+- `user` (String) The user associated with the server.
+- `validation_logs` (String) Logs related to server validation.
 
 <a id="nestedatt--proxy"></a>
 ### Nested Schema for `proxy`
 
 Read-Only:
 
-- `force_stop` (Boolean)
-- `status` (String)
-- `type` (String)
+- `force_stop` (Boolean) Indicates if the proxy is forcefully stopped.
+- `status` (String) The status of the proxy.
+- `type` (String) The type of the proxy.
 
 
 <a id="nestedatt--settings"></a>
@@ -68,44 +66,44 @@ Read-Only:
 
 Read-Only:
 
-- `concurrent_builds` (Number)
-- `created_at` (String)
-- `delete_unused_networks` (Boolean)
-- `delete_unused_volumes` (Boolean)
-- `docker_cleanup_frequency` (String)
-- `docker_cleanup_threshold` (Number)
-- `dynamic_timeout` (Number)
-- `force_disabled` (Boolean)
-- `force_docker_cleanup` (Boolean)
-- `generate_exact_labels` (Boolean)
-- `id` (Number)
-- `is_build_server` (Boolean)
-- `is_cloudflare_tunnel` (Boolean)
-- `is_jump_server` (Boolean)
-- `is_logdrain_axiom_enabled` (Boolean)
-- `is_logdrain_custom_enabled` (Boolean)
-- `is_logdrain_highlight_enabled` (Boolean)
-- `is_logdrain_newrelic_enabled` (Boolean)
-- `is_metrics_enabled` (Boolean)
-- `is_reachable` (Boolean)
-- `is_server_api_enabled` (Boolean)
-- `is_swarm_manager` (Boolean)
-- `is_swarm_worker` (Boolean)
-- `is_usable` (Boolean)
-- `logdrain_axiom_api_key` (String)
-- `logdrain_axiom_dataset_name` (String)
-- `logdrain_custom_config` (String)
-- `logdrain_custom_config_parser` (String)
-- `logdrain_highlight_project_id` (String)
-- `logdrain_newrelic_base_uri` (String)
-- `logdrain_newrelic_license_key` (String)
-- `metrics_history_days` (Number)
-- `metrics_refresh_rate_seconds` (Number)
-- `metrics_token` (String)
-- `server_id` (Number)
-- `server_timezone` (String)
-- `updated_at` (String)
-- `wildcard_domain` (String)
+- `concurrent_builds` (Number) The number of concurrent builds allowed on the server.
+- `created_at` (String) The creation timestamp of the server.
+- `delete_unused_networks` (Boolean) Indicates if unused networks are deleted.
+- `delete_unused_volumes` (Boolean) Indicates if unused volumes are deleted.
+- `docker_cleanup_frequency` (String) The frequency of Docker cleanup operations.
+- `docker_cleanup_threshold` (Number) The threshold for Docker cleanup operations.
+- `dynamic_timeout` (Number) The dynamic timeout setting for the server.
+- `force_disabled` (Boolean) Indicates if the server is forcefully disabled.
+- `force_docker_cleanup` (Boolean) Indicates if Docker cleanup is forcefully executed.
+- `generate_exact_labels` (Boolean) Indicates if exact labels are generated.
+- `id` (Number) The ID of the server settings.
+- `is_build_server` (Boolean) Indicates if the server is a build server.
+- `is_cloudflare_tunnel` (Boolean) Indicates if the server uses a Cloudflare tunnel.
+- `is_jump_server` (Boolean) Indicates if the server is a jump server.
+- `is_logdrain_axiom_enabled` (Boolean) Indicates if log drain to Axiom is enabled.
+- `is_logdrain_custom_enabled` (Boolean) Indicates if custom log drain is enabled.
+- `is_logdrain_highlight_enabled` (Boolean) Indicates if log drain to Highlight is enabled.
+- `is_logdrain_newrelic_enabled` (Boolean) Indicates if log drain to New Relic is enabled.
+- `is_metrics_enabled` (Boolean) Indicates if metrics collection is enabled.
+- `is_reachable` (Boolean) Indicates if the server is reachable.
+- `is_server_api_enabled` (Boolean) Indicates if the server API is enabled.
+- `is_swarm_manager` (Boolean) Indicates if the server is a Swarm manager.
+- `is_swarm_worker` (Boolean) Indicates if the server is a Swarm worker.
+- `is_usable` (Boolean) Indicates if the server is usable.
+- `logdrain_axiom_api_key` (String) The API key for Axiom log drain.
+- `logdrain_axiom_dataset_name` (String) The dataset name for Axiom log drain.
+- `logdrain_custom_config` (String) The custom configuration for log drain.
+- `logdrain_custom_config_parser` (String) The parser for custom log drain configuration.
+- `logdrain_highlight_project_id` (String) The project ID for Highlight log drain.
+- `logdrain_newrelic_base_uri` (String) The base URI for New Relic log drain.
+- `logdrain_newrelic_license_key` (String) The license key for New Relic log drain.
+- `metrics_history_days` (Number) The number of days to retain metrics history.
+- `metrics_refresh_rate_seconds` (Number) The refresh rate for metrics in seconds.
+- `metrics_token` (String) The token used for metrics collection.
+- `server_id` (Number) The ID of the server.
+- `server_timezone` (String) The timezone of the server.
+- `updated_at` (String) The last update timestamp of the server.
+- `wildcard_domain` (String) The wildcard domain associated with the server.
 
 
 

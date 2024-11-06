@@ -12,7 +12,6 @@ Private Key data source
 
 ## Exemplo de Uso
 
-```hcl
 ```terraform
 data "coolify_private_key" "example" {
   id = "12345"
@@ -21,7 +20,6 @@ data "coolify_private_key" "example" {
 output "private_key_name" {
   value = data.coolify_private_key.example.name
 }
-```
 ```
 
 ## Argumentos e Atributos

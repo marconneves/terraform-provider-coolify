@@ -12,7 +12,6 @@ Team members data source
 
 ## Exemplo de Uso
 
-```hcl
 ```terraform
 data "coolify_team_members" "example" {
   team_id = "12345"
@@ -21,7 +20,6 @@ data "coolify_team_members" "example" {
 output "team_member_names" {
   value = data.coolify_team_members.example.members[*].name
 }
-```
 ```
 
 ## Argumentos e Atributos

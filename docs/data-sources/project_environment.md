@@ -12,7 +12,6 @@ Environment data source
 
 ## Exemplo de Uso
 
-```hcl
 ```terraform
 data "coolify_project_environment" "example" {
   project_uuid = "uuid_project"
@@ -22,7 +21,6 @@ data "coolify_project_environment" "example" {
 output "project_name" {
   value = data.coolify_project_environment.example.name
 }
-```
 ```
 
 ## Argumentos e Atributos
