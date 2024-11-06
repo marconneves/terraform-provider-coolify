@@ -1,10 +1,10 @@
-package team
+package team_members
 
 import (
 	"context"
 	"fmt"
 
-	"github.com/marconneves/coolify-sdk-go"
+	coolify_sdk "github.com/marconneves/coolify-sdk-go"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"

@@ -1,4 +1,4 @@
-package team_test
+package team_members_test
 
 import (
 	"fmt"
