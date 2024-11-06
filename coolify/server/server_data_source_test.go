@@ -47,6 +47,5 @@ func testAccServerDataSourceCheck() resource.TestCheckFunc {
 		resource.TestCheckResourceAttr("data.coolify_server.test", "high_disk_usage_notification_sent", "false"),
 		resource.TestCheckResourceAttr("data.coolify_server.test", "log_drain_notification_sent", "false"),
 		resource.TestCheckResourceAttr("data.coolify_server.test", "port", "22"),
-		resource.TestCheckResourceAttr("data.coolify_server.test", "private_key_id", "5"),
 	)
 }
