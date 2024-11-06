@@ -1,8 +1,7 @@
-package project
+package project_environment
 
 import (
 	"context"
-	"fmt"
 
 	coolify_sdk "github.com/marconneves/coolify-sdk-go"
 	configure "github.com/marconneves/terraform-provider-coolify/shared"
@@ -79,31 +78,25 @@ func (d *EnvironmentDataSource) Configure(ctx context.Context, req datasource.Co
 }
 
 func (d *EnvironmentDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data EnvironmentDataSourceModel
+	var environment EnvironmentModel
 
-	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
-
+	resp.Diagnostics.Append(req.Config.Get(ctx, &environment)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	environment, err := d.client.Project.Environment(data.ProjectUUID.ValueString(), data.Name.ValueString())
-	if err != nil {
-		resp.Diagnostics.AddError(
-			"Client Error",
-			fmt.Sprintf("Unable to read environment data, got error: %s", err),
-		)
+	environmentSaved, diags := readEnvironment(*d.client, environment.ProjectUUID, environment.Name)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	data.Id = types.Int64Value(int64(environment.Id))
-	data.Name = types.StringValue(environment.Name)
-	data.Description = types.StringValue(environment.Description)
-	data.ProjectID = types.Int64Value(int64(environment.ProjectID))
-	data.CreatedAt = types.StringValue(environment.CreatedAt.String())
-	data.UpdatedAt = types.StringValue(environment.UpdatedAt.String())
+	mapEnvironmentModel(&environment, environmentSaved)
 
-	tflog.Trace(ctx, "read an environment data source")
+	tflog.Trace(ctx, "Successfully read team data", map[string]interface{}{
+		"environment_id": environmentSaved.Id,
+		"name":           environmentSaved.Name,
+	})
 
-	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &environment)...)
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/marconneves/terraform-provider-coolify/coolify/project"
+	"github.com/marconneves/terraform-provider-coolify/coolify/project_environment"
 	"github.com/marconneves/terraform-provider-coolify/coolify/server"
 	"github.com/marconneves/terraform-provider-coolify/coolify/team"
 	"github.com/marconneves/terraform-provider-coolify/coolify/team_members"
@@ -74,7 +75,7 @@ func (p *CoolifyProvider) DataSources(ctx context.Context) []func() datasource.D
 		team.NewTeamDataSource,
 		team_members.NewTeamMembersDataSource,
 		project.NewProjectDataSource,
-		project.NewEnvironmentDataSource,
+		project_environment.NewEnvironmentDataSource,
 		server.NewServerDataSource,
 	}
 }

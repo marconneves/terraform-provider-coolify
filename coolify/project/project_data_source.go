@@ -2,14 +2,12 @@ package project
 
 import (
 	"context"
-	"fmt"
 
 	coolify_sdk "github.com/marconneves/coolify-sdk-go"
 	configure "github.com/marconneves/terraform-provider-coolify/shared"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
@@ -21,22 +19,6 @@ func NewProjectDataSource() datasource.DataSource {
 
 type ProjectDataSource struct {
 	client *coolify_sdk.Sdk
-}
-
-type ProjectDataSourceModel struct {
-	Id           types.String       `tfsdk:"id"`
-	Name         types.String       `tfsdk:"name"`
-	Description  types.String       `tfsdk:"description"`
-	Environments []EnvironmentModel `tfsdk:"environments"`
-}
-
-type EnvironmentModel struct {
-	Id          types.Int64  `tfsdk:"id"`
-	Name        types.String `tfsdk:"name"`
-	Description types.String `tfsdk:"description"`
-	ProjectId   types.Int64  `tfsdk:"project_id"`
-	CreatedAt   types.String `tfsdk:"created_at"`
-	UpdatedAt   types.String `tfsdk:"updated_at"`
 }
 
 func (d *ProjectDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -101,87 +83,25 @@ func (d *ProjectDataSource) Configure(ctx context.Context, req datasource.Config
 }
 
 func (d *ProjectDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data ProjectDataSourceModel
+	var project ProjectModel
 
-	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
-
+	resp.Diagnostics.Append(req.Config.Get(ctx, &project)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	var project *coolify_sdk.Project
-	var err error
-
-	if !data.Id.IsNull() {
-		project, err = d.client.Project.Get(fmt.Sprintf("%v", data.Id.ValueString()))
-		if err != nil {
-			resp.Diagnostics.AddError(
-				"Client Error",
-				fmt.Sprintf("Unable to read project data by ID, got error: %s", err),
-			)
-			return
-		}
-	} else if !data.Name.IsNull() {
-		projects, err := d.client.Project.List()
-		if err != nil {
-			resp.Diagnostics.AddError(
-				"Client Error",
-				fmt.Sprintf("Unable to list projects, got error: %s", err),
-			)
-			return
-		}
-
-		for _, p := range *projects {
-			if p.Name == data.Name.ValueString() {
-				project = &p
-				break
-			}
-		}
-
-		if project == nil {
-			resp.Diagnostics.AddError(
-				"Not Found",
-				fmt.Sprintf("No project found with name: %s", data.Name.ValueString()),
-			)
-			return
-		}
-	} else {
-		resp.Diagnostics.AddError(
-			"Configuration Error",
-			"Either 'id' or 'name' must be specified.",
-		)
+	projectSaved, diags := readProject(ctx, *d.client, project.Id, project.Name)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	data.Id = types.StringValue(project.UUID)
-	data.Name = types.StringValue(project.Name)
-	if project.Description != nil {
-		data.Description = types.StringValue(*project.Description)
-	}
+	mapProjectDataSourceModel(&project, projectSaved)
 
-	if project.Environments != nil {
-		environments := make([]EnvironmentModel, len(project.Environments))
-		for i, env := range project.Environments {
-			var description types.String
-			if env.Description != nil {
-				description = types.StringValue(*env.Description)
-			} else {
-				description = types.StringNull()
-			}
+	tflog.Trace(ctx, "Successfully read team data", map[string]interface{}{
+		"project_id": projectSaved.ID,
+		"name":       projectSaved.Name,
+	})
 
-			environments[i] = EnvironmentModel{
-				Id:          types.Int64Value(env.ID),
-				Name:        types.StringValue(env.Name),
-				Description: description,
-				ProjectId:   types.Int64Value(env.ProjectId),
-				CreatedAt:   types.StringValue(env.CreatedAt.String()),
-				UpdatedAt:   types.StringValue(env.UpdatedAt.String()),
-			}
-		}
-		data.Environments = environments
-	}
-
-	tflog.Trace(ctx, "read a project by ID or Name data source")
-
-	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &project)...)
 }
