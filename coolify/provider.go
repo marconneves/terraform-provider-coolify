@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/marconneves/terraform-provider-coolify/coolify/project"
+	"github.com/marconneves/terraform-provider-coolify/coolify/server"
 	"github.com/marconneves/terraform-provider-coolify/coolify/team"
 
 	coolify_sdk "github.com/marconneves/coolify-sdk-go"
@@ -73,6 +74,7 @@ func (p *CoolifyProvider) DataSources(ctx context.Context) []func() datasource.D
 		team.NewTeamMembersDataSource,
 		project.NewProjectDataSource,
 		project.NewEnvironmentDataSource,
+		server.NewServerDataSource,
 	}
 }
 
