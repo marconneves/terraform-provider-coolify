@@ -26,7 +26,7 @@ func (s *ServerDataSource) Metadata(ctx context.Context, req datasource.Metadata
 func (s *ServerDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
-			"uuid": schema.StringAttribute{
+			"id": schema.StringAttribute{
 				Optional:    true,
 				Description: "The unique identifier of the server.",
 			},

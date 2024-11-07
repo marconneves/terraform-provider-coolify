@@ -43,12 +43,12 @@ func (r *ServerResource) CreateServer(ctx context.Context, req resource.CreateRe
 		return
 	}
 
-	data.UUID = types.StringValue(*serverID)
+	data.ID = types.StringValue(*serverID)
 	data.PrivateKeyUUID = types.StringValue(privateKeyUUID)
 	tflog.Trace(ctx, "Created a server", map[string]interface{}{"server_id": serverID})
 
 	tflog.Debug(ctx, "Data after server creation", map[string]interface{}{
-		"uuid":        data.UUID.ValueString(),
+		"uuid":        data.ID.ValueString(),
 		"name":        data.Name.ValueString(),
 		"ip":          data.IP.ValueString(),
 		"description": data.Description.ValueString(),

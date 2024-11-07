@@ -16,7 +16,7 @@ func readPrivateKey(ctx context.Context, client coolify_sdk.Sdk, id types.String
 	var err error
 
 	if !id.IsNull() {
-		privateKey, err = fetchPrivateKeyByID(client, ctx, id.ValueString())
+		privateKey, err = fetchPrivateKeyByUUID(client, ctx, id.ValueString())
 	} else {
 		diags.AddError("Configuration Error", "Either 'id' or 'name' must be specified.")
 		return nil, diags
