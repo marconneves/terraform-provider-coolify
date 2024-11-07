@@ -5,7 +5,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-log/tflog"
 	coolify_sdk "github.com/marconneves/coolify-sdk-go"
 	configure "github.com/marconneves/terraform-provider-coolify/shared"
 )
@@ -51,11 +50,11 @@ func (s *ServerDataSource) Schema(_ context.Context, _ datasource.SchemaRequest,
 				Computed:    true,
 				Description: "Indicates if a log drain notification has been sent.",
 			},
-			"port": schema.StringAttribute{
+			"port": schema.Int32Attribute{
 				Computed:    true,
 				Description: "The port used by the server.",
 			},
-			"private_key_id": schema.Int64Attribute{
+			"private_key_uuid": schema.StringAttribute{
 				Computed:    true,
 				Description: "The ID of the private key associated with the server.",
 			},
@@ -276,27 +275,5 @@ func (s *ServerDataSource) Configure(ctx context.Context, req datasource.Configu
 }
 
 func (s *ServerDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var server ServerModel
-
-	diags := req.Config.Get(ctx, &server)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	serverSaved, diags := readServer(ctx, *s.client, server.UUID, server.Name)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	mapServerModel(&server, serverSaved)
-
-	tflog.Trace(ctx, "Successfully read team data", map[string]interface{}{
-		"server_uuid": serverSaved.UUID,
-		"name":        serverSaved.Name,
-	})
-
-	resp.Diagnostics.Append(resp.State.Set(ctx, &server)...)
-
+	s.ReadServerDataSource(ctx, req, resp)
 }

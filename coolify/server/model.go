@@ -1,6 +1,8 @@
 package server
 
 import (
+	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -8,21 +10,25 @@ import (
 )
 
 type ServerModel struct {
-	UUID                          types.String   `tfsdk:"uuid"`
-	Name                          types.String   `tfsdk:"name"`
-	IP                            types.String   `tfsdk:"ip"`
-	Description                   types.String   `tfsdk:"description"`
+	UUID           types.String `tfsdk:"uuid"`
+	Name           types.String `tfsdk:"name"`
+	Description    types.String `tfsdk:"description"`
+	IP             types.String `tfsdk:"ip"`
+	Port           types.Int32  `tfsdk:"port"`
+	User           types.String `tfsdk:"user"`
+	PrivateKeyUUID types.String `tfsdk:"private_key_uuid"`
+}
+
+type ServerDataSourceModel struct {
+	ServerModel
 	HighDiskUsageNotificationSent types.Bool     `tfsdk:"high_disk_usage_notification_sent"`
 	LogDrainNotificationSent      types.Bool     `tfsdk:"log_drain_notification_sent"`
-	Port                          types.String   `tfsdk:"port"`
-	PrivateKeyID                  types.Int64    `tfsdk:"private_key_id"`
 	Proxy                         *ProxyModel    `tfsdk:"proxy"`
 	Settings                      *SettingsModel `tfsdk:"settings"`
 	SwarmCluster                  types.String   `tfsdk:"swarm_cluster"`
 	TeamID                        types.Int64    `tfsdk:"team_id"`
 	UnreachableCount              types.Int64    `tfsdk:"unreachable_count"`
 	UnreachableNotificationSent   types.Bool     `tfsdk:"unreachable_notification_sent"`
-	User                          types.String   `tfsdk:"user"`
 	ValidationLogs                types.String   `tfsdk:"validation_logs"`
 	CreatedAt                     types.String   `tfsdk:"created_at"`
 	UpdatedAt                     types.String   `tfsdk:"updated_at"`
@@ -75,7 +81,7 @@ type SettingsModel struct {
 	UpdatedAt                  types.String `tfsdk:"updated_at"`
 }
 
-func mapServerModel(data *ServerModel, server *coolify_sdk.Server) {
+func mapCommonServerFields(data *ServerModel, server *coolify_sdk.Server) {
 	data.UUID = types.StringValue(server.UUID)
 	data.IP = types.StringValue(server.IP)
 	data.Name = types.StringValue(server.Name)
@@ -84,10 +90,25 @@ func mapServerModel(data *ServerModel, server *coolify_sdk.Server) {
 		data.Description = types.StringValue(*server.Description)
 	}
 
+	portInt64, err := strconv.ParseInt(server.Port, 10, 32)
+	if err != nil {
+		fmt.Println("Erro na conversão:", err)
+		return
+	}
+
+	port := int32(portInt64)
+
+	data.Port = types.Int32Value(port)
+}
+
+func mapServerDataSourceModel(data *ServerDataSourceModel, server *coolify_sdk.Server) {
+	mapCommonServerFields(&data.ServerModel, server)
+
+	// TODO: Get private key uuid founding in api
+	data.PrivateKeyUUID = types.StringValue(server.UUID)
+
 	data.HighDiskUsageNotificationSent = types.BoolValue(server.HighDiskUsageNotificationSent)
 	data.LogDrainNotificationSent = types.BoolValue(server.LogDrainNotificationSent)
-	data.Port = types.StringValue(server.Port)
-	data.PrivateKeyID = types.Int64Value(int64(server.PrivateKeyID))
 
 	if server.Proxy != nil {
 		proxy := ProxyModel{}
@@ -185,4 +206,8 @@ func mapServerModel(data *ServerModel, server *coolify_sdk.Server) {
 
 	data.CreatedAt = types.StringValue(server.CreatedAt.Format(time.RFC3339))
 	data.UpdatedAt = types.StringValue(server.UpdatedAt.Format(time.RFC3339))
+}
+
+func mapServerResourceModel(projectData *ServerModel, project *coolify_sdk.Server) {
+	mapCommonServerFields(projectData, project)
 }
