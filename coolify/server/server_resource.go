@@ -84,5 +84,5 @@ func (r *ServerResource) Delete(ctx context.Context, req resource.DeleteRequest,
 }
 
 func (r *ServerResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+	resource.ImportStatePassthroughID(ctx, path.Root("uuid"), req, resp)
 }

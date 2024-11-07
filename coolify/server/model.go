@@ -89,6 +89,7 @@ func mapCommonServerFields(data *ServerModel, server *coolify_sdk.Server) {
 	if server.Description != nil {
 		data.Description = types.StringValue(*server.Description)
 	}
+	data.User = types.StringValue(server.User)
 
 	portInt64, err := strconv.ParseInt(server.Port, 10, 32)
 	if err != nil {
@@ -198,7 +199,6 @@ func mapServerDataSourceModel(data *ServerDataSourceModel, server *coolify_sdk.S
 	data.TeamID = types.Int64Value(int64(server.TeamID))
 	data.UnreachableCount = types.Int64Value(int64(server.UnreachableCount))
 	data.UnreachableNotificationSent = types.BoolValue(server.UnreachableNotificationSent)
-	data.User = types.StringValue(server.User)
 	data.ValidationLogs = types.StringNull()
 	if server.ValidationLogs != nil {
 		data.ValidationLogs = types.StringValue(*server.ValidationLogs)
