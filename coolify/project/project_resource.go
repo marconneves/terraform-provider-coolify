@@ -2,10 +2,7 @@ package project
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"os"
-	"path/filepath"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -97,20 +94,7 @@ func (r *ProjectResource) Create(ctx context.Context, req resource.CreateRequest
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 
-	stateFilePath := filepath.Join(".", "project_state_after_create.json")
-	stateData, err := json.MarshalIndent(data, "", "  ")
-	if err != nil {
-		resp.Diagnostics.AddError("State Serialization Error", fmt.Sprintf("Unable to serialize state to JSON: %s", err))
-		return
-	}
-
-	err = os.WriteFile(stateFilePath, stateData, 0644)
-	if err != nil {
-		resp.Diagnostics.AddError("File Write Error", fmt.Sprintf("Unable to write state to file: %s", err))
-		return
-	}
-
-	tflog.Debug(ctx, "Project state saved to file after creation", map[string]interface{}{"file_path": stateFilePath})
+	tflog.Debug(ctx, "Project state saved to file after creation")
 }
 
 func (r *ProjectResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
@@ -139,34 +123,59 @@ func (r *ProjectResource) Read(ctx context.Context, req resource.ReadRequest, re
 }
 
 func (r *ProjectResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var data ProjectResourceModel
+	var plan ProjectResourceModel
+	var state ProjectResourceModel
 
-	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
+	diags := req.Plan.Get(ctx, &plan)
+	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	if data.Id.IsNull() {
-		resp.Diagnostics.AddError("ID Missing", "UUID is required for updating a project.")
+	diags = req.State.Get(ctx, &state)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	tflog.Debug(ctx, "Project ID for update", map[string]interface{}{"project_id": data.Id.ValueString()})
-
-	updateDTO := coolify_sdk.UpdateProjectDTO{
-		Name:        data.Name.ValueStringPointer(),
-		Description: data.Description.ValueStringPointer(),
+	if r.client == nil {
+		resp.Diagnostics.AddError("Client Error", "Client is not configured. Please ensure the provider is properly configured.")
+		return
 	}
 
-	err := r.client.Project.Update(data.Id.ValueString(), &updateDTO)
+	if state.Id.IsNull() || state.Id.ValueString() == "" {
+		resp.Diagnostics.AddError("ID Missing", "UUID is required to update the project.")
+		return
+	}
+
+	updateDTO := coolify_sdk.UpdateProjectDTO{
+		Name:        plan.Name.ValueStringPointer(),
+		Description: plan.Description.ValueStringPointer(),
+	}
+
+	err := r.client.Project.Update(state.Id.ValueString(), &updateDTO)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update project, got error: %s", err))
 		return
 	}
 
-	tflog.Trace(ctx, "Updated project", map[string]interface{}{"project_id": data.Id.ValueString()})
+	project, err := r.client.Project.Get(state.Id.ValueString())
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read project after update, got error: %s", err))
+		return
+	}
 
-	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+	var newState ProjectResourceModel
+	newState.Id = types.StringValue(project.UUID)
+	newState.Name = types.StringValue(project.Name)
+	if project.Description != nil {
+		newState.Description = types.StringValue(*project.Description)
+	} else {
+		newState.Description = types.StringNull()
+	}
+
+	diags = resp.State.Set(ctx, &newState)
+	resp.Diagnostics.Append(diags...)
 }
 
 func (r *ProjectResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
