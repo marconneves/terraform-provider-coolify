@@ -40,7 +40,7 @@ func (r *ServerResource) UpdateServer(ctx context.Context, req resource.UpdateRe
 		Description:    plan.Description.ValueString(),
 		IsBuildServer:  false,
 		Port:           int(plan.Port.ValueInt32()),
-		User:           plan.UUID.ValueString(),
+		User:           plan.User.ValueString(),
 		PrivateKeyUUID: plan.PrivateKeyUUID.ValueString(),
 	}
 
@@ -59,6 +59,7 @@ func (r *ServerResource) UpdateServer(ctx context.Context, req resource.UpdateRe
 	var newState ServerModel
 
 	mapCommonServerFields(&newState, server)
+	newState.PrivateKeyUUID = plan.PrivateKeyUUID
 
 	diags = resp.State.Set(ctx, &newState)
 	resp.Diagnostics.Append(diags...)

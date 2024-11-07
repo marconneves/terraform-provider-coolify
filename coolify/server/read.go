@@ -12,14 +12,14 @@ import (
 	coolify_sdk "github.com/marconneves/coolify-sdk-go"
 )
 
-func readServer(ctx context.Context, client coolify_sdk.Sdk, id types.String, name types.String) (*coolify_sdk.Server, diag.Diagnostics) {
+func readServer(ctx context.Context, client coolify_sdk.Sdk, uuid types.String, name types.String) (*coolify_sdk.Server, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
 	var server *coolify_sdk.Server
 	var err error
 
-	if !id.IsNull() {
-		server, err = fetchServerByID(client, ctx, id.ValueString())
+	if !uuid.IsNull() {
+		server, err = fetchServerByID(client, ctx, uuid.ValueString())
 	} else if !name.IsNull() {
 		server, err = fetchServerByName(client, ctx, name.ValueString())
 	} else {
@@ -75,6 +75,8 @@ func (r *ServerResource) ReadServerResource(ctx context.Context, req resource.Re
 		return
 	}
 
+	privateKeyUUID := server.PrivateKeyUUID
+
 	serverSaved, diags := readServer(ctx, *r.client, server.UUID, server.Name)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
@@ -82,6 +84,7 @@ func (r *ServerResource) ReadServerResource(ctx context.Context, req resource.Re
 	}
 
 	mapServerResourceModel(&server, serverSaved)
+	server.PrivateKeyUUID = privateKeyUUID
 
 	tflog.Trace(ctx, "Successfully read server data", map[string]interface{}{
 		"server_uuid": serverSaved.UUID,

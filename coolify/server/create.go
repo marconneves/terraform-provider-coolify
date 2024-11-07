@@ -25,13 +25,15 @@ func (r *ServerResource) CreateServer(ctx context.Context, req resource.CreateRe
 		"description": data.Description.ValueString(),
 	})
 
+	privateKeyUUID := data.PrivateKeyUUID.ValueString()
+
 	createDTO := coolify_sdk.CreateServerDTO{
 		Name:           data.Name.ValueString(),
 		IP:             data.IP.ValueString(),
 		Description:    data.Description.ValueString(),
 		IsBuildServer:  false,
 		Port:           int(data.Port.ValueInt32()),
-		User:           data.UUID.ValueString(),
+		User:           data.User.ValueString(),
 		PrivateKeyUUID: data.PrivateKeyUUID.ValueString(),
 	}
 
@@ -42,6 +44,7 @@ func (r *ServerResource) CreateServer(ctx context.Context, req resource.CreateRe
 	}
 
 	data.UUID = types.StringValue(*serverID)
+	data.PrivateKeyUUID = types.StringValue(privateKeyUUID)
 	tflog.Trace(ctx, "Created a server", map[string]interface{}{"server_id": serverID})
 
 	tflog.Debug(ctx, "Data after server creation", map[string]interface{}{

@@ -8,12 +8,12 @@ import (
 	coolify_sdk "github.com/marconneves/coolify-sdk-go"
 )
 
-func fetchServerByID(client coolify_sdk.Sdk, ctx context.Context, id string) (*coolify_sdk.Server, error) {
+func fetchServerByID(client coolify_sdk.Sdk, ctx context.Context, uuid string) (*coolify_sdk.Server, error) {
 	tflog.Debug(ctx, "Fetching server by ID", map[string]interface{}{
-		"server_id": id,
+		"server_id": uuid,
 	})
 
-	server, err := client.Server.Get(id)
+	server, err := client.Server.Get(uuid)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read server data by ID, got error: %w", err)
 	}
