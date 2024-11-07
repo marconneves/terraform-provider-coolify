@@ -110,6 +110,7 @@ func getAPIToken(token types.String, resp *provider.ConfigureResponse) string {
 func (p *CoolifyProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		project.NewProjectResource,
+		server.NewServerResource,
 	}
 }
 

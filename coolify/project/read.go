@@ -41,7 +41,7 @@ func readProject(ctx context.Context, client coolify_sdk.Sdk, id types.String, n
 }
 
 func (d *ProjectDataSource) ReadProjectDatasource(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var project ProjectWithEnvironmentsModel
+	var project ProjectDataSourceModel
 
 	resp.Diagnostics.Append(req.Config.Get(ctx, &project)...)
 	if resp.Diagnostics.HasError() {

@@ -14,7 +14,7 @@ func TestAccServerDataSource(t *testing.T) {
 		ProtoV6ProviderFactories: tests.ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccServerDataSourceConfig(`uuid = "tks4gcsgwowws8gswggkw8gs"`),
+				Config: testAccServerDataSourceConfig(`uuid = "kk4wskwk0k0sssc8ckcss44c"`),
 				Check:  testAccServerDataSourceCheck(),
 			},
 			{
@@ -35,7 +35,7 @@ data "coolify_server" "test" {
 
 func testAccServerDataSourceCheck() resource.TestCheckFunc {
 	return resource.ComposeAggregateTestCheckFunc(
-		resource.TestCheckResourceAttr("data.coolify_server.test", "uuid", "tks4gcsgwowws8gswggkw8gs"),
+		resource.TestCheckResourceAttr("data.coolify_server.test", "uuid", "kk4wskwk0k0sssc8ckcss44c"),
 		resource.TestCheckResourceAttr("data.coolify_server.test", "name", "example-server"),
 		resource.TestCheckResourceAttr("data.coolify_server.test", "ip", "localhost"),
 		resource.TestCheckResourceAttr("data.coolify_server.test", "high_disk_usage_notification_sent", "false"),
