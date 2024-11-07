@@ -8,7 +8,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
 var _ datasource.DataSource = &ProjectDataSource{}
@@ -83,25 +82,5 @@ func (d *ProjectDataSource) Configure(ctx context.Context, req datasource.Config
 }
 
 func (d *ProjectDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var project ProjectModel
-
-	resp.Diagnostics.Append(req.Config.Get(ctx, &project)...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	projectSaved, diags := readProject(ctx, *d.client, project.Id, project.Name)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	mapProjectDataSourceModel(&project, projectSaved)
-
-	tflog.Trace(ctx, "Successfully read team data", map[string]interface{}{
-		"project_id": projectSaved.ID,
-		"name":       projectSaved.Name,
-	})
-
-	resp.Diagnostics.Append(resp.State.Set(ctx, &project)...)
+	d.ReadProjectDatasource(ctx, req, resp)
 }

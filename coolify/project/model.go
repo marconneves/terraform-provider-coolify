@@ -6,10 +6,16 @@ import (
 )
 
 type ProjectModel struct {
-	Id           types.String       `tfsdk:"id"`
-	Name         types.String       `tfsdk:"name"`
-	Description  types.String       `tfsdk:"description"`
-	Environments []EnvironmentModel `tfsdk:"environments"`
+	Id          types.String `tfsdk:"id"`
+	Name        types.String `tfsdk:"name"`
+	Description types.String `tfsdk:"description"`
+}
+
+type ProjectWithEnvironmentsModel struct {
+	Id           types.String        `tfsdk:"id"`
+	Name         types.String        `tfsdk:"name"`
+	Description  types.String        `tfsdk:"description"`
+	Environments *[]EnvironmentModel `tfsdk:"environments"`
 }
 
 type EnvironmentModel struct {
@@ -21,7 +27,7 @@ type EnvironmentModel struct {
 	UpdatedAt   types.String `tfsdk:"updated_at"`
 }
 
-func mapProjectDataSourceModel(projectData *ProjectModel, project *coolify_sdk.Project) {
+func mapProjectDataSourceModel(projectData *ProjectWithEnvironmentsModel, project *coolify_sdk.Project) {
 	projectData.Id = types.StringValue(project.UUID)
 	projectData.Name = types.StringValue(project.Name)
 	if project.Description != nil {
@@ -49,6 +55,16 @@ func mapProjectDataSourceModel(projectData *ProjectModel, project *coolify_sdk.P
 				UpdatedAt:   types.StringValue(env.UpdatedAt.String()),
 			}
 		}
-		projectData.Environments = environments
+		projectData.Environments = &environments
+	}
+}
+
+func mapProjectResourceModel(projectData *ProjectModel, project *coolify_sdk.Project) {
+	projectData.Id = types.StringValue(project.UUID)
+	projectData.Name = types.StringValue(project.Name)
+	if project.Description != nil {
+		projectData.Description = types.StringValue(*project.Description)
+	} else {
+		projectData.Description = types.StringNull()
 	}
 }
