@@ -2,6 +2,7 @@ package provider
 
 import (
 	"context"
+	"os"
 
 	"github.com/marconneves/terraform-provider-coolify/coolify/private_key"
 	"github.com/marconneves/terraform-provider-coolify/coolify/project"
@@ -13,6 +14,7 @@ import (
 	coolify_sdk "github.com/marconneves/coolify-sdk-go"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -33,21 +35,31 @@ type CoolifyProviderModel struct {
 	Token   types.String `tfsdk:"token"`
 }
 
+const (
+	ENV_KEY_ADDRESS = "COOLIFY_ADDRESS"
+	ENV_KEY_TOKEN   = "COOLIFY_TOKEN"
+
+	DEFAULT_COOLIFY_ENDPOINT = "https://app.coolify.io"
+)
+
 func (p *CoolifyProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
 	resp.TypeName = "coolify"
 	resp.Version = p.version
 }
 
 func (p *CoolifyProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
+	hasEnvToken := os.Getenv(ENV_KEY_TOKEN) != ""
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"address": schema.StringAttribute{
-				MarkdownDescription: "The address of the Coolify service.",
-				Required:            true,
+				MarkdownDescription: "Coolify endpoint. If not set, checks env for `" + ENV_KEY_ADDRESS + "`. Default: `" + DEFAULT_COOLIFY_ENDPOINT + "`.",
+				Optional:            true,
 			},
 			"token": schema.StringAttribute{
-				MarkdownDescription: "The token for authenticating with the Coolify service.",
-				Required:            true,
+				Required:            !hasEnvToken,
+				Optional:            hasEnvToken,
+				Sensitive:           true,
+				MarkdownDescription: "Coolify token. If not set, checks env for `" + ENV_KEY_TOKEN + "`.",
 			},
 		},
 	}
@@ -62,13 +74,43 @@ func (p *CoolifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 		return
 	}
 
-	client := coolify_sdk.Init(data.Address.ValueString(), data.Token.ValueString())
+	apiEndpoint := getAPIEndpoint(data.Address)
+	apiToken := getAPIToken(data.Token, resp)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	client := coolify_sdk.Init(apiEndpoint, apiToken)
 	resp.DataSourceData = client
 	resp.ResourceData = client
 }
 
+func getAPIEndpoint(address types.String) string {
+	if !address.IsNull() {
+		return address.ValueString()
+	}
+	if apiEndpointFromEnv, found := os.LookupEnv(ENV_KEY_ADDRESS); found {
+		return apiEndpointFromEnv
+	}
+	return DEFAULT_COOLIFY_ENDPOINT
+}
+
+func getAPIToken(token types.String, resp *provider.ConfigureResponse) string {
+	if !token.IsNull() {
+		return token.ValueString()
+	}
+	if apiTokenFromEnv, found := os.LookupEnv(ENV_KEY_TOKEN); found {
+		return apiTokenFromEnv
+	}
+	resp.Diagnostics.AddAttributeError(path.Root("token"), "Failed to configure client", "No token provided")
+	return ""
+}
+
 func (p *CoolifyProvider) Resources(ctx context.Context) []func() resource.Resource {
-	return []func() resource.Resource{}
+	return []func() resource.Resource{
+		project.NewProjectResource,
+	}
 }
 
 func (p *CoolifyProvider) DataSources(ctx context.Context) []func() datasource.DataSource {

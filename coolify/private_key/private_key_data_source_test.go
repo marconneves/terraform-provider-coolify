@@ -2,7 +2,6 @@ package private_key_test
 
 import (
 	"fmt"
-	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -24,15 +23,10 @@ func TestAccPrivateKeyDataSource(t *testing.T) {
 
 func testAccPrivateKeyDataSourceConfig(attribute string) string {
 	return fmt.Sprintf(`
-provider "coolify" {
-  address = "%s"
-  token   = "%s"
-}
-
 data "coolify_private_key" "test" {
   %s
 }
-`, os.Getenv("COOLIFY_ADDRESS"), os.Getenv("COOLIFY_TOKEN"), attribute)
+`, attribute)
 }
 
 func testAccPrivateKeyDataSourceCheck() resource.TestCheckFunc {

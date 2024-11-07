@@ -2,7 +2,6 @@ package team_members_test
 
 import (
 	"fmt"
-	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -24,15 +23,10 @@ func TestAccTeamMembersDataSource(t *testing.T) {
 
 func testAccTeamMembersDataSourceConfig(teamID int) string {
 	return fmt.Sprintf(`
-provider "coolify" {
-  address = "%s"
-  token   = "%s"
-}
-
 data "coolify_team_members" "test" {
   team_id = %d
 }
-`, os.Getenv("COOLIFY_ADDRESS"), os.Getenv("COOLIFY_TOKEN"), teamID)
+`, teamID)
 }
 
 func testAccTeamMembersDataSourceCheck() resource.TestCheckFunc {
