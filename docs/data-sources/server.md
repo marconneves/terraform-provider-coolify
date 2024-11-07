@@ -39,8 +39,8 @@ output "server_name" {
 - `high_disk_usage_notification_sent` (Boolean) Indicates if a high disk usage notification has been sent.
 - `ip` (String) The IP address of the server.
 - `log_drain_notification_sent` (Boolean) Indicates if a log drain notification has been sent.
-- `port` (String) The port used by the server.
-- `private_key_id` (Number) The ID of the private key associated with the server.
+- `port` (Number) The port used by the server.
+- `private_key_uuid` (String) The ID of the private key associated with the server.
 - `proxy` (Attributes) Proxy settings for the server. (see [below for nested schema](#nestedatt--proxy))
 - `settings` (Attributes) Settings related to the server. (see [below for nested schema](#nestedatt--settings))
 - `swarm_cluster` (String) The swarm cluster associated with the server.
