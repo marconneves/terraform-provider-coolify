@@ -42,6 +42,7 @@ func (r *ProjectResource) Schema(ctx context.Context, req resource.SchemaRequest
 			"id": schema.StringAttribute{
 				MarkdownDescription: "Project identifier",
 				Computed:            true,
+				Optional:            true,
 			},
 			"name": schema.StringAttribute{
 				MarkdownDescription: "Project name",
