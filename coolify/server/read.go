@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	coolify_sdk "github.com/marconneves/coolify-sdk-go"
+	"github.com/marconneves/terraform-provider-coolify/coolify/private_key"
 )
 
 func readServer(ctx context.Context, client coolify_sdk.Sdk, uuid types.String, name types.String) (*coolify_sdk.Server, diag.Diagnostics) {
@@ -28,7 +29,7 @@ func readServer(ctx context.Context, client coolify_sdk.Sdk, uuid types.String, 
 	}
 
 	if err != nil {
-		diags.AddError("Client Error", fmt.Sprintf("Unable to read server data: %s", err))
+		diags.AddError("Client Error", fmt.Sprintf("Unable to read server data: %s %s", err, uuid.ValueString()))
 		return nil, diags
 	}
 
@@ -49,7 +50,7 @@ func (s *ServerDataSource) ReadServerDataSource(ctx context.Context, req datasou
 		return
 	}
 
-	serverSaved, diags := readServer(ctx, *s.client, server.UUID, server.Name)
+	serverSaved, diags := readServer(ctx, *s.client, server.ID, server.Name)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
 		return
@@ -75,16 +76,21 @@ func (r *ServerResource) ReadServerResource(ctx context.Context, req resource.Re
 		return
 	}
 
-	privateKeyUUID := server.PrivateKeyUUID
-
-	serverSaved, diags := readServer(ctx, *r.client, server.UUID, server.Name)
+	serverSaved, diags := readServer(ctx, *r.client, server.ID, server.Name)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	mapServerResourceModel(&server, serverSaved)
-	server.PrivateKeyUUID = privateKeyUUID
+
+	privateKey, err := private_key.FetchPrivateKeyByID(*r.client, ctx, serverSaved.PrivateKeyID)
+	if err != nil {
+		diags.AddError("Not Found", "No server found with the given ID or name")
+		return
+	}
+
+	server.PrivateKeyUUID = types.StringValue(privateKey.UUID)
 
 	tflog.Trace(ctx, "Successfully read server data", map[string]interface{}{
 		"server_uuid": serverSaved.UUID,

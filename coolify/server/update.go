@@ -29,7 +29,7 @@ func (r *ServerResource) UpdateServer(ctx context.Context, req resource.UpdateRe
 		return
 	}
 
-	if state.UUID.IsNull() || state.UUID.ValueString() == "" {
+	if state.ID.IsNull() || state.ID.ValueString() == "" {
 		resp.Diagnostics.AddError("ID Missing", "UUID is required to update the server.")
 		return
 	}
@@ -44,13 +44,13 @@ func (r *ServerResource) UpdateServer(ctx context.Context, req resource.UpdateRe
 		PrivateKeyUUID: plan.PrivateKeyUUID.ValueString(),
 	}
 
-	err := r.client.Server.Update(state.UUID.ValueString(), &updateDTO)
+	err := r.client.Server.Update(state.ID.ValueString(), &updateDTO)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update server, got error: %s", err))
 		return
 	}
 
-	server, err := r.client.Server.Get(state.UUID.ValueString())
+	server, err := r.client.Server.Get(state.ID.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read server after update, got error: %s", err))
 		return

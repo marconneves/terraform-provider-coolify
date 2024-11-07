@@ -16,11 +16,11 @@ func (r *ServerResource) DeleteServer(ctx context.Context, req resource.DeleteRe
 		return
 	}
 
-	err := r.client.Server.Delete(data.UUID.ValueString())
+	err := r.client.Server.Delete(data.ID.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete server, got error: %s", err))
 		return
 	}
 
-	tflog.Trace(ctx, "Deleted server", map[string]interface{}{"server_id": data.UUID.ValueString()})
+	tflog.Trace(ctx, "Deleted server", map[string]interface{}{"server_id": data.ID.ValueString()})
 }

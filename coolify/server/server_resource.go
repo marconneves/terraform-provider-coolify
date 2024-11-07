@@ -30,7 +30,7 @@ func (r *ServerResource) Schema(ctx context.Context, req resource.SchemaRequest,
 		MarkdownDescription: "Manage Coolify servers",
 
 		Attributes: map[string]schema.Attribute{
-			"uuid": schema.StringAttribute{
+			"id": schema.StringAttribute{
 				MarkdownDescription: "Server identifier",
 				Computed:            true,
 				Optional:            true,
@@ -84,5 +84,5 @@ func (r *ServerResource) Delete(ctx context.Context, req resource.DeleteRequest,
 }
 
 func (r *ServerResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resource.ImportStatePassthroughID(ctx, path.Root("uuid"), req, resp)
+	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }

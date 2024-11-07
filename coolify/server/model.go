@@ -10,7 +10,7 @@ import (
 )
 
 type ServerModel struct {
-	UUID           types.String `tfsdk:"uuid"`
+	ID             types.String `tfsdk:"id"`
 	Name           types.String `tfsdk:"name"`
 	Description    types.String `tfsdk:"description"`
 	IP             types.String `tfsdk:"ip"`
@@ -82,7 +82,7 @@ type SettingsModel struct {
 }
 
 func mapCommonServerFields(data *ServerModel, server *coolify_sdk.Server) {
-	data.UUID = types.StringValue(server.UUID)
+	data.ID = types.StringValue(server.UUID)
 	data.IP = types.StringValue(server.IP)
 	data.Name = types.StringValue(server.Name)
 	data.Description = types.StringNull()
