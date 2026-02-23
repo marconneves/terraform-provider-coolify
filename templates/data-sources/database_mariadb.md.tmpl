@@ -1,6 +1,6 @@
 ---
 page_title: "coolify_database_mariadb Data Source - terraform-provider-coolify"
-subcategory: ""
+subcategory: "database"
 description: |-
   Get a Coolify MariaDB database
 ---

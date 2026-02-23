@@ -1,6 +1,6 @@
 ---
 page_title: "coolify_database_mariadb Resource - terraform-provider-coolify"
-subcategory: ""
+subcategory: "database"
 description: |-
   Manage a Coolify MariaDB database
 ---
