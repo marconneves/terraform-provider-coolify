@@ -29,8 +29,8 @@ output "server_name" {
 
 ### Optional
 
+- `id` (String) The unique identifier of the server.
 - `name` (String) The name of the server.
-- `uuid` (String) The unique identifier of the server.
 
 ### Read-Only
 

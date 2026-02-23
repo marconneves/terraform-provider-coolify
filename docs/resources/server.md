@@ -17,8 +17,8 @@ resource "coolify_server" "test" {
     name             = "example-server"
     ip               = "192.168.1.100"
     port             = "22"
-    user             = "example-user"
-    private_key_uuid = "example-key-uuid"
+    user             = "root"
+    private_key_uuid = "xso0ooc4o0w4cswcwws8gswg"
 }
 ```
 
@@ -38,10 +38,10 @@ resource "coolify_server" "test" {
 ### Optional
 
 - `description` (String) Server description
-- `uuid` (String) Server identifier
+- `id` (String) Server identifier
 
 
 
 ## Importação
 
-/Users/marcon/Projects/OpenSource/terraform-provider-coolify/examples/resources/coolify_server/import.sh
+/Users/marcon/Projects/OpenSource/coolify/terraform-provider-coolify/examples/resources/coolify_server/import.sh

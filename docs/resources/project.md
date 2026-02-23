@@ -37,4 +37,4 @@ resource "coolify_project" "test" {
 
 ## Importação
 
-/Users/marcon/Projects/OpenSource/terraform-provider-coolify/examples/resources/coolify_project/import.sh
+/Users/marcon/Projects/OpenSource/coolify/terraform-provider-coolify/examples/resources/coolify_project/import.sh
