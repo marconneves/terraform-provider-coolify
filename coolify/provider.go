@@ -4,6 +4,10 @@ import (
 	"context"
 	"os"
 
+	"github.com/marconneves/terraform-provider-coolify/coolify/database_mariadb"
+	"github.com/marconneves/terraform-provider-coolify/coolify/database_mysql"
+	"github.com/marconneves/terraform-provider-coolify/coolify/database_postgresql"
+	"github.com/marconneves/terraform-provider-coolify/coolify/database_redis"
 	"github.com/marconneves/terraform-provider-coolify/coolify/private_key"
 	"github.com/marconneves/terraform-provider-coolify/coolify/project"
 	"github.com/marconneves/terraform-provider-coolify/coolify/project_environment"
@@ -87,20 +91,20 @@ func (p *CoolifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 }
 
 func getAPIEndpoint(address types.String) string {
-	if !address.IsNull() {
+	if !address.IsNull() && address.ValueString() != "" {
 		return address.ValueString()
 	}
-	if apiEndpointFromEnv, found := os.LookupEnv(ENV_KEY_ADDRESS); found {
+	if apiEndpointFromEnv, found := os.LookupEnv(ENV_KEY_ADDRESS); found && apiEndpointFromEnv != "" {
 		return apiEndpointFromEnv
 	}
 	return DEFAULT_COOLIFY_ENDPOINT
 }
 
 func getAPIToken(token types.String, resp *provider.ConfigureResponse) string {
-	if !token.IsNull() {
+	if !token.IsNull() && token.ValueString() != "" {
 		return token.ValueString()
 	}
-	if apiTokenFromEnv, found := os.LookupEnv(ENV_KEY_TOKEN); found {
+	if apiTokenFromEnv, found := os.LookupEnv(ENV_KEY_TOKEN); found && apiTokenFromEnv != "" {
 		return apiTokenFromEnv
 	}
 	resp.Diagnostics.AddAttributeError(path.Root("token"), "Failed to configure client", "No token provided")
@@ -111,6 +115,10 @@ func (p *CoolifyProvider) Resources(ctx context.Context) []func() resource.Resou
 	return []func() resource.Resource{
 		project.NewProjectResource,
 		server.NewServerResource,
+		database_postgresql.NewPostgresResource,
+		database_redis.NewRedisResource,
+		database_mysql.NewMySQLResource,
+		database_mariadb.NewMariaDBResource,
 	}
 }
 
@@ -122,6 +130,10 @@ func (p *CoolifyProvider) DataSources(ctx context.Context) []func() datasource.D
 		project_environment.NewEnvironmentDataSource,
 		server.NewServerDataSource,
 		private_key.NewPrivateKeyDataSource,
+		database_postgresql.NewPostgresDataSource,
+		database_redis.NewRedisDataSource,
+		database_mysql.NewMySQLDataSource,
+		database_mariadb.NewMariaDBDataSource,
 	}
 }
 

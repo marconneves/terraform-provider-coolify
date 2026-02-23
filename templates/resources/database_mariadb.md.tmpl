@@ -1,0 +1,24 @@
+---
+page_title: "coolify_database_mariadb Resource - terraform-provider-coolify"
+subcategory: ""
+description: |-
+  Manage a Coolify MariaDB database
+---
+
+# coolify_database_mariadb (Resource)
+
+Manage a Coolify MariaDB database.
+
+## Example Usage
+
+{{ tffile "examples/resources/coolify_database_mariadb/resource.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+
+## Import
+
+Import is supported using the following syntax:
+
+```shell
+terraform import coolify_database_mariadb.mariadb "database-uuid"
+```

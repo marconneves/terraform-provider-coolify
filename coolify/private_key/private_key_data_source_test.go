@@ -14,7 +14,7 @@ func TestAccPrivateKeyDataSource(t *testing.T) {
 		ProtoV6ProviderFactories: tests.ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccPrivateKeyDataSourceConfig(`uuid = "gsssowsgoswo4g8sswsc0kc4`),
+				Config: testAccPrivateKeyDataSourceConfig(`uuid = "gsssowsgoswo4g8sswsc0kc4"`),
 				Check:  testAccPrivateKeyDataSourceCheck(),
 			},
 		},

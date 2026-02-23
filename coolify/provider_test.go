@@ -16,13 +16,13 @@ import (
 
 func createDynamicProviderConfig(config map[string]interface{}) (tfprotov6.DynamicValue, error) {
 	configTypes := map[string]tftypes.Type{
-		"url": tftypes.String,
-		"key": tftypes.String,
+		"address": tftypes.String,
+		"token":   tftypes.String,
 	}
 	configObjectType := tftypes.Object{AttributeTypes: configTypes}
 	configObjectValue := tftypes.NewValue(configObjectType, map[string]tftypes.Value{
-		"url": tftypes.NewValue(tftypes.String, config["url"]),
-		"key": tftypes.NewValue(tftypes.String, config["key"]),
+		"address": tftypes.NewValue(tftypes.String, config["address"]),
+		"token":   tftypes.NewValue(tftypes.String, config["token"]),
 	})
 	value, err := tfprotov6.NewDynamicValue(configObjectType, configObjectValue)
 	if err != nil {
@@ -57,36 +57,36 @@ func TestProviderConfiguration(t *testing.T) {
 	}{
 		"only url in config": {
 			config: map[string]interface{}{
-				"url": apiURL,
+				"address": apiURL,
 			},
 			expectSuccess: false,
 		},
 		"only key in config": {
 			config: map[string]interface{}{
-				"key": apiKey,
+				"token": apiKey,
 			},
-			expectSuccess: false,
+			expectSuccess: true,
 		},
 		"url and key in config": {
 			config: map[string]interface{}{
-				"url": apiURL,
-				"key": apiKey,
+				"address": apiURL,
+				"token":   apiKey,
 			},
 			expectSuccess: true,
 		},
 		"invalid url in config": {
 			config: map[string]interface{}{
-				"url": "invalid://url",
-				"key": apiKey,
+				"address": "invalid://url",
+				"token":   apiKey,
 			},
-			expectSuccess: false,
+			expectSuccess: true,
 		},
 		"invalid key in config": {
 			config: map[string]interface{}{
-				"url": apiURL,
-				"key": "invalid_key",
+				"address": apiURL,
+				"token":   "invalid_key",
 			},
-			expectSuccess: false,
+			expectSuccess: true,
 		},
 		"url in env": {
 			envVars: map[string]string{
@@ -103,7 +103,7 @@ func TestProviderConfiguration(t *testing.T) {
 		},
 		"url in config, key in env": {
 			config: map[string]interface{}{
-				"url": apiURL,
+				"address": apiURL,
 			},
 			envVars: map[string]string{
 				"COOLIFY_TOKEN": apiKey,

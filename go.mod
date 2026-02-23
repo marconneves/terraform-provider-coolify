@@ -7,7 +7,7 @@ require (
 	github.com/hashicorp/terraform-plugin-go v0.25.0
 	github.com/hashicorp/terraform-plugin-log v0.9.0
 	github.com/hashicorp/terraform-plugin-testing v1.10.0
-	github.com/marconneves/coolify-sdk-go v1.5.3
+	github.com/marconneves/coolify-sdk-go v1.5.4
 	github.com/stretchr/testify v1.8.3
 )
 
@@ -67,3 +67,5 @@ require (
 	google.golang.org/protobuf v1.35.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+
+replace github.com/marconneves/coolify-sdk-go => ../coolify-sdk-go
