@@ -1,32 +1,68 @@
-# Provider Deprecation Notice
+# Terraform Provider Coolify
 
-This repository is being discontinued in favor of the [terraform-provider-coolify](https://github.com/SierraJC/terraform-provider-coolify), which is actively maintained and supports the same functionality. We recommend using the new provider to ensure compatibility and continued support.
+## Visão Geral
+O **Terraform Provider Coolify** permite que você gerencie recursos do Coolify (servidores, aplicações, bancos de dados, etc.) como código (IaC). Este provedor integra-se à API do Coolify para automatizar o provisionamento e a configuração da sua infraestrutura.
 
-## Why the Change?
+## Tecnologias
+- **Linguagem:** Go (Golang)
+- **Framework:** Terraform Plugin Framework (hashicorp/terraform-plugin-framework)
+- **SDK:** coolify-sdk-go (SDK customizado para a API do Coolify)
+- **Gestão de Dependências:** Go Modules
 
-The decision to deprecate this provider was made to consolidate efforts and offer a more robust solution. The `terraform-provider-coolify` provides comprehensive support for managing resources in Coolify, and it is being continuously updated by the maintainers.
+## Como rodar localmente
 
-## What You Need to Do
+### Pré-requisitos
+- [Go](https://golang.org/doc/install) instalando (versão recomendada no `.go-version`)
+- [Terraform](https://developer.hashicorp.com/terraform/downloads) (versão 1.0+)
+- [Docker](https://docs.docker.com/get-docker/) e Docker Compose (para testes locais)
 
-If you're currently using this provider, we encourage you to migrate to `terraform-provider-coolify` as soon as possible. Here's how you can transition:
+### Passo a Passo
+1. **Clone o repositório:**
+   ```bash
+   git clone https://github.com/marconneves/terraform-provider-coolify.git
+   cd terraform-provider-coolify
+   ```
 
-1. **Review the Documentation**:  
-   Familiarize yourself with the [terraform-provider-coolify documentation](https://github.com/SierraJC/terraform-provider-coolify) to understand the available features and configurations.
+2. **Compile o provedor:**
+   ```bash
+   go build -o terraform-provider-coolify
+   ```
 
-2. **Check Compatibility**:  
-   Ensure that `terraform-provider-coolify` is compatible with your current Terraform version. The provider's documentation will specify the supported versions.
+3. **Configuração para desenvolvimento local:**
+   Para testar o provedor localmente sem publicá-lo, você pode usar um arquivo `.terraformrc` no seu home directory:
+   ```hcl
+   provider_installation {
+     dev_overrides {
+       "marconneves/coolify" = "/caminho/para/o/binario/do/provedor"
+     }
+     direct {}
+   }
+   ```
 
-3. **Update Your Configuration**:  
-   Replace this provider in your Terraform configuration files with `terraform-provider-coolify`. You will need to update the `provider` block and modify resource configurations as needed.
+4. **Rodando testes com Docker:**
+   O projeto utiliza Docker Compose para subir instâncias locais do Coolify ou bancos de dados para testes de aceitação:
+   ```bash
+   docker compose up -d
+   ```
+   Execute os testes:
+   ```bash
+   TF_ACC=1 go test ./... -v
+   ```
 
-4. **Test in a Development Environment**:  
-   Before applying changes to production, test your configuration in a development environment to verify that everything works as expected.
+## Variáveis de Ambiente
+As seguintes variáveis de ambiente são utilizadas para configurar o provedor:
 
-5. **Consult the Community**:  
-   If you have questions or encounter issues, visit the [Issues section](https://github.com/SierraJC/terraform-provider-coolify/issues) of the `terraform-provider-coolify` repository or consult relevant forums and communities.
+| Variável | Descrição | Obrigatório |
+|----------|-----------|-------------|
+| `COOLIFY_ENDPOINT` | URL da API do Coolify (ex: `https://app.coolify.io/api/v1`) | Sim |
+| `COOLIFY_API_TOKEN` | Token de autenticação da API | Sim |
 
-## Next Steps
+## Guia de Contribuição
+1. Faça um Fork do repositório.
+2. Crie uma branch para sua feature (`git checkout -b feature/nova-feature`).
+3. Siga os padrões de código (veja [AGENTS.md](./AGENTS.md)).
+4. Certifique-se de que os testes estão passando.
+5. Abra um Pull Request detalhando as mudanças.
 
-For any new development or issues, please direct them to the [terraform-provider-coolify repository](https://github.com/SierraJC/terraform-provider-coolify). 
-
-Thank you for your understanding, and we hope the transition is smooth.
+---
+Desenvolvido com ❤️ pela comunidade Coolify.

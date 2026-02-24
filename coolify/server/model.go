@@ -1,8 +1,6 @@
 package server
 
 import (
-	"fmt"
-	"strconv"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -91,15 +89,7 @@ func mapCommonServerFields(data *ServerModel, server *coolify_sdk.Server) {
 	}
 	data.User = types.StringValue(server.User)
 
-	portInt64, err := strconv.ParseInt(server.Port, 10, 32)
-	if err != nil {
-		fmt.Println("Erro na conversão:", err)
-		return
-	}
-
-	port := int32(portInt64)
-
-	data.Port = types.Int32Value(port)
+	data.Port = types.Int32Value(int32(server.Port))
 }
 
 func mapServerDataSourceModel(data *ServerDataSourceModel, server *coolify_sdk.Server) {
