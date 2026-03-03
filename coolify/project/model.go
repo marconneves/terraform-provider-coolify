@@ -3,6 +3,7 @@ package project
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	coolify_sdk "github.com/marconneves/coolify-sdk-go"
+	configure "github.com/marconneves/terraform-provider-coolify/shared"
 )
 
 type ProjectModel struct {
@@ -28,11 +29,7 @@ type EnvironmentModel struct {
 func mapCommonProjectFields(projectData *ProjectModel, project *coolify_sdk.Project) {
 	projectData.Id = types.StringValue(project.UUID)
 	projectData.Name = types.StringValue(project.Name)
-	if project.Description != nil {
-		projectData.Description = types.StringValue(*project.Description)
-	} else {
-		projectData.Description = types.StringNull()
-	}
+	projectData.Description = configure.ValueStringValue(project.Description, projectData.Description)
 }
 
 func mapProjectDataSourceModel(projectData *ProjectDataSourceModel, project *coolify_sdk.Project) {

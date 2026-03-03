@@ -36,20 +36,20 @@ type DatabaseRedisModel struct {
 func mapRedisResourceModel(data *DatabaseRedisModel, db *database.Database) {
 	data.Id = types.StringValue(db.UUID)
 	data.Name = types.StringValue(db.Name)
-	data.Description = configure.ValueStringValue(db.Description)
+	data.Description = configure.ValueStringValue(db.Description, data.Description)
 	data.Image = types.StringValue(db.Image)
 	data.IsPublic = types.BoolValue(db.IsPublic)
 	data.PublicPort = types.Int64Value(int64(db.PublicPort))
 
-	data.RedisPassword = configure.ValueStringValue(db.RedisPassword)
-	data.RedisConf = configure.ValueStringValue(db.RedisConf)
+	data.RedisPassword = configure.ValueStringValue(db.RedisPassword, data.RedisPassword)
+	data.RedisConf = configure.ValueStringValue(db.RedisConf, data.RedisConf)
 
 	data.LimitsMemory = types.StringValue(db.LimitsMemory)
 	data.LimitsMemorySwap = types.StringValue(db.LimitsMemorySwap)
 	data.LimitsMemorySwappiness = types.Int64Value(int64(db.LimitsMemorySwappiness))
 	data.LimitsMemoryReservation = types.StringValue(db.LimitsMemoryReservation)
 	data.LimitsCPUs = types.StringValue(db.LimitsCpus)
-	data.LimitsCPUSet = configure.ValueStringValue(db.LimitsCpuset)
+	data.LimitsCPUSet = configure.ValueStringValue(db.LimitsCpuset, data.LimitsCPUSet)
 	data.LimitsCPUShares = types.Int64Value(int64(db.LimitsCPUShares))
 
 	data.Status = types.StringValue(db.Status)

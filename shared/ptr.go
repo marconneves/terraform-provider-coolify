@@ -17,23 +17,32 @@ func ValueStringPointer(s types.String) *string {
 	return s.ValueStringPointer()
 }
 
-func ValueStringValue(s *string) types.String {
+func ValueStringValue(s *string, current types.String) types.String {
 	if s == nil {
-		return types.StringNull()
+		if current.IsUnknown() {
+			return types.StringNull()
+		}
+		return current
 	}
 	return types.StringValue(*s)
 }
 
-func ValueBoolValue(b *bool) types.Bool {
+func ValueBoolValue(b *bool, current types.Bool) types.Bool {
 	if b == nil {
-		return types.BoolNull()
+		if current.IsUnknown() {
+			return types.BoolNull()
+		}
+		return current
 	}
 	return types.BoolValue(*b)
 }
 
-func ValueInt64Value(i *int) types.Int64 {
+func ValueInt64Value(i *int, current types.Int64) types.Int64 {
 	if i == nil {
-		return types.Int64Null()
+		if current.IsUnknown() {
+			return types.Int64Null()
+		}
+		return current
 	}
 	return types.Int64Value(int64(*i))
 }

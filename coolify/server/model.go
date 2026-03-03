@@ -5,6 +5,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	coolify_sdk "github.com/marconneves/coolify-sdk-go"
+	configure "github.com/marconneves/terraform-provider-coolify/shared"
 )
 
 type ServerModel struct {
@@ -83,10 +84,7 @@ func mapCommonServerFields(data *ServerModel, server *coolify_sdk.Server) {
 	data.ID = types.StringValue(server.UUID)
 	data.IP = types.StringValue(server.IP)
 	data.Name = types.StringValue(server.Name)
-	data.Description = types.StringNull()
-	if server.Description != nil {
-		data.Description = types.StringValue(*server.Description)
-	}
+	data.Description = configure.ValueStringValue(server.Description, data.Description)
 	data.User = types.StringValue(server.User)
 
 	data.Port = types.Int32Value(int32(server.Port))
@@ -137,34 +135,13 @@ func mapServerDataSourceModel(data *ServerDataSourceModel, server *coolify_sdk.S
 		settings.IsSwarmManager = types.BoolValue(server.Settings.IsSwarmManager)
 		settings.IsSwarmWorker = types.BoolValue(server.Settings.IsSwarmWorker)
 		settings.IsUsable = types.BoolValue(server.Settings.IsUsable)
-		settings.LogdrainAxiomApiKey = types.StringNull()
-		if server.Settings.LogdrainAxiomApiKey != nil {
-			settings.LogdrainAxiomApiKey = types.StringValue(*server.Settings.LogdrainAxiomApiKey)
-		}
-		settings.LogdrainAxiomDatasetName = types.StringNull()
-		if server.Settings.LogdrainAxiomDatasetName != nil {
-			settings.LogdrainAxiomDatasetName = types.StringValue(*server.Settings.LogdrainAxiomDatasetName)
-		}
-		settings.LogdrainCustomConfig = types.StringNull()
-		if server.Settings.LogdrainCustomConfig != nil {
-			settings.LogdrainCustomConfig = types.StringValue(*server.Settings.LogdrainCustomConfig)
-		}
-		settings.LogdrainCustomConfigParser = types.StringNull()
-		if server.Settings.LogdrainCustomConfigParser != nil {
-			settings.LogdrainCustomConfigParser = types.StringValue(*server.Settings.LogdrainCustomConfigParser)
-		}
-		settings.LogdrainHighlightProjectId = types.StringNull()
-		if server.Settings.LogdrainHighlightProjectId != nil {
-			settings.LogdrainHighlightProjectId = types.StringValue(*server.Settings.LogdrainHighlightProjectId)
-		}
-		settings.LogdrainNewRelicBaseUri = types.StringNull()
-		if server.Settings.LogdrainNewRelicBaseUri != nil {
-			settings.LogdrainNewRelicBaseUri = types.StringValue(*server.Settings.LogdrainNewRelicBaseUri)
-		}
-		settings.LogdrainNewRelicLicenseKey = types.StringNull()
-		if server.Settings.LogdrainNewRelicLicenseKey != nil {
-			settings.LogdrainNewRelicLicenseKey = types.StringValue(*server.Settings.LogdrainNewRelicLicenseKey)
-		}
+		settings.LogdrainAxiomApiKey = configure.ValueStringValue(server.Settings.LogdrainAxiomApiKey, settings.LogdrainAxiomApiKey)
+		settings.LogdrainAxiomDatasetName = configure.ValueStringValue(server.Settings.LogdrainAxiomDatasetName, settings.LogdrainAxiomDatasetName)
+		settings.LogdrainCustomConfig = configure.ValueStringValue(server.Settings.LogdrainCustomConfig, settings.LogdrainCustomConfig)
+		settings.LogdrainCustomConfigParser = configure.ValueStringValue(server.Settings.LogdrainCustomConfigParser, settings.LogdrainCustomConfigParser)
+		settings.LogdrainHighlightProjectId = configure.ValueStringValue(server.Settings.LogdrainHighlightProjectId, settings.LogdrainHighlightProjectId)
+		settings.LogdrainNewRelicBaseUri = configure.ValueStringValue(server.Settings.LogdrainNewRelicBaseUri, settings.LogdrainNewRelicBaseUri)
+		settings.LogdrainNewRelicLicenseKey = configure.ValueStringValue(server.Settings.LogdrainNewRelicLicenseKey, settings.LogdrainNewRelicLicenseKey)
 		settings.MetricsHistoryDays = types.Int64Value(int64(server.Settings.MetricsHistoryDays))
 		settings.MetricsRefreshRateSeconds = types.Int64Value(int64(server.Settings.MetricsRefreshRateSeconds))
 		settings.MetricsToken = types.StringValue(server.Settings.MetricsToken)
@@ -182,17 +159,11 @@ func mapServerDataSourceModel(data *ServerDataSourceModel, server *coolify_sdk.S
 
 	}
 
-	data.SwarmCluster = types.StringNull()
-	if server.SwarmCluster != nil {
-		data.SwarmCluster = types.StringValue(*server.SwarmCluster)
-	}
+	data.SwarmCluster = configure.ValueStringValue(server.SwarmCluster, data.SwarmCluster)
 	data.TeamID = types.Int64Value(int64(server.TeamID))
 	data.UnreachableCount = types.Int64Value(int64(server.UnreachableCount))
 	data.UnreachableNotificationSent = types.BoolValue(server.UnreachableNotificationSent)
-	data.ValidationLogs = types.StringNull()
-	if server.ValidationLogs != nil {
-		data.ValidationLogs = types.StringValue(*server.ValidationLogs)
-	}
+	data.ValidationLogs = configure.ValueStringValue(server.ValidationLogs, data.ValidationLogs)
 
 	data.CreatedAt = types.StringValue(server.CreatedAt.Format(time.RFC3339))
 	data.UpdatedAt = types.StringValue(server.UpdatedAt.Format(time.RFC3339))

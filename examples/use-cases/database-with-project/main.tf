@@ -24,9 +24,9 @@ resource "coolify_database_redis" "this" {
   environment_name = "production"
   description      = "Redis database for my-new-project"
   image            = "redis:latest"
-  is_public        = false
+  redis_password   = "password123"
+  redis_conf       = base64encode("#")
+  is_public        = true
   instant_deploy   = true
 
-  limits_memory = "256m"
-  limits_cpus   = "0.5"
 }
