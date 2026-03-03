@@ -19,25 +19,25 @@ func (r *MariaDBResource) UpdateMariaDB(ctx context.Context, req resource.Update
 	}
 
 	updateDTO := database.UpdateDatabaseDTO{
-		Name:                    data.Name.ValueStringPointer(),
-		Description:             data.Description.ValueStringPointer(),
-		Image:                   data.Image.ValueStringPointer(),
+		Name:                    configure.ValueStringPointer(data.Name),
+		Description:             configure.ValueStringPointer(data.Description),
+		Image:                   configure.ValueStringPointer(data.Image),
 		IsPublic:                data.IsPublic.ValueBoolPointer(),
-		PublicPort:              configure.Int64ToUintPtr(data.PublicPort.ValueInt64Pointer()),
+		PublicPort:              configure.Int64ToUintPtr(data.PublicPort),
 
-		MariadbRootPassword: data.MariadbRootPassword.ValueStringPointer(),
-		MariadbPassword:     data.MariadbPassword.ValueStringPointer(),
-		MariadbUser:         data.MariadbUser.ValueStringPointer(),
-		MariadbDatabase:     data.MariadbDatabase.ValueStringPointer(),
-		MariadbConf:         data.MariadbConf.ValueStringPointer(),
+		MariadbRootPassword: configure.ValueStringPointer(data.MariadbRootPassword),
+		MariadbPassword:     configure.ValueStringPointer(data.MariadbPassword),
+		MariadbUser:         configure.ValueStringPointer(data.MariadbUser),
+		MariadbDatabase:     configure.ValueStringPointer(data.MariadbDatabase),
+		MariadbConf:         configure.ValueStringPointer(data.MariadbConf),
 
-		LimitsMemory:            data.LimitsMemory.ValueStringPointer(),
-		LimitsMemorySwap:        data.LimitsMemorySwap.ValueStringPointer(),
-		LimitsMemorySwappiness:  configure.Int64ToUintPtr(data.LimitsMemorySwappiness.ValueInt64Pointer()),
-		LimitsMemoryReservation: data.LimitsMemoryReservation.ValueStringPointer(),
-		LimitsCpus:              data.LimitsCPUs.ValueStringPointer(),
-		LimitsCpuset:            data.LimitsCPUSet.ValueStringPointer(),
-		LimitsCPUShares:         configure.Int64ToUintPtr(data.LimitsCPUShares.ValueInt64Pointer()),
+		LimitsMemory:            configure.ValueStringPointer(data.LimitsMemory),
+		LimitsMemorySwap:        configure.ValueStringPointer(data.LimitsMemorySwap),
+		LimitsMemorySwappiness:  configure.Int64ToUintPtr(data.LimitsMemorySwappiness),
+		LimitsMemoryReservation: configure.ValueStringPointer(data.LimitsMemoryReservation),
+		LimitsCpus:              configure.ValueStringPointer(data.LimitsCPUs),
+		LimitsCpuset:            configure.ValueStringPointer(data.LimitsCPUSet),
+		LimitsCPUShares:         configure.Int64ToUintPtr(data.LimitsCPUShares),
 	}
 
 	err := r.client.Database.Update(ctx, data.Id.ValueString(), &updateDTO)

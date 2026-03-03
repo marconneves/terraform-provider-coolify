@@ -3,6 +3,7 @@ package database_redis
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/marconneves/coolify-sdk-go/database"
+	configure "github.com/marconneves/terraform-provider-coolify/shared"
 )
 
 type DatabaseRedisModel struct {
@@ -35,30 +36,20 @@ type DatabaseRedisModel struct {
 func mapRedisResourceModel(data *DatabaseRedisModel, db *database.Database) {
 	data.Id = types.StringValue(db.UUID)
 	data.Name = types.StringValue(db.Name)
-	if db.Description != nil {
-		data.Description = types.StringValue(*db.Description)
-	} else {
-		data.Description = types.StringNull()
-	}
+	data.Description = configure.ValueStringValue(db.Description)
 	data.Image = types.StringValue(db.Image)
 	data.IsPublic = types.BoolValue(db.IsPublic)
 	data.PublicPort = types.Int64Value(int64(db.PublicPort))
-	
-	if db.RedisPassword != nil {
-		data.RedisPassword = types.StringValue(*db.RedisPassword)
-	}
-	if db.RedisConf != nil {
-		data.RedisConf = types.StringValue(*db.RedisConf)
-	}
+
+	data.RedisPassword = configure.ValueStringValue(db.RedisPassword)
+	data.RedisConf = configure.ValueStringValue(db.RedisConf)
 
 	data.LimitsMemory = types.StringValue(db.LimitsMemory)
 	data.LimitsMemorySwap = types.StringValue(db.LimitsMemorySwap)
 	data.LimitsMemorySwappiness = types.Int64Value(int64(db.LimitsMemorySwappiness))
 	data.LimitsMemoryReservation = types.StringValue(db.LimitsMemoryReservation)
 	data.LimitsCPUs = types.StringValue(db.LimitsCpus)
-	if db.LimitsCpuset != nil {
-		data.LimitsCPUSet = types.StringValue(*db.LimitsCpuset)
-	}
+	data.LimitsCPUSet = configure.ValueStringValue(db.LimitsCpuset)
 	data.LimitsCPUShares = types.Int64Value(int64(db.LimitsCPUShares))
 
 	data.Status = types.StringValue(db.Status)

@@ -42,6 +42,7 @@ func (r *ServerResource) Schema(ctx context.Context, req resource.SchemaRequest,
 			"description": schema.StringAttribute{
 				MarkdownDescription: "Server description",
 				Optional:            true,
+				Computed:            true,
 			},
 			"ip": schema.StringAttribute{
 				MarkdownDescription: "Server IP address",

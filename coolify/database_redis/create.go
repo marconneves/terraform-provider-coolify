@@ -26,20 +26,20 @@ func (r *RedisResource) CreateRedis(ctx context.Context, req resource.CreateRequ
 		Description:     data.Description.ValueStringPointer(),
 		Image:           data.Image.ValueStringPointer(),
 		IsPublic:        data.IsPublic.ValueBoolPointer(),
-		PublicPort:      configure.Int64ToUintPtr(data.PublicPort.ValueInt64Pointer()),
+		PublicPort:      configure.Int64ToUintPtr(data.PublicPort),
 		InstantDeploy:   data.InstantDeploy.ValueBoolPointer(),
-		DestinationUUID: data.DestinationUUID.ValueStringPointer(),
+		DestinationUUID: configure.ValueStringPointer(data.DestinationUUID),
 
-		RedisPassword: data.RedisPassword.ValueStringPointer(),
-		RedisConf:     data.RedisConf.ValueStringPointer(),
+		RedisPassword: configure.ValueStringPointer(data.RedisPassword),
+		RedisConf:     configure.ValueStringPointer(data.RedisConf),
 
-		LimitsMemory:            data.LimitsMemory.ValueStringPointer(),
-		LimitsMemorySwap:        data.LimitsMemorySwap.ValueStringPointer(),
-		LimitsMemorySwappiness:  configure.Int64ToUintPtr(data.LimitsMemorySwappiness.ValueInt64Pointer()),
-		LimitsMemoryReservation: data.LimitsMemoryReservation.ValueStringPointer(),
-		LimitsCPUs:              data.LimitsCPUs.ValueStringPointer(),
-		LimitsCPUSet:            data.LimitsCPUSet.ValueStringPointer(),
-		LimitsCPUShares:         configure.Int64ToUintPtr(data.LimitsCPUShares.ValueInt64Pointer()),
+		LimitsMemory:            configure.ValueStringPointer(data.LimitsMemory),
+		LimitsMemorySwap:        configure.ValueStringPointer(data.LimitsMemorySwap),
+		LimitsMemorySwappiness:  configure.Int64ToUintPtr(data.LimitsMemorySwappiness),
+		LimitsMemoryReservation: configure.ValueStringPointer(data.LimitsMemoryReservation),
+		LimitsCPUs:              configure.ValueStringPointer(data.LimitsCPUs),
+		LimitsCPUSet:            configure.ValueStringPointer(data.LimitsCPUSet),
+		LimitsCPUShares:         configure.Int64ToUintPtr(data.LimitsCPUShares),
 	}
 
 	uuid, err := r.client.Database.CreateRedis(ctx, &createDTO)

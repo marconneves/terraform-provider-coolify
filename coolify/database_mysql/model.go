@@ -3,6 +3,7 @@ package database_mysql
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/marconneves/coolify-sdk-go/database"
+	configure "github.com/marconneves/terraform-provider-coolify/shared"
 )
 
 type DatabaseMySQLModel struct {
@@ -39,39 +40,23 @@ type DatabaseMySQLModel struct {
 func mapMySQLResourceModel(data *DatabaseMySQLModel, db *database.Database) {
 	data.Id = types.StringValue(db.UUID)
 	data.Name = types.StringValue(db.Name)
-	if db.Description != nil {
-		data.Description = types.StringValue(*db.Description)
-	} else {
-		data.Description = types.StringNull()
-	}
+	data.Description = configure.ValueStringValue(db.Description)
 	data.Image = types.StringValue(db.Image)
 	data.IsPublic = types.BoolValue(db.IsPublic)
 	data.PublicPort = types.Int64Value(int64(db.PublicPort))
 	
-	if db.MysqlRootPassword != nil {
-		data.MysqlRootPassword = types.StringValue(*db.MysqlRootPassword)
-	}
-	if db.MysqlPassword != nil {
-		data.MysqlPassword = types.StringValue(*db.MysqlPassword)
-	}
-	if db.MysqlUser != nil {
-		data.MysqlUser = types.StringValue(*db.MysqlUser)
-	}
-	if db.MysqlDatabase != nil {
-		data.MysqlDatabase = types.StringValue(*db.MysqlDatabase)
-	}
-	if db.MysqlConf != nil {
-		data.MysqlConf = types.StringValue(*db.MysqlConf)
-	}
+	data.MysqlRootPassword = configure.ValueStringValue(db.MysqlRootPassword)
+	data.MysqlPassword = configure.ValueStringValue(db.MysqlPassword)
+	data.MysqlUser = configure.ValueStringValue(db.MysqlUser)
+	data.MysqlDatabase = configure.ValueStringValue(db.MysqlDatabase)
+	data.MysqlConf = configure.ValueStringValue(db.MysqlConf)
 
 	data.LimitsMemory = types.StringValue(db.LimitsMemory)
 	data.LimitsMemorySwap = types.StringValue(db.LimitsMemorySwap)
 	data.LimitsMemorySwappiness = types.Int64Value(int64(db.LimitsMemorySwappiness))
 	data.LimitsMemoryReservation = types.StringValue(db.LimitsMemoryReservation)
 	data.LimitsCPUs = types.StringValue(db.LimitsCpus)
-	if db.LimitsCpuset != nil {
-		data.LimitsCPUSet = types.StringValue(*db.LimitsCpuset)
-	}
+	data.LimitsCPUSet = configure.ValueStringValue(db.LimitsCpuset)
 	data.LimitsCPUShares = types.Int64Value(int64(db.LimitsCPUShares))
 
 	data.Status = types.StringValue(db.Status)

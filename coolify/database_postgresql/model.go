@@ -3,6 +3,7 @@ package database_postgresql
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/marconneves/coolify-sdk-go/database"
+	configure "github.com/marconneves/terraform-provider-coolify/shared"
 )
 
 type DatabasePostgresModel struct {
@@ -39,11 +40,7 @@ type DatabasePostgresModel struct {
 func mapPostgresResourceModel(data *DatabasePostgresModel, db *database.Database) {
 	data.Id = types.StringValue(db.UUID)
 	data.Name = types.StringValue(db.Name)
-	if db.Description != nil {
-		data.Description = types.StringValue(*db.Description)
-	} else {
-		data.Description = types.StringNull()
-	}
+	data.Description = configure.ValueStringValue(db.Description)
 	data.Image = types.StringValue(db.Image)
 	data.IsPublic = types.BoolValue(db.IsPublic)
 	data.PublicPort = types.Int64Value(int64(db.PublicPort))
@@ -51,24 +48,16 @@ func mapPostgresResourceModel(data *DatabasePostgresModel, db *database.Database
 	data.PostgresUser = types.StringValue(db.PostgresUser)
 	data.PostgresPassword = types.StringValue(db.PostgresPassword)
 	data.PostgresDB = types.StringValue(db.PostgresDB)
-	if db.PostgresInitdbArgs != nil {
-		data.PostgresInitdbArgs = types.StringValue(*db.PostgresInitdbArgs)
-	}
-	if db.PostgresHostAuthMethod != nil {
-		data.PostgresHostAuthMethod = types.StringValue(*db.PostgresHostAuthMethod)
-	}
-	if db.PostgresConf != nil {
-		data.PostgresConf = types.StringValue(*db.PostgresConf)
-	}
+	data.PostgresInitdbArgs = configure.ValueStringValue(db.PostgresInitdbArgs)
+	data.PostgresHostAuthMethod = configure.ValueStringValue(db.PostgresHostAuthMethod)
+	data.PostgresConf = configure.ValueStringValue(db.PostgresConf)
 
 	data.LimitsMemory = types.StringValue(db.LimitsMemory)
 	data.LimitsMemorySwap = types.StringValue(db.LimitsMemorySwap)
 	data.LimitsMemorySwappiness = types.Int64Value(int64(db.LimitsMemorySwappiness))
 	data.LimitsMemoryReservation = types.StringValue(db.LimitsMemoryReservation)
 	data.LimitsCPUs = types.StringValue(db.LimitsCpus)
-	if db.LimitsCpuset != nil {
-		data.LimitsCPUSet = types.StringValue(*db.LimitsCpuset)
-	}
+	data.LimitsCPUSet = configure.ValueStringValue(db.LimitsCpuset)
 	data.LimitsCPUShares = types.Int64Value(int64(db.LimitsCPUShares))
 
 	data.Status = types.StringValue(db.Status)

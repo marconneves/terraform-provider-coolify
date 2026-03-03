@@ -44,6 +44,7 @@ func (r *MySQLResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 			"description": schema.StringAttribute{
 				MarkdownDescription: "Database description",
 				Optional:            true,
+				Computed:            true,
 			},
 			"server_uuid": schema.StringAttribute{
 				MarkdownDescription: "Server UUID",

@@ -3,6 +3,7 @@ package database_mariadb
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/marconneves/coolify-sdk-go/database"
+	configure "github.com/marconneves/terraform-provider-coolify/shared"
 )
 
 // DatabaseMariaDBModel represents the data model for a MariaDB database.
@@ -40,39 +41,23 @@ type DatabaseMariaDBModel struct {
 func mapMariaDBResourceModel(data *DatabaseMariaDBModel, db *database.Database) {
 	data.Id = types.StringValue(db.UUID)
 	data.Name = types.StringValue(db.Name)
-	if db.Description != nil {
-		data.Description = types.StringValue(*db.Description)
-	} else {
-		data.Description = types.StringNull()
-	}
+	data.Description = configure.ValueStringValue(db.Description)
 	data.Image = types.StringValue(db.Image)
 	data.Status = types.StringValue(db.Status)
 	data.IsPublic = types.BoolValue(db.IsPublic)
 	data.PublicPort = types.Int64Value(int64(db.PublicPort))
 
-	if db.MariadbConf != nil {
-		data.MariadbConf = types.StringValue(*db.MariadbConf)
-	}
-	if db.MariadbRootPassword != nil {
-		data.MariadbRootPassword = types.StringValue(*db.MariadbRootPassword)
-	}
-	if db.MariadbUser != nil {
-		data.MariadbUser = types.StringValue(*db.MariadbUser)
-	}
-	if db.MariadbPassword != nil {
-		data.MariadbPassword = types.StringValue(*db.MariadbPassword)
-	}
-	if db.MariadbDatabase != nil {
-		data.MariadbDatabase = types.StringValue(*db.MariadbDatabase)
-	}
+	data.MariadbConf = configure.ValueStringValue(db.MariadbConf)
+	data.MariadbRootPassword = configure.ValueStringValue(db.MariadbRootPassword)
+	data.MariadbUser = configure.ValueStringValue(db.MariadbUser)
+	data.MariadbPassword = configure.ValueStringValue(db.MariadbPassword)
+	data.MariadbDatabase = configure.ValueStringValue(db.MariadbDatabase)
 
 	data.LimitsMemory = types.StringValue(db.LimitsMemory)
 	data.LimitsMemorySwap = types.StringValue(db.LimitsMemorySwap)
 	data.LimitsMemorySwappiness = types.Int64Value(int64(db.LimitsMemorySwappiness))
 	data.LimitsMemoryReservation = types.StringValue(db.LimitsMemoryReservation)
 	data.LimitsCPUs = types.StringValue(db.LimitsCpus)
-	if db.LimitsCpuset != nil {
-		data.LimitsCPUSet = types.StringValue(*db.LimitsCpuset)
-	}
+	data.LimitsCPUSet = configure.ValueStringValue(db.LimitsCpuset)
 	data.LimitsCPUShares = types.Int64Value(int64(db.LimitsCPUShares))
 }
