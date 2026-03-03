@@ -35,7 +35,7 @@ func (r *MariaDBResource) CreateMariaDB(ctx context.Context, req resource.Create
 		MariadbPassword:     configure.ValueStringPointer(data.MariadbPassword),
 		MariadbUser:         configure.ValueStringPointer(data.MariadbUser),
 		MariadbDatabase:     configure.ValueStringPointer(data.MariadbDatabase),
-		MariadbConf:         configure.ValueStringPointer(data.MariadbConf),
+		MariadbConf:         configure.Base64EncodeString(data.MariadbConf),
 
 		LimitsMemory:            configure.ValueStringPointer(data.LimitsMemory),
 		LimitsMemorySwap:        configure.ValueStringPointer(data.LimitsMemorySwap),

@@ -35,7 +35,7 @@ func (r *MySQLResource) CreateMySQL(ctx context.Context, req resource.CreateRequ
 		MysqlPassword:     configure.ValueStringPointer(data.MysqlPassword),
 		MysqlUser:         configure.ValueStringPointer(data.MysqlUser),
 		MysqlDatabase:     configure.ValueStringPointer(data.MysqlDatabase),
-		MysqlConf:         configure.ValueStringPointer(data.MysqlConf),
+		MysqlConf:         configure.Base64EncodeString(data.MysqlConf),
 
 		LimitsMemory:            configure.ValueStringPointer(data.LimitsMemory),
 		LimitsMemorySwap:        configure.ValueStringPointer(data.LimitsMemorySwap),

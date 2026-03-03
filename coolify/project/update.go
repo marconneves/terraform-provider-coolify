@@ -7,6 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	coolify_sdk "github.com/marconneves/coolify-sdk-go"
+	configure "github.com/marconneves/terraform-provider-coolify/shared"
 )
 
 func (r *ProjectResource) UpdateProject(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
@@ -36,8 +37,8 @@ func (r *ProjectResource) UpdateProject(ctx context.Context, req resource.Update
 	}
 
 	updateDTO := coolify_sdk.UpdateProjectDTO{
-		Name:        plan.Name.ValueStringPointer(),
-		Description: plan.Description.ValueStringPointer(),
+		Name:        configure.DiffString(plan.Name, state.Name),
+		Description: configure.DiffString(plan.Description, state.Description),
 	}
 
 	err := r.client.Project.Update(state.Id.ValueString(), &updateDTO)

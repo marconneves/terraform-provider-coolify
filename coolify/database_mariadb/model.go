@@ -47,7 +47,7 @@ func mapMariaDBResourceModel(data *DatabaseMariaDBModel, db *database.Database) 
 	data.IsPublic = configure.ValueBoolValue(&db.IsPublic, data.IsPublic)
 	data.PublicPort = types.Int64Value(int64(db.PublicPort))
 
-	data.MariadbConf = configure.ValueStringValue(db.MariadbConf, data.MariadbConf)
+	data.MariadbConf = configure.Base64String(db.MariadbConf, data.MariadbConf)
 	data.MariadbRootPassword = configure.ValueStringValue(db.MariadbRootPassword, data.MariadbRootPassword)
 	data.MariadbUser = configure.ValueStringValue(db.MariadbUser, data.MariadbUser)
 	data.MariadbPassword = configure.ValueStringValue(db.MariadbPassword, data.MariadbPassword)

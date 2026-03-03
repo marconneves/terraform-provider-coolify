@@ -35,7 +35,7 @@ func (r *PostgresResource) CreatePostgres(ctx context.Context, req resource.Crea
 		PostgresDB:             configure.ValueStringPointer(data.PostgresDB),
 		PostgresInitdbArgs:     configure.ValueStringPointer(data.PostgresInitdbArgs),
 		PostgresHostAuthMethod: configure.ValueStringPointer(data.PostgresHostAuthMethod),
-		PostgresConf:           configure.ValueStringPointer(data.PostgresConf),
+		PostgresConf:           configure.Base64EncodeString(data.PostgresConf),
 
 		LimitsMemory:            configure.ValueStringPointer(data.LimitsMemory),
 		LimitsMemorySwap:        configure.ValueStringPointer(data.LimitsMemorySwap),

@@ -17,27 +17,33 @@ func (r *RedisResource) UpdateRedis(ctx context.Context, req resource.UpdateRequ
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	updateDTO := database.UpdateDatabaseDTO{
-		Name:                    configure.ValueStringPointer(data.Name),
-		Description:             configure.ValueStringPointer(data.Description),
-		Image:                   configure.ValueStringPointer(data.Image),
-		IsPublic:                data.IsPublic.ValueBoolPointer(),
-		PublicPort:              configure.Int64ToUintPtr(data.PublicPort),
-
-		RedisPassword: configure.ValueStringPointer(data.RedisPassword),
-		RedisConf:     configure.ValueStringPointer(data.RedisConf),
-
-		LimitsMemory:            configure.ValueStringPointer(data.LimitsMemory),
-		LimitsMemorySwap:        configure.ValueStringPointer(data.LimitsMemorySwap),
-		LimitsMemorySwappiness:  configure.Int64ToUintPtr(data.LimitsMemorySwappiness),
-		LimitsMemoryReservation: configure.ValueStringPointer(data.LimitsMemoryReservation),
-		LimitsCpus:              configure.ValueStringPointer(data.LimitsCPUs),
-		LimitsCpuset:            configure.ValueStringPointer(data.LimitsCPUSet),
-		LimitsCPUShares:         configure.Int64ToUintPtr(data.LimitsCPUShares),
+	plan := data
+	var state DatabaseRedisModel
+	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
+	if resp.Diagnostics.HasError() {
+		return
 	}
 
-	err := r.client.Database.Update(ctx, data.Id.ValueString(), &updateDTO)
+	updateDTO := database.UpdateDatabaseDTO{
+		Name:                    configure.DiffString(plan.Name, state.Name),
+		Description:             configure.DiffString(plan.Description, state.Description),
+		Image:                   configure.DiffString(plan.Image, state.Image),
+		IsPublic:                configure.DiffBool(plan.IsPublic, state.IsPublic),
+		PublicPort:              configure.DiffInt64(plan.PublicPort, state.PublicPort),
+
+		RedisPassword: configure.DiffString(plan.RedisPassword, state.RedisPassword),
+		RedisConf:     configure.DiffString(plan.RedisConf, state.RedisConf),
+
+		LimitsMemory:            configure.DiffString(plan.LimitsMemory, state.LimitsMemory),
+		LimitsMemorySwap:        configure.DiffString(plan.LimitsMemorySwap, state.LimitsMemorySwap),
+		LimitsMemorySwappiness:  configure.DiffInt64(plan.LimitsMemorySwappiness, state.LimitsMemorySwappiness),
+		LimitsMemoryReservation: configure.DiffString(plan.LimitsMemoryReservation, state.LimitsMemoryReservation),
+		LimitsCpus:              configure.DiffString(plan.LimitsCPUs, state.LimitsCPUs),
+		LimitsCpuset:            configure.DiffString(plan.LimitsCPUSet, state.LimitsCPUSet),
+		LimitsCPUShares:         configure.DiffInt64(plan.LimitsCPUShares, state.LimitsCPUShares),
+	}
+
+	err := r.client.Database.Update(ctx, plan.Id.ValueString(), &updateDTO)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update Redis database, got error: %s", err))
 		return

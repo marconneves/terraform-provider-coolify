@@ -20,13 +20,12 @@ resource "coolify_project" "this" {
 resource "coolify_database_redis" "this" {
   name             = "my-redis-db"
   server_uuid      = "dooskco4gc8w8ckss4ko0840"
-  project_uuid     = coolify_project.this.id
+  project_uuid     = "ccw888ksoco4w8kgwoswc4k4"
   environment_name = "production"
   description      = "Redis database for my-new-project"
   image            = "redis:latest"
   redis_password   = "password123"
-  redis_conf       = base64encode("#")
-  is_public        = true
+  redis_conf       = "#"
+  is_public        = false
   instant_deploy   = true
-
 }

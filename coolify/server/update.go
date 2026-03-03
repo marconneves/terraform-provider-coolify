@@ -34,14 +34,24 @@ func (r *ServerResource) UpdateServer(ctx context.Context, req resource.UpdateRe
 		return
 	}
 
-	updateDTO := coolify_sdk.UpdateServerDTO{
-		Name:           plan.Name.ValueString(),
-		IP:             plan.IP.ValueString(),
-		Description:    plan.Description.ValueString(),
-		IsBuildServer:  false,
-		Port:           int(plan.Port.ValueInt32()),
-		User:           plan.User.ValueString(),
-		PrivateKeyUUID: plan.PrivateKeyUUID.ValueString(),
+	updateDTO := coolify_sdk.UpdateServerDTO{}
+	if !plan.Name.Equal(state.Name) {
+		updateDTO.Name = plan.Name.ValueString()
+	}
+	if !plan.IP.Equal(state.IP) {
+		updateDTO.IP = plan.IP.ValueString()
+	}
+	if !plan.Description.Equal(state.Description) {
+		updateDTO.Description = plan.Description.ValueString()
+	}
+	if !plan.Port.Equal(state.Port) {
+		updateDTO.Port = int(plan.Port.ValueInt32())
+	}
+	if !plan.User.Equal(state.User) {
+		updateDTO.User = plan.User.ValueString()
+	}
+	if !plan.PrivateKeyUUID.Equal(state.PrivateKeyUUID) {
+		updateDTO.PrivateKeyUUID = plan.PrivateKeyUUID.ValueString()
 	}
 
 	err := r.client.Server.Update(state.ID.ValueString(), &updateDTO)

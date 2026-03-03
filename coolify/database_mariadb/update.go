@@ -17,30 +17,36 @@ func (r *MariaDBResource) UpdateMariaDB(ctx context.Context, req resource.Update
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	updateDTO := database.UpdateDatabaseDTO{
-		Name:                    configure.ValueStringPointer(data.Name),
-		Description:             configure.ValueStringPointer(data.Description),
-		Image:                   configure.ValueStringPointer(data.Image),
-		IsPublic:                data.IsPublic.ValueBoolPointer(),
-		PublicPort:              configure.Int64ToUintPtr(data.PublicPort),
-
-		MariadbRootPassword: configure.ValueStringPointer(data.MariadbRootPassword),
-		MariadbPassword:     configure.ValueStringPointer(data.MariadbPassword),
-		MariadbUser:         configure.ValueStringPointer(data.MariadbUser),
-		MariadbDatabase:     configure.ValueStringPointer(data.MariadbDatabase),
-		MariadbConf:         configure.ValueStringPointer(data.MariadbConf),
-
-		LimitsMemory:            configure.ValueStringPointer(data.LimitsMemory),
-		LimitsMemorySwap:        configure.ValueStringPointer(data.LimitsMemorySwap),
-		LimitsMemorySwappiness:  configure.Int64ToUintPtr(data.LimitsMemorySwappiness),
-		LimitsMemoryReservation: configure.ValueStringPointer(data.LimitsMemoryReservation),
-		LimitsCpus:              configure.ValueStringPointer(data.LimitsCPUs),
-		LimitsCpuset:            configure.ValueStringPointer(data.LimitsCPUSet),
-		LimitsCPUShares:         configure.Int64ToUintPtr(data.LimitsCPUShares),
+	plan := data
+	var state DatabaseMariaDBModel
+	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
+	if resp.Diagnostics.HasError() {
+		return
 	}
 
-	err := r.client.Database.Update(ctx, data.Id.ValueString(), &updateDTO)
+	updateDTO := database.UpdateDatabaseDTO{
+		Name:                    configure.DiffString(plan.Name, state.Name),
+		Description:             configure.DiffString(plan.Description, state.Description),
+		Image:                   configure.DiffString(plan.Image, state.Image),
+		IsPublic:                configure.DiffBool(plan.IsPublic, state.IsPublic),
+		PublicPort:              configure.DiffInt64(plan.PublicPort, state.PublicPort),
+
+		MariadbRootPassword: configure.DiffString(plan.MariadbRootPassword, state.MariadbRootPassword),
+		MariadbPassword:     configure.DiffString(plan.MariadbPassword, state.MariadbPassword),
+		MariadbUser:         configure.DiffString(plan.MariadbUser, state.MariadbUser),
+		MariadbDatabase:     configure.DiffString(plan.MariadbDatabase, state.MariadbDatabase),
+		MariadbConf:         configure.DiffBase64String(plan.MariadbConf, state.MariadbConf),
+
+		LimitsMemory:            configure.DiffString(plan.LimitsMemory, state.LimitsMemory),
+		LimitsMemorySwap:        configure.DiffString(plan.LimitsMemorySwap, state.LimitsMemorySwap),
+		LimitsMemorySwappiness:  configure.DiffInt64(plan.LimitsMemorySwappiness, state.LimitsMemorySwappiness),
+		LimitsMemoryReservation: configure.DiffString(plan.LimitsMemoryReservation, state.LimitsMemoryReservation),
+		LimitsCpus:              configure.DiffString(plan.LimitsCPUs, state.LimitsCPUs),
+		LimitsCpuset:            configure.DiffString(plan.LimitsCPUSet, state.LimitsCPUSet),
+		LimitsCPUShares:         configure.DiffInt64(plan.LimitsCPUShares, state.LimitsCPUShares),
+	}
+
+	err := r.client.Database.Update(ctx, plan.Id.ValueString(), &updateDTO)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update MariaDB database, got error: %s", err))
 		return

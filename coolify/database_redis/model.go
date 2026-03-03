@@ -42,7 +42,7 @@ func mapRedisResourceModel(data *DatabaseRedisModel, db *database.Database) {
 	data.PublicPort = types.Int64Value(int64(db.PublicPort))
 
 	data.RedisPassword = configure.ValueStringValue(db.RedisPassword, data.RedisPassword)
-	data.RedisConf = configure.ValueStringValue(db.RedisConf, data.RedisConf)
+	data.RedisConf = configure.Base64String(db.RedisConf, data.RedisConf)
 
 	data.LimitsMemory = types.StringValue(db.LimitsMemory)
 	data.LimitsMemorySwap = types.StringValue(db.LimitsMemorySwap)
