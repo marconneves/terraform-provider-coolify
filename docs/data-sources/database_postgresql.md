@@ -6,7 +6,7 @@ description: |-
   Get a Coolify PostgreSQL database
 ---
 
-# coolify_database_postgresql (Data Source)
+# coolify_database_postgresql
 
 Get a Coolify PostgreSQL database
 

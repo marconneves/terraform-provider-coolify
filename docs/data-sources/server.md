@@ -3,12 +3,12 @@
 page_title: "coolify_server Data Source - coolify"
 subcategory: "server"
 description: |-
-  
+  Look up a Coolify server by `id` or `name`.
 ---
 
 # coolify_server
 
-
+Look up a Coolify server by `id` or `name`.
 
 ## Exemplo de Uso
 
@@ -106,7 +106,4 @@ Read-Only:
 - `wildcard_domain` (String) The wildcard domain associated with the server.
 
 
-
-
-## Importação
 

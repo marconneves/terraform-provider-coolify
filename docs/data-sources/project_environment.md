@@ -42,6 +42,3 @@ output "project_name" {
 - `updated_at` (String) Environment last update timestamp
 
 
-
-## Importação
-

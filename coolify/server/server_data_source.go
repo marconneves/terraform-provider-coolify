@@ -25,6 +25,7 @@ func (s *ServerDataSource) Metadata(ctx context.Context, req datasource.Metadata
 
 func (s *ServerDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
+		MarkdownDescription: "Look up a Coolify server by `id` or `name`.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Optional:    true,

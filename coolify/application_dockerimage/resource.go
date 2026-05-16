@@ -3,6 +3,7 @@ package application_dockerimage
 import (
 	"context"
 
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
@@ -13,6 +14,7 @@ import (
 )
 
 var _ resource.Resource = &ApplicationDockerImageResource{}
+var _ resource.ResourceWithImportState = &ApplicationDockerImageResource{}
 
 func NewApplicationDockerImageResource() resource.Resource {
 	return &ApplicationDockerImageResource{}
@@ -266,4 +268,8 @@ func (r *ApplicationDockerImageResource) Update(ctx context.Context, req resourc
 
 func (r *ApplicationDockerImageResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	r.DeleteApplication(ctx, req, resp)
+}
+
+func (r *ApplicationDockerImageResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }

@@ -68,7 +68,3 @@ resource "coolify_database_redis" "test" {
 - `status` (String) Database status
 
 
-
-## Importação
-
-/Users/marcon/Projects/OpenSource/coolify/terraform-provider-coolify/examples/resources/coolify_database_redis/import.sh
