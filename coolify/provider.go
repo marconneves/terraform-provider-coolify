@@ -4,6 +4,8 @@ import (
 	"context"
 	"os"
 
+	"github.com/marconneves/terraform-provider-coolify/coolify/application_dockerimage"
+	"github.com/marconneves/terraform-provider-coolify/coolify/application_env"
 	"github.com/marconneves/terraform-provider-coolify/coolify/database_mariadb"
 	"github.com/marconneves/terraform-provider-coolify/coolify/database_mysql"
 	"github.com/marconneves/terraform-provider-coolify/coolify/database_postgresql"
@@ -119,6 +121,8 @@ func (p *CoolifyProvider) Resources(ctx context.Context) []func() resource.Resou
 		database_redis.NewRedisResource,
 		database_mysql.NewMySQLResource,
 		database_mariadb.NewMariaDBResource,
+		application_dockerimage.NewApplicationDockerImageResource,
+		application_env.NewApplicationEnvResource,
 	}
 }
 
@@ -134,6 +138,7 @@ func (p *CoolifyProvider) DataSources(ctx context.Context) []func() datasource.D
 		database_redis.NewRedisDataSource,
 		database_mysql.NewMySQLDataSource,
 		database_mariadb.NewMariaDBDataSource,
+		application_dockerimage.NewApplicationDockerImageDataSource,
 	}
 }
 
