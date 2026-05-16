@@ -116,12 +116,10 @@ func (r *ApplicationDockerImageResource) Schema(ctx context.Context, req resourc
 			"is_force_https_enabled": schema.BoolAttribute{
 				MarkdownDescription: "Force HTTPS.",
 				Optional:            true,
-				Computed:            true,
 			},
 			"connect_to_docker_network": schema.BoolAttribute{
 				MarkdownDescription: "Connect the application to Coolify's predefined Docker network.",
 				Optional:            true,
-				Computed:            true,
 			},
 
 			"health_check_enabled": schema.BoolAttribute{
