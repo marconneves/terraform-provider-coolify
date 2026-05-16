@@ -31,6 +31,7 @@ type ApplicationDockerImageModel struct {
 	InstantDeploy          types.Bool `tfsdk:"instant_deploy"`
 	IsForceHTTPSEnabled    types.Bool `tfsdk:"is_force_https_enabled"`
 	ConnectToDockerNetwork types.Bool `tfsdk:"connect_to_docker_network"`
+	RedeployOnUpdate       types.Bool `tfsdk:"redeploy_on_update"`
 
 	HealthCheckEnabled      types.Bool   `tfsdk:"health_check_enabled"`
 	HealthCheckPath         types.String `tfsdk:"health_check_path"`
