@@ -6,7 +6,7 @@ description: |-
   Get a Coolify MySQL database
 ---
 
-# coolify_database_mysql (Data Source)
+# coolify_database_mysql
 
 Get a Coolify MySQL database
 

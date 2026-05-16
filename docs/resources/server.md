@@ -44,4 +44,6 @@ resource "coolify_server" "test" {
 
 ## Importação
 
-/Users/marcon/Projects/OpenSource/coolify/terraform-provider-coolify/examples/resources/coolify_server/import.sh
+```shell
+terraform import coolify_server.example <server-uuid>
+```

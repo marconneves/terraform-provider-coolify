@@ -6,7 +6,7 @@ description: |-
   Get a Coolify Redis database
 ---
 
-# coolify_database_redis (Data Source)
+# coolify_database_redis
 
 Get a Coolify Redis database
 

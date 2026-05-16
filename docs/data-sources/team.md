@@ -37,6 +37,3 @@ output "team_name" {
 - `description` (String) Team description
 
 
-
-## Importação
-

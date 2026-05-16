@@ -73,7 +73,3 @@ resource "coolify_database_postgresql" "test" {
 - `status` (String) Database status
 
 
-
-## Importação
-
-/Users/marcon/Projects/OpenSource/coolify/terraform-provider-coolify/examples/resources/coolify_database_postgresql/import.sh

@@ -43,6 +43,3 @@ output "private_key_name" {
 - `updated_at` (String) Private Key last update timestamp
 
 
-
-## Importação
-
