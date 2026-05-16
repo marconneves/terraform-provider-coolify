@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs ls -la)",
+      "Bash(kill bk2yf03j6 *)",
+      "Bash(pkill -f \"find / -path\")",
+      "Read(//Users/marcon/**)",
+      "Bash(terraform version *)",
+      "Bash(go env *)",
+      "Bash(umask)",
+      "Bash(go build *)",
+      "Read(//tmp/**)",
+      "Bash(/tmp/test-tf-build -help)",
+      "Bash(TMPDIR=/tmp/tfdocs-tmp make generate)",
+      "Bash(go run *)"
+    ]
+  }
+}
