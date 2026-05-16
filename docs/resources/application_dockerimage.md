@@ -67,7 +67,7 @@ resource "coolify_application_dockerimage" "api" {
 - `domains` (String) Application URLs in a comma-separated list.
 - `environment_name` (String) Environment name. Provide either `environment_name` or `environment_uuid`.
 - `environment_uuid` (String) Environment UUID. Provide either `environment_name` or `environment_uuid`.
-- `environment_variables` (Map of String) Environment variables to upsert in bulk on the application. Variables not listed here are left untouched, so individual entries can be managed via `coolify_application_env`.
+- `environment_variables` (Map of String, Sensitive) Environment variables to upsert in bulk on the application. Variables not listed here are left untouched, so individual entries can be managed via `coolify_application_env`. Values are marked sensitive and hidden from plan output.
 - `health_check_enabled` (Boolean) Enable health checks.
 - `health_check_host` (String) Health check host.
 - `health_check_interval` (Number) Health check interval in seconds.
@@ -91,6 +91,7 @@ resource "coolify_application_dockerimage" "api" {
 - `limits_memory_swappiness` (Number) Memory swappiness.
 - `name` (String) Application name.
 - `ports_mappings` (String) Host-to-container port mappings, comma-separated (e.g. `"8080:80"`).
+- `redeploy_on_update` (Boolean) When `true`, trigger a redeploy after a successful update if any runtime-affecting field changed. Coolify's update endpoint only persists configuration; without this flag a changed image tag, env or port will not take effect until the next manual deploy. Fields that trigger a redeploy: `docker_registry_image_name`, `docker_registry_image_tag`, `environment_variables`, `ports_exposes`, `ports_mappings`, `domains`, `is_force_https_enabled`, `connect_to_docker_network`, all `health_check_*`, all `limits_*`, `custom_labels`, `custom_docker_run_options`. Changes to `name` or `description` alone do not trigger a redeploy.
 
 ### Read-Only
 
