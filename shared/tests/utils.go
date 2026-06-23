@@ -10,8 +10,9 @@ import (
 )
 
 const (
-	ENV_KEY_ADDRESS = "COOLIFY_ADDRESS"
-	ENV_KEY_TOKEN   = "COOLIFY_TOKEN"
+	ENV_KEY_ADDRESS            = "COOLIFY_ADDRESS"
+	ENV_KEY_TOKEN              = "COOLIFY_TOKEN"
+	ENV_KEY_TEST_APP_UUID      = "COOLIFY_TEST_APPLICATION_UUID"
 )
 
 func TestAccPreCheck(t *testing.T) {
