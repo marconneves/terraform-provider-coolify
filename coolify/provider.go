@@ -6,6 +6,9 @@ import (
 
 	"github.com/marconneves/terraform-provider-coolify/coolify/application_dockerimage"
 	"github.com/marconneves/terraform-provider-coolify/coolify/application_env"
+	"github.com/marconneves/terraform-provider-coolify/coolify/application_restart"
+	"github.com/marconneves/terraform-provider-coolify/coolify/application_start"
+	"github.com/marconneves/terraform-provider-coolify/coolify/application_stop"
 	"github.com/marconneves/terraform-provider-coolify/coolify/database_mariadb"
 	"github.com/marconneves/terraform-provider-coolify/coolify/database_mysql"
 	"github.com/marconneves/terraform-provider-coolify/coolify/database_postgresql"
@@ -123,6 +126,9 @@ func (p *CoolifyProvider) Resources(ctx context.Context) []func() resource.Resou
 		database_mariadb.NewMariaDBResource,
 		application_dockerimage.NewApplicationDockerImageResource,
 		application_env.NewApplicationEnvResource,
+		application_start.NewApplicationStartResource,
+		application_stop.NewApplicationStopResource,
+		application_restart.NewApplicationRestartResource,
 	}
 }
 
